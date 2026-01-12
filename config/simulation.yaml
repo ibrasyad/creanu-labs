@@ -1,4 +1,18 @@
 simulation:
+  transaction_volume:
+    weekday_base:
+      monday: 40
+      tuesday: 35
+      wednesday: 45
+      thursday: 35
+      friday: 65
+      saturday: 90
+      sunday: 85
+
+    noise:
+      distribution: poisson
+      multiplier: 1.0
+
   basket:
     min_items: 1
     max_items: 8

@@ -35,6 +35,9 @@ def resolve_basket_config(sim_cfg, tier_cfg):
         "max_items": tier_basket.get("max_items", sim_basket["max_items"]),
     }
 
+def trx_by_day_of_week(day_of_week):
+    return sim['transaction_volume']['weekday_base'][day_of_week]
+
 # ------------------------
 # Main API
 # ------------------------
