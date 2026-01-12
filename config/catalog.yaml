@@ -1,0 +1,27 @@
+catalog:
+  vegetables:
+    leafy_greens:
+      spinach:
+        base_price: 4000
+      kale:
+        base_price: 5000
+
+  fruits:
+    berries:
+      strawberries:
+        base_price: 5000
+      blueberries:
+        base_price: 5500
+
+  snacks:
+    chips:
+      potato_chips_150g:
+        base_price: 17000
+
+  beverages:
+    soda:
+      cola_500mL:
+        base_price: 20000
+    water:
+      mineral_water_600mL:
+        base_price: 4000

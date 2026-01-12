@@ -1,0 +1,595 @@
+default_tiers: &default_tiers
+    # Weight distribution over product categories
+    product_category_preferences:
+        vegetables:
+          weight: 0
+          subcategory:
+            leafy_greens:
+              weight: 0
+              products:
+                spinach:
+                  price_range: [3000,5000]
+                  quantity_range: [0,0]
+                kale:
+                  price_range: [4000,6000]
+                  quantity_range: [0,0]
+                lettuce:
+                  price_range: [2000,4000]
+                  quantity_range: [0,0]
+            root_vegetables:
+              weight: 0
+              products:
+                carrots:
+                  price_range: [1500,3000]
+                  quantity_range: [0,0]
+                potatoes:
+                  price_range: [1000,3500]
+                  quantity_range: [0,0]
+                beets:
+                  price_range: [2000,4500]
+                  quantity_range: [0,0]
+        fruits:
+          weight: 0
+          subcategory:
+            citrus:
+              weight: 0
+              products:
+                oranges:
+                  price_range: [2000,4000]
+                  quantity_range: [0,0]
+                lemons:
+                  price_range: [3500,5000]
+                  quantity_range: [0,0]
+                limes:
+                  price_range: [1000,2500]
+                  quantity_range: [0,0]
+            berries:
+              weight: 0
+              products:
+                strawberries:
+                  price_range: [3000,7000]
+                  quantity_range: [0,0]
+                blueberries:
+                  price_range: [4000,6000]
+                  quantity_range: [0,0]   
+                raspberries:
+                  price_range: [3500,5500]
+                  quantity_range: [0,0]   
+            tropical:
+              weight: 0
+              products:
+                mangoes:
+                  price_range: [3000,6000]
+                  quantity_range: [0,0]   
+                pineapples:
+                  price_range: [4000,7000]
+                  quantity_range: [0,0]   
+                bananas:
+                  price_range: [1000,3000]
+                  quantity_range: [0,0]   
+            stone_fruits:
+              weight: 0
+              products:
+                peaches:
+                  price_range: [2500,4500]
+                  quantity_range: [0,0]   
+                plums:
+                  price_range: [2000,4000]
+                  quantity_range: [0,0]   
+                cherries:
+                  price_range: [5000,8000]
+                  quantity_range: [0,0]   
+            melons:
+              weight: 0
+              products:
+                watermelon:
+                  price_range: [3000,6000]
+                  quantity_range: [0,0]   
+                cantaloupe:
+                  price_range: [2500,4500]
+                  quantity_range: [0,0]   
+                honeydew:
+                  price_range: [2000,5000]
+                  quantity_range: [0,0]   
+        grains:
+          weight: 0
+          subcategory:
+            rice:
+              weight: 0
+              products:
+                white_rice_5kg:
+                  price_range: [60000,80000]
+                  quantity_range: [0,0]   
+                brown_rice_1kg:
+                  price_range: [70000,90000]
+                  quantity_range: [0,0]   
+                premium_white_rice_5kg:
+                  price_range: [90000,120000]
+                  quantity_range: [0,0]        
+        dairy:
+          weight: 0
+          subcategory:
+            milk:
+              weight: 0
+              products:
+                whole_milk_1L:
+                  price_range: [18000,25000]
+                  quantity_range: [0,0]        
+                skim_milk_1L:
+                  price_range: [22000,29000]
+                  quantity_range: [0,0]        
+                almond_milk_1L:
+                  price_range: [27000,33000]
+                  quantity_range: [0,0]        
+            cheese:
+              weight: 0
+              products:
+                cheddar_cheese_200g:
+                  price_range: [30000,45000]
+                  quantity_range: [0,0]        
+                mozzarella_cheese_200g:
+                  price_range: [35000,55000]
+                  quantity_range: [0,0]        
+            yogurt:
+              weight: 0
+              products:
+                greek_yogurt_150g:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+                flavored_yogurt_150g:
+                  price_range: [12000,20000]
+                  quantity_range: [0,0]        
+            butter:
+              weight: 0
+              products:
+                salted_butter_200g:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+                unsalted_butter_200g:
+                  price_range: [17000,27000]
+                  quantity_range: [0,0]        
+                margarine_200g:
+                  price_range: [6000,11000]
+                  quantity_range: [0,0]        
+            eggs:
+              weight: 0
+              products:
+                regular_eggs_10pcs:
+                  price_range: [15000,24000]
+                  quantity_range: [0,0]        
+                organic_eggs_10pcs:
+                  price_range: [24000,35000]
+                  quantity_range: [0,0]        
+        bakery:
+          weight: 0
+          subcategory:
+            bread:
+              weight: 0
+              products:
+                whole_wheat_bread:
+                  price_range: [18000,25000]
+                  quantity_range: [0,0]        
+                white_bread:
+                  price_range: [12000,17000]
+                  quantity_range: [0,0]        
+                multigrain_bread:
+                  price_range: [17000,28000]
+                  quantity_range: [0,0]        
+            pastries:
+              weight: 0
+              products:
+                croissant:
+                  price_range: [8000,15000]
+                  quantity_range: [0,0]        
+                danish:
+                  price_range: [9000,16000]
+                  quantity_range: [0,0]        
+                muffin:
+                  price_range: [7000,12000]
+                  quantity_range: [0,0]        
+            cakes:
+              weight: 0
+              products:
+                chocolate_cake:
+                  price_range: [40000,60000]
+                  quantity_range: [0,0]        
+                vanilla_cake:
+                  price_range: [35000,55000]
+                  quantity_range: [0,0]        
+                red_velvet_cake:
+                  price_range: [45000,70000]
+                  quantity_range: [0,0]        
+            cookies:
+              weight: 0
+              products:
+                chocolate_chip_cookies:
+                  price_range: [6000,9000]
+                  quantity_range: [0,0]        
+                oatmeal_raisin_cookies:
+                  price_range: [8000,12000]
+                  quantity_range: [0,0]        
+                sugar_cookies:
+                  price_range: [4000,6000]
+                  quantity_range: [0,0]        
+            muffins:
+              weight: 0
+              products:
+                blueberry_muffin:
+                  price_range: [7000,9000]
+                  quantity_range: [0,0]        
+                banana_nut_muffin:
+                  price_range: [8000,10000]
+                  quantity_range: [0,0]        
+                chocolate_muffin:
+                  price_range: [6000,8000]
+                  quantity_range: [0,0]        
+        snacks:
+          weight: 0
+          subcategory:
+            chips:
+              weight: 0
+              products:
+                potato_chips_150g:
+                  price_range: [15000,18000]
+                  quantity_range: [0,0]        
+                tortilla_chips_150g:
+                  price_range: [16000,20000]
+                  quantity_range: [0,0]        
+                veggie_chips_150g:
+                  price_range: [18000,23000]
+                  quantity_range: [0,0]        
+            nuts:
+              weight: 0
+              products:
+                almonds_200g:
+                  price_range: [50000,65000]
+                  quantity_range: [0,0]        
+                cashews_200g:
+                  price_range: [50000,65000]
+                  quantity_range: [0,0]        
+                mixed_nuts_200g:
+                  price_range: [45000,55000]
+                  quantity_range: [0,0]        
+            granola_bars:
+              weight: 0
+              products:
+                honey_granola_bars_100g:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+                chocolate_granola_bars_100g:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+                fruit_granola_bars_100g:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+            popcorn: 
+              weight: 0
+              products:
+                buttered_popcorn_100g:
+                  price_range: [10000,15000]
+                  quantity_range: [0,0]        
+                cheese_popcorn_100g:
+                  price_range: [12000,17000]
+                  quantity_range: [0,0]        
+                caramel_popcorn_100g:
+                  price_range: [15000,20000]
+                  quantity_range: [0,0]        
+            dried_fruits:
+              weight: 0
+              products:
+                dried_mangoes_100g:
+                  price_range: [25000,35000]
+                  quantity_range: [0,0]        
+                dried_apricots_100g:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+                dried_cranberries_100g:
+                  price_range: [22000,32000]
+                  quantity_range: [0,0]        
+        beverages:
+          weight: 0
+          subcategory:
+            soda:
+              weight: 0
+              products:
+                cola_500mL:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+                lemon_lime_500mL:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+                orange_soda_500mL:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+            juice:
+              weight: 0
+              products:
+                orange_juice_750mL:
+                  price_range: [30000,45000]
+                  quantity_range: [0,0]        
+                apple_juice_750mL:
+                  price_range: [25000,40000]
+                  quantity_range: [0,0]        
+                mixed_fruit_juice_750mL:
+                  price_range: [35000,50000]
+                  quantity_range: [0,0]        
+            water:
+              weight: 0
+              products:
+                mineral_water_A_600mL:
+                  price_range: [3000,3000]
+                  quantity_range: [0,0]        
+                mineral_water_B_600mL:
+                  price_range: [4500,4500]
+                  quantity_range: [0,0]        
+                mineral_water_C_600mL:
+                  price_range: [6000,6000]
+                  quantity_range: [0,0]        
+            coffee:
+              weight: 0
+              products:
+                ground_coffee_250g:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+                instant_coffee_200g:
+                  price_range: [15000,22000]
+                  quantity_range: [0,0]        
+            tea:
+              weight: 0
+              products:
+                black_tea_100g:
+                  price_range: [10000,15000]
+                  quantity_range: [0,0]        
+                green_tea_100g:
+                  price_range: [12000,18000]
+                  quantity_range: [0,0]        
+                jasmine_tea_100g:
+                  price_range: [15000,20000]
+                  quantity_range: [0,0]        
+        meat:
+          weight: 0
+          subcategory:
+            beef:
+              weight: 0
+              products:
+                ground_beef_500g:
+                  price_range: [50000,60000]
+                  quantity_range: [0,0]        
+                beef_steak_300g:
+                  price_range: [60000,80000]
+                  quantity_range: [0,0]        
+                beef_roast_1kg:
+                  price_range: [140000,170000]
+                  quantity_range: [0,0]        
+            lamb:
+              weight: 0
+              products:
+                lamb_leg_1kg:
+                  price_range: [150000,200000]
+                  quantity_range: [0,0]        
+                lamb_chop_300g:
+                  price_range: [70000,85000]
+                  quantity_range: [0,0]        
+        seafood:
+          weight: 0
+          subcategory:
+            fish:
+              weight: 0
+              products:
+                salmon_fillet_500g:
+                  price_range: [80000,100000]
+                  quantity_range: [0,0]        
+                dori_fillet_500g:
+                  price_range: [35000,50000]
+                  quantity_range: [0,0]        
+            shellfish: 0
+        poultry:
+          weight: 0
+          subcategory:
+            whole_chicken:
+              weight: 0
+              products:
+                whole_chicken_1kg:
+                  price_range: [50000,65000]
+                  quantity_range: [0,0]        
+            chicken_parts:
+              weight: 0
+              products:
+                chicken_breast_500g:
+                  price_range: [35000,42000]
+                  quantity_range: [0,0]        
+                chicken_thigh_500g:
+                  price_range: [33000,40000]
+                  quantity_range: [0,0]        
+                chicken_wings_500g:
+                  price_range: [28000,32000]
+                  quantity_range: [0,0]        
+        frozen_foods:
+          weight: 0
+          subcategory:
+            frozen_vegetables:
+              weight: 0
+              products:
+                mixed_vegetables_1kg:
+                  price_range: [30000,35000]
+                  quantity_range: [0,0]        
+                peas_1kg:
+                  price_range: [27000,32000]
+                  quantity_range: [0,0]        
+                corn_1kg:
+                  price_range: [27000,32000]
+                  quantity_range: [0,0]        
+            frozen_meals:
+              weight: 0
+              products:
+                frozen_pizza:
+                  price_range: [40000,60000]
+                  quantity_range: [0,0]        
+                frozen_dumplings:
+                  price_range: [35000,50000]
+                  quantity_range: [0,0]        
+                frozen_noodles:
+                  price_range: [30000,45000]
+                  quantity_range: [0,0]        
+        personal_care:
+          weight: 0
+          subcategory:
+            skincare:
+              weight: 0
+              products:
+                facial_cleanser:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+                moisturizer:
+                  price_range: [20000,35000]
+                  quantity_range: [0,0]        
+                sunscreen:
+                  price_range: [25000,40000]
+                  quantity_range: [0,0]        
+            haircare:
+              weight: 0
+              products:
+                shampoo:
+                  price_range: [15000,25000]
+                  quantity_range: [0,0]        
+                conditioner:
+                  price_range: [18000,28000]
+                  quantity_range: [0,0]        
+            oral_care:
+              weight: 0
+              products:
+                toothpaste:
+                  price_range: [12000,18000]
+                  quantity_range: [0,0]        
+                toothbrush:
+                  price_range: [8000,12000]
+                  quantity_range: [0,0]        
+        household_supplies:
+          weight: 0
+          subcategory:
+            cleaning_products:
+              weight: 0
+              products:
+                all_purpose_cleaner:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+                dish_soap:
+                  price_range: [15000,22000]
+                  quantity_range: [0,0]        
+                laundry_detergent:
+                  price_range: [30000,45000]
+                  quantity_range: [0,0]        
+            paper_goods:
+              weight: 0
+              products:
+                paper_towels:
+                  price_range: [10000,15000]
+                  quantity_range: [0,0]        
+                toilet_paper:
+                  price_range: [12000,18000]
+                  quantity_range: [0,0]        
+        condiments_seasonings:
+          weight: 0
+          subcategory:
+            sauces:
+              weight: 0
+              products:
+                ketchup:
+                  price_range: [10000,15000]
+                  quantity_range: [0,0]        
+                mustard:
+                  price_range: [8000,12000]
+                  quantity_range: [0,0]        
+                mayonnaise:
+                  price_range: [12000,18000]
+                  quantity_range: [0,0]        
+            spices:
+              weight: 0
+              products:
+                black_pepper:
+                  price_range: [5000,10000]
+                  quantity_range: [0,0]        
+                cinnamon:
+                  price_range: [7000,12000]
+                  quantity_range: [0,0]        
+                paprika:
+                  price_range: [6000,11000]
+                  quantity_range: [0,0]        
+            oils:
+              weight: 0
+              products:
+                olive_oil_500mL:
+                  price_range: [40000,60000]
+                  quantity_range: [0,0]        
+                vegetable_oil_1L:
+                  price_range: [19000,25000]
+                  quantity_range: [0,0]        
+                coconut_oil_500mL:
+                  price_range: [20000,35000]
+                  quantity_range: [0,0]        
+            dressings:
+              weight: 0
+              products:
+                ranch_dressing_250mL:
+                  price_range: [15000,22000]
+                  quantity_range: [0,0]        
+                italian_dressing_250mL:
+                  price_range: [14000,20000]
+                  quantity_range: [0,0]        
+                vinaigrette_250mL:
+                  price_range: [13000,19000]
+                  quantity_range: [0,0]        
+            marinades:
+              weight: 0
+              products:
+                teriyaki_marinade_250mL:
+                  price_range: [20000,30000]
+                  quantity_range: [0,0]        
+                barbecue_marinade_250mL:
+                  price_range: [18000,28000]
+                  quantity_range: [0,0]        
+                lemon_herb_marinade_250mL:
+                  price_range: [22000,32000]
+                  quantity_range: [0,0]        
+
+# ---------------------------------------
+# Tier 1 — Fresh Produce Enthusiasts
+# Regularly purchase fruits and vegetables.
+# ---------------------------------------
+
+tier_1:
+    <<: *default_tiers
+    product_category_preferences:
+        vegetables:
+          weight: 50
+          subcategory:
+            leafy_greens:
+              weight: 30
+            root_vegetables:
+              weight: 20
+        fruits:
+          weight: 40
+        grains:
+          weight: 5
+        dairy:
+          weight: 3
+        bakery:
+          weight: 2
+        snacks:
+          weight: 0
+        beverages:
+          weight: 0
+        meat:
+          weight: 0
+        seafood:
+          weight: 0
+        poultry:
+          weight: 0
+        frozen_foods:
+          weight: 0
+        personal_care:
+          weight: 0
+        household_supplies:
+          weight: 0
+        condiments_seasonings:
+          weight: 0
