@@ -1,5 +1,6 @@
 """
 Centralized configuration loader for all simulation modules.
+Includes validation and error handling for configuration files.
 """
 import yaml
 from pathlib import Path
@@ -7,31 +8,209 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+class ConfigError(Exception):
+    """Raised when configuration is invalid or missing."""
+    pass
+
+
 def load_yaml(path):
-    """Load and parse a YAML file."""
-    with open(path) as f:
-        return yaml.safe_load(f)
+    """
+    Load and parse a YAML file.
+    
+    Args:
+        path: Path object or string to YAML file
+        
+    Returns:
+        Parsed YAML content (dict or list)
+        
+    Raises:
+        ConfigError: If file doesn't exist or YAML is invalid
+    """
+    path = Path(path)
+    
+    if not path.exists():
+        raise ConfigError(f"Configuration file not found: {path}")
+    
+    try:
+        with open(path) as f:
+            data = yaml.safe_load(f)
+        if data is None:
+            raise ConfigError(f"Configuration file is empty: {path}")
+        return data
+    except yaml.YAMLError as e:
+        raise ConfigError(f"Invalid YAML in {path}: {e}")
+    except Exception as e:
+        raise ConfigError(f"Error reading {path}: {e}")
 
 
-# Load all configs once at module level
-_catalog = load_yaml(BASE_DIR / "config/catalog.yaml")["catalog"]
-_tiers = load_yaml(BASE_DIR / "config/tiers.yaml")["tiers"]
-_sim = load_yaml(BASE_DIR / "config/simulation.yaml")["simulation"]
-_date_config = load_yaml(BASE_DIR / "config/date.yaml")["date"]
+def validate_catalog(catalog_dict):
+    """
+    Validate catalog structure.
+    
+    Args:
+        catalog_dict: Catalog configuration dict
+        
+    Raises:
+        ConfigError: If catalog is invalid
+    """
+    if not isinstance(catalog_dict, dict):
+        raise ConfigError("Catalog must be a dictionary of categories")
+    
+    for category, subcats in catalog_dict.items():
+        if not isinstance(subcats, dict):
+            raise ConfigError(f"Category '{category}' must contain subcategories")
+        
+        for subcat, products in subcats.items():
+            if not isinstance(products, dict):
+                raise ConfigError(f"Subcategory '{subcat}' must contain products")
+            
+            for product, attrs in products.items():
+                if not isinstance(attrs, dict) or "base_price" not in attrs:
+                    raise ConfigError(f"Product '{product}' must have 'base_price'")
+                
+                if not isinstance(attrs["base_price"], (int, float)) or attrs["base_price"] <= 0:
+                    raise ConfigError(f"Product '{product}' base_price must be positive number")
+
+
+def validate_tiers(tiers_dict):
+    """
+    Validate tiers configuration structure.
+    
+    Args:
+        tiers_dict: Tiers configuration dict
+        
+    Raises:
+        ConfigError: If tiers are invalid
+    """
+    if not isinstance(tiers_dict, dict) or not tiers_dict:
+        raise ConfigError("Tiers must be a non-empty dictionary")
+    
+    for tier_name, tier_config in tiers_dict.items():
+        if not isinstance(tier_config, dict):
+            raise ConfigError(f"Tier '{tier_name}' configuration must be a dict")
+        
+        # Validate basket config
+        if "basket" in tier_config:
+            basket = tier_config["basket"]
+            if "min_items" in basket and "max_items" in basket:
+                if basket["min_items"] > basket["max_items"]:
+                    raise ConfigError(
+                        f"Tier '{tier_name}': min_items ({basket['min_items']}) "
+                        f"cannot exceed max_items ({basket['max_items']})"
+                    )
+
+
+def validate_date_config(date_dict):
+    """
+    Validate date configuration.
+    
+    Args:
+        date_dict: Date configuration dict
+        
+    Raises:
+        ConfigError: If date config is invalid
+    """
+    if "start_date" not in date_dict or "end_date" not in date_dict:
+        raise ConfigError("Date config must contain 'start_date' and 'end_date'")
+    
+    # Validate date format (basic check)
+    for date_field in ["start_date", "end_date"]:
+        date_str = date_dict[date_field]
+        try:
+            from datetime import datetime
+            datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            raise ConfigError(f"Invalid date format in '{date_field}': {date_str}. Expected YYYY-MM-DD")
+
+
+def _load_and_validate_configs():
+    """
+    Load and validate all configuration files.
+    
+    Returns:
+        Tuple of (catalog, tiers, simulation, date_config)
+        
+    Raises:
+        ConfigError: If any configuration is invalid
+    """
+    try:
+        # Load all configs
+        catalog_data = load_yaml(BASE_DIR / "config/catalog.yaml")
+        tiers_data = load_yaml(BASE_DIR / "config/tiers.yaml")
+        sim_data = load_yaml(BASE_DIR / "config/simulation.yaml")
+        date_data = load_yaml(BASE_DIR / "config/date.yaml")
+        
+        # Extract root keys
+        catalog = catalog_data.get("catalog")
+        tiers = tiers_data.get("tiers")
+        simulation = sim_data.get("simulation")
+        date_config = date_data.get("date")
+        
+        # Validate structure
+        if not catalog:
+            raise ConfigError("'catalog' key missing from catalog.yaml")
+        if not tiers:
+            raise ConfigError("'tiers' key missing from tiers.yaml")
+        if not simulation:
+            raise ConfigError("'simulation' key missing from simulation.yaml")
+        if not date_config:
+            raise ConfigError("'date' key missing from date.yaml")
+        
+        # Validate content
+        validate_catalog(catalog)
+        validate_tiers(tiers)
+        validate_date_config(date_config)
+        
+        return catalog, tiers, simulation, date_config
+        
+    except ConfigError:
+        raise
+    except Exception as e:
+        raise ConfigError(f"Unexpected error loading configuration: {e}")
+
+
+# Load all configs at module level with validation
+try:
+    _catalog, _tiers, _sim, _date_config = _load_and_validate_configs()
+except ConfigError as e:
+    raise SystemExit(f"Configuration Error: {e}")
 
 
 # Public accessors
 def get_catalog():
+    """
+    Get the product catalog.
+    
+    Returns:
+        Dict with structure: category → subcategory → product → base_price
+    """
     return _catalog
 
 
 def get_tiers():
+    """
+    Get customer tier configurations.
+    
+    Returns:
+        Dict with tier names as keys, tier configs as values
+    """
     return _tiers
 
 
 def get_simulation():
+    """
+    Get global simulation defaults.
+    
+    Returns:
+        Dict with simulation settings
+    """
     return _sim
 
 
 def get_date_config():
-    return _date_config
+    """
+    Get date range and transaction volume configuration.
+    
+    Returns:
+        Dict with date settings
+    """
