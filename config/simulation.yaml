@@ -1,24 +1,16 @@
+# Global simulation defaults (can be overridden by tier-specific settings)
 simulation:
-  transaction_volume:
-    weekday_base:
-      monday: 40
-      tuesday: 35
-      wednesday: 45
-      thursday: 35
-      friday: 65
-      saturday: 90
-      sunday: 85
-
-    noise:
-      distribution: poisson
-      multiplier: 1.0
-
+  # Default basket size (used if tier doesn't specify)
   basket:
     min_items: 1
     max_items: 8
 
+  # Default quantity distribution (used if tier doesn't specify)
   quantity_model:
+    # Expected avg units per product (Poisson parameter)
     base_lambda: 1.2
 
+  # Price randomization around base_price
   price_variation:
+    # 8% standard deviation for normal distribution
     std_pct: 0.08

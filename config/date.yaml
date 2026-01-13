@@ -1,0 +1,41 @@
+# Date range and transaction volume configuration
+date:
+  # Simulation date range
+  start_date: "2026-01-01"
+  end_date: "2026-12-31"
+
+  transaction_volume:
+    # Multiplier for transaction volume by month (1.0 = baseline)
+    monthly_rate:
+      january: 1.0
+      february: 0.9
+      march: 1.1
+      april: 1.0
+      may: 1.2
+      june: 1.1
+      july: 1.3
+      august: 1.2
+      september: 1.0
+      october: 1.1
+      november: 1.3
+      december: 1.5
+
+    # Random variation applied to monthly rates
+    monthly_rate_noise:
+      distribution: poisson
+      multiplier: 1.25
+    
+    # Expected transactions per day by weekday
+    weekday_base:
+      monday: 65
+      tuesday: 55
+      wednesday: 60
+      thursday: 50
+      friday: 80
+      saturday: 110
+      sunday: 105
+
+    # Random variation applied to daily transaction counts
+    weekday_rate_noise:
+      distribution: poisson
+      multiplier: 1.15

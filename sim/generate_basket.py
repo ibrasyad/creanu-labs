@@ -1,32 +1,29 @@
-import yaml, random
+"""
+Basket generation module for transaction simulation.
+"""
+import random
 import numpy as np
-from pathlib import Path
+from .config import get_catalog, get_tiers, get_simulation, get_date_config
+from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# ------------------------
-# Load configs once
-# ------------------------
-
-def load_yaml(path):
-    with open(path) as f:
-        return yaml.safe_load(f)
-
-catalog = load_yaml(BASE_DIR / "config/catalog.yaml")["catalog"]
-tiers = load_yaml(BASE_DIR / "config/tiers.yaml")["tiers"]
-sim = load_yaml(BASE_DIR / "config/simulation.yaml")["simulation"]
-
-# ------------------------
-# Helpers
-# ------------------------
-
-def weighted_choice(d):
-    keys = list(d.keys())
-    weights = list(d.values())
-    return random.choices(keys, weights)[0]
+# Cache configs
+_catalog = get_catalog()
+_tiers = get_tiers()
+_sim = get_simulation()
+_date_config = get_date_config()
 
 
 def resolve_basket_config(sim_cfg, tier_cfg):
+    """
+    Resolve basket configuration with tier overrides.
+    
+    Args:
+        sim_cfg: Simulation config dict
+        tier_cfg: Tier config dict
+        
+    Returns:
+        Dict with min_items and max_items
+    """
     sim_basket = sim_cfg["basket"]
     tier_basket = tier_cfg.get("basket", {})
 
@@ -35,73 +32,91 @@ def resolve_basket_config(sim_cfg, tier_cfg):
         "max_items": tier_basket.get("max_items", sim_basket["max_items"]),
     }
 
-def trx_by_day_of_week(day_of_week):
-    return sim['transaction_volume']['weekday_base'][day_of_week]
 
-# ------------------------
-# Main API
-# ------------------------
+def generate_total_trx(date_str):
+    """
+    Calculate total transactions for a given date.
+    
+    Args:
+        date_str: Date string in YYYY-MM-DD format
+        
+    Returns:
+        Number of transactions (int)
+    """
+    weekday = get_day_of_week(date_str)
+    base_trx = _date_config["transaction_volume"]["weekday_base"][weekday]
+    
+    # Apply weekday noise
+    weekday_noise_config = _date_config.get("transaction_volume", {}).get("weekday_rate_noise")
+    base_trx *= apply_noise(base_trx, weekday_noise_config)
+    
+    # Apply monthly rate
+    month = get_month_name(date_str)
+    monthly_rate = _date_config["transaction_volume"]["monthly_rate"][month]
+    
+    # Apply monthly noise
+    monthly_noise_config = _date_config.get("transaction_volume", {}).get("monthly_rate_noise")
+    monthly_rate *= apply_noise(monthly_rate, monthly_noise_config)
+    
+    return int(base_trx * monthly_rate)
+
 
 def generate_basket(tier_name=None, seed=None):
     """
-    Generate a shopping basket.
+    Generate a shopping basket for a customer.
 
     Args:
-        tier_name (str | None): specific tier, or random if None
-        seed (int | None): random seed for reproducibility
-    """
+        tier_name (str | None): Customer tier, or random if None
+        seed (int | None): Random seed for reproducibility
 
+    Returns:
+        List of dicts representing items in the basket
+    """
     if seed is not None:
         random.seed(seed)
         np.random.seed(seed)
 
     # Pick tier
     if tier_name is None:
-        tier_name = random.choice(list(tiers.keys()))
+        tier_name = random.choice(list(_tiers.keys()))
 
-    tier = tiers[tier_name]
+    tier = _tiers[tier_name]
 
-    # Basket size
-    basket_cfg = resolve_basket_config(sim, tier)
-    basket_size = random.randint(
-        basket_cfg["min_items"],
-        basket_cfg["max_items"]
-    )
+    # Determine basket size
+    basket_cfg = resolve_basket_config(_sim, tier)
+    basket_size = random.randint(basket_cfg["min_items"], basket_cfg["max_items"])
 
     basket = []
 
     for _ in range(basket_size):
-
-        # Category
+        # Select category based on tier preferences
         category = weighted_choice(tier["category_weight"])
 
-        # Subcategory
-        subcats = catalog[category]
+        # Select subcategory
+        subcats = _catalog[category]
         sub_weights = tier.get("subcategory_weight", {}).get(category)
-
+        
         if sub_weights:
             subcategory = weighted_choice(sub_weights)
         else:
             subcategory = random.choice(list(subcats))
 
-        # Product
+        # Select product
         products = subcats[subcategory]
         product_name = random.choice(list(products))
         product = products[product_name]
 
-        # Quantity
-        base_lambda = sim["quantity_model"]["base_lambda"]
+        # Calculate quantity
+        base_lambda = tier.get("quantity_model", {}).get("base_lambda") or \
+                      _sim.get("quantity_model", {}).get("base_lambda", 1.0)
         bias = tier.get("quantity_bias", {}).get(category, 1.0)
         quantity = max(1, np.random.poisson(base_lambda * bias))
 
-        # Price
+        # Calculate price with variation
         base_price = product["base_price"]
-        std = sim["price_variation"]["std_pct"]
-        raw_price = base_price * np.random.normal(1, std)
+        price_std = _sim["price_variation"]["std_pct"]
+        raw_price = base_price * np.random.normal(1, price_std)
         unit_price = int(round(max(1, raw_price), -2))
-
-        # cap = tier["price_sensitivity"]["max_multiplier"]
-        # unit_price = int(min(raw_price, base_price * cap))
 
         basket.append({
             "tier": tier_name,
@@ -112,7 +127,9 @@ def generate_basket(tier_name=None, seed=None):
             "unit_price": unit_price,
             "total_price": unit_price * quantity
         })
+    
     return basket
+
 
 if __name__ == "__main__":
     basket = generate_basket()

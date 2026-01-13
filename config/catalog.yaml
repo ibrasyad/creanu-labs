@@ -1,3 +1,4 @@
+# Product catalog structure: category → subcategory → product → base_price (in rupiah)
 catalog:
   vegetables:
     leafy_greens:
