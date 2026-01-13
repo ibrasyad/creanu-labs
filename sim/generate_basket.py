@@ -3,8 +3,18 @@ Basket generation module for transaction simulation.
 """
 import random
 import numpy as np
-from .config import get_catalog, get_tiers, get_simulation, get_date_config
-from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name
+import sys
+from pathlib import Path
+
+# Handle both module import and direct script execution
+try:
+    from .config import get_catalog, get_tiers, get_simulation, get_date_config
+    from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name
+except ImportError:
+    # Allow running as a script
+    sys.path.insert(0, str(Path(__file__).parent))
+    from config import get_catalog, get_tiers, get_simulation, get_date_config
+    from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name
 
 # Cache configs
 _catalog = get_catalog()
@@ -31,6 +41,29 @@ def resolve_basket_config(sim_cfg, tier_cfg):
         "min_items": tier_basket.get("min_items", sim_basket["min_items"]),
         "max_items": tier_basket.get("max_items", sim_basket["max_items"]),
     }
+
+
+def resolve_subcategory_duplicates(sim_cfg, tier_cfg):
+    """
+    Resolve subcategory duplicate rules with tier overrides.
+    
+    Args:
+        sim_cfg: Simulation config dict
+        tier_cfg: Tier config dict
+        
+    Returns:
+        Dict mapping subcategories to boolean (True = allow duplicates)
+    """
+    # Start with simulation defaults
+    defaults = sim_cfg.get("subcategory_allow_duplicates", {})
+    
+    # Apply tier-specific overrides
+    tier_overrides = tier_cfg.get("subcategory_allow_duplicates", {})
+    
+    result = defaults.copy()
+    result.update(tier_overrides)
+    
+    return result
 
 
 def generate_total_trx(date_str):
@@ -86,7 +119,11 @@ def generate_basket(tier_name=None, seed=None):
     basket_cfg = resolve_basket_config(_sim, tier)
     basket_size = random.randint(basket_cfg["min_items"], basket_cfg["max_items"])
 
+    # Get subcategory duplicate rules for this tier
+    dup_rules = resolve_subcategory_duplicates(_sim, tier)
+
     basket = []
+    picked_subcategories = set()
 
     for _ in range(basket_size):
         # Select category based on tier preferences
@@ -100,6 +137,25 @@ def generate_basket(tier_name=None, seed=None):
             subcategory = weighted_choice(sub_weights)
         else:
             subcategory = random.choice(list(subcats))
+
+        # Check if subcategory allows duplicates
+        allows_dup = dup_rules.get(subcategory, True)  # default to allowing
+        if not allows_dup and subcategory in picked_subcategories:
+            # Skip and try again (find a new subcategory)
+            max_retries = 10
+            for _ in range(max_retries):
+                category = weighted_choice(tier["category_weight"])
+                subcats = _catalog[category]
+                sub_weights = tier.get("subcategory_weight", {}).get(category)
+                
+                if sub_weights:
+                    subcategory = weighted_choice(sub_weights)
+                else:
+                    subcategory = random.choice(list(subcats))
+                
+                allows_dup = dup_rules.get(subcategory, True)
+                if allows_dup or subcategory not in picked_subcategories:
+                    break
 
         # Select product
         products = subcats[subcategory]
@@ -120,13 +176,14 @@ def generate_basket(tier_name=None, seed=None):
 
         basket.append({
             "tier": tier_name,
-            "category": category,
-            "subcategory": subcategory,
             "product": product_name,
             "quantity": quantity,
             "unit_price": unit_price,
             "total_price": unit_price * quantity
         })
+
+        # Track this subcategory as picked
+        picked_subcategories.add(subcategory)
     
     return basket
 

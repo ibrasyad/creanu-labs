@@ -6,23 +6,317 @@ catalog:
         base_price: 4000
       kale:
         base_price: 5000
+      lettuce:
+        base_price: 3000
+    root_vegetables:
+      carrots:
+        base_price: 2250
+      potatoes:
+        base_price: 2250
+      beets:
+        base_price: 3250
 
   fruits:
+    citrus:
+      oranges:
+        base_price: 3000
+      lemons:
+        base_price: 4250
+      limes:
+        base_price: 1750
     berries:
       strawberries:
         base_price: 5000
       blueberries:
+        base_price: 5000
+      raspberries:
+        base_price: 4500
+    tropical:
+      mangoes:
+        base_price: 4500
+      pineapples:
         base_price: 5500
+      bananas:
+        base_price: 2000
+    stone_fruits:
+      peaches:
+        base_price: 3500
+      plums:
+        base_price: 3000
+      cherries:
+        base_price: 6500
+    melons:
+      watermelon:
+        base_price: 4500
+      cantaloupe:
+        base_price: 3500
+      honeydew:
+        base_price: 3500
+
+  grains:
+    rice:
+      white_rice_5kg:
+        base_price: 70000
+      brown_rice_1kg:
+        base_price: 80000
+      premium_white_rice_5kg:
+        base_price: 105000
+
+  dairy:
+    milk:
+      whole_milk_1L:
+        base_price: 21500
+      skim_milk_1L:
+        base_price: 25500
+      almond_milk_1L:
+        base_price: 30000
+    cheese:
+      cheddar_cheese_200g:
+        base_price: 37500
+      mozzarella_cheese_200g:
+        base_price: 45000
+    yogurt:
+      greek_yogurt_150g:
+        base_price: 20000
+      flavored_yogurt_150g:
+        base_price: 16000
+    butter:
+      salted_butter_200g:
+        base_price: 20000
+      unsalted_butter_200g:
+        base_price: 22000
+      margarine_200g:
+        base_price: 8500
+    eggs:
+      regular_eggs_10pcs:
+        base_price: 19500
+      organic_eggs_10pcs:
+        base_price: 29500
+
+  bakery:
+    bread:
+      whole_wheat_bread:
+        base_price: 21500
+      white_bread:
+        base_price: 14500
+      multigrain_bread:
+        base_price: 22500
+    pastries:
+      croissant:
+        base_price: 11500
+      danish:
+        base_price: 12500
+      muffin:
+        base_price: 9500
+    cakes:
+      chocolate_cake:
+        base_price: 50000
+      vanilla_cake:
+        base_price: 45000
+      red_velvet_cake:
+        base_price: 57500
+    cookies:
+      chocolate_chip_cookies:
+        base_price: 7500
+      oatmeal_raisin_cookies:
+        base_price: 10000
+      sugar_cookies:
+        base_price: 5000
+    muffins:
+      blueberry_muffin:
+        base_price: 8000
+      banana_nut_muffin:
+        base_price: 9000
+      chocolate_muffin:
+        base_price: 7000
 
   snacks:
     chips:
       potato_chips_150g:
-        base_price: 17000
+        base_price: 16500
+      tortilla_chips_150g:
+        base_price: 18000
+      veggie_chips_150g:
+        base_price: 20500
+    nuts:
+      almonds_200g:
+        base_price: 57500
+      cashews_200g:
+        base_price: 57500
+      mixed_nuts_200g:
+        base_price: 50000
+    granola_bars:
+      honey_granola_bars_100g:
+        base_price: 25000
+      chocolate_granola_bars_100g:
+        base_price: 25000
+      fruit_granola_bars_100g:
+        base_price: 25000
+    popcorn:
+      buttered_popcorn_100g:
+        base_price: 12500
+      cheese_popcorn_100g:
+        base_price: 14500
+      caramel_popcorn_100g:
+        base_price: 17500
+    dried_fruits:
+      dried_mangoes_100g:
+        base_price: 30000
+      dried_apricots_100g:
+        base_price: 25000
+      dried_cranberries_100g:
+        base_price: 27000
 
   beverages:
     soda:
       cola_500mL:
         base_price: 20000
+      lemon_lime_500mL:
+        base_price: 20000
+      orange_soda_500mL:
+        base_price: 20000
+    juice:
+      orange_juice_750mL:
+        base_price: 37500
+      apple_juice_750mL:
+        base_price: 32500
+      mixed_fruit_juice_750mL:
+        base_price: 42500
     water:
-      mineral_water_600mL:
-        base_price: 4000
+      mineral_water_A_600mL:
+        base_price: 3000
+      mineral_water_B_600mL:
+        base_price: 4500
+      mineral_water_C_600mL:
+        base_price: 6000
+    coffee:
+      ground_coffee_250g:
+        base_price: 25000
+      instant_coffee_200g:
+        base_price: 18500
+    tea:
+      black_tea_100g:
+        base_price: 12500
+      green_tea_100g:
+        base_price: 15000
+      jasmine_tea_100g:
+        base_price: 17500
+
+  meat:
+    beef:
+      ground_beef_500g:
+        base_price: 55000
+      beef_steak_300g:
+        base_price: 70000
+      beef_roast_1kg:
+        base_price: 155000
+    lamb:
+      lamb_leg_1kg:
+        base_price: 175000
+      lamb_chop_300g:
+        base_price: 77500
+
+  seafood:
+    fish:
+      salmon_fillet_500g:
+        base_price: 90000
+      dori_fillet_500g:
+        base_price: 42500
+
+  poultry:
+    whole_chicken:
+      whole_chicken_1kg:
+        base_price: 57500
+    chicken_parts:
+      chicken_breast_500g:
+        base_price: 38500
+      chicken_thigh_500g:
+        base_price: 36500
+      chicken_wings_500g:
+        base_price: 30000
+
+  frozen_foods:
+    frozen_vegetables:
+      mixed_vegetables_1kg:
+        base_price: 32500
+      peas_1kg:
+        base_price: 29500
+      corn_1kg:
+        base_price: 29500
+    frozen_meals:
+      frozen_pizza:
+        base_price: 50000
+      frozen_dumplings:
+        base_price: 42500
+      frozen_noodles:
+        base_price: 37500
+
+  personal_care:
+    skincare:
+      facial_cleanser:
+        base_price: 20000
+      moisturizer:
+        base_price: 27500
+      sunscreen:
+        base_price: 32500
+    haircare:
+      shampoo:
+        base_price: 20000
+      conditioner:
+        base_price: 23000
+    oral_care:
+      toothpaste:
+        base_price: 15000
+      toothbrush:
+        base_price: 10000
+
+  household_supplies:
+    cleaning_products:
+      all_purpose_cleaner:
+        base_price: 25000
+      dish_soap:
+        base_price: 18500
+      laundry_detergent:
+        base_price: 37500
+    paper_goods:
+      paper_towels:
+        base_price: 12500
+      toilet_paper:
+        base_price: 15000
+
+  condiments_seasonings:
+    sauces:
+      ketchup:
+        base_price: 12500
+      mustard:
+        base_price: 10000
+      mayonnaise:
+        base_price: 15000
+    spices:
+      black_pepper:
+        base_price: 7500
+      cinnamon:
+        base_price: 9500
+      paprika:
+        base_price: 8500
+    oils:
+      olive_oil_500mL:
+        base_price: 50000
+      vegetable_oil_1L:
+        base_price: 22000
+      coconut_oil_500mL:
+        base_price: 27500
+    dressings:
+      ranch_dressing_250mL:
+        base_price: 18500
+      italian_dressing_250mL:
+        base_price: 17000
+      vinaigrette_250mL:
+        base_price: 16000
+    marinades:
+      teriyaki_marinade_250mL:
+        base_price: 25000
+      barbecue_marinade_250mL:
+        base_price: 23000
+      lemon_herb_marinade_250mL:
+        base_price: 27000

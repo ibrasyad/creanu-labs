@@ -214,3 +214,4 @@ def get_date_config():
     Returns:
         Dict with date settings
     """
+    return _date_config

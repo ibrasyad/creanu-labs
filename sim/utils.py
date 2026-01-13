@@ -101,3 +101,45 @@ def get_month_name(date_str):
         Month name in lowercase (e.g., 'january')
     """
     return parse_date(date_str).strftime("%B").lower()
+
+
+def generate_catalog_csv(output_path="output/catalog.csv"):
+    """
+    Generate a catalog.csv file from catalog.yaml.
+    
+    Flattens the nested catalog structure (category → subcategory → product → base_price)
+    into a CSV with columns: category, subcategory, product, base_price
+    
+    Args:
+        output_path: Path where the CSV file will be saved (default: output/catalog.csv)
+        
+    Returns:
+        List of dicts representing the flattened catalog
+    """
+    from .config import get_catalog
+    import csv
+    
+    catalog = get_catalog()
+    rows = []
+    
+    # Flatten the nested structure
+    for category, subcategories in catalog.items():
+        for subcategory, products in subcategories.items():
+            for product, attrs in products.items():
+                base_price = attrs.get("base_price", 0)
+                rows.append({
+                    "category": category,
+                    "subcategory": subcategory,
+                    "product": product,
+                    "base_price": base_price
+                })
+    
+    # Write to CSV
+    if rows:
+        with open(output_path, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["category", "subcategory", "product", "base_price"])
+            writer.writeheader()
+            writer.writerows(rows)
+    
+    return rows
+
