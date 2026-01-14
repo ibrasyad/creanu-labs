@@ -77,26 +77,30 @@ def roll_new_user_chance(tier_name, date):
     month_name = get_month_name(date)
     day_of_week = get_day_of_week(date)
 
-    # Determine the chance based on day type and add month multiplier
+    # Base chance (weekday vs weekend)
     if day_of_week in ["saturday", "sunday"]:
-        chance = get_daily_new_user_chance_weekend(tier_name) * tier_cfg.get("monthly_new_user_multiplier", {}).get(month_name, 1.0)
+        chance = get_daily_new_user_chance_weekend(tier_name)
     else:
-        chance = get_daily_new_user_chance(tier_name) * tier_cfg.get("monthly_new_user_multiplier", {}).get(month_name, 1.0)
-    
-    # Apply monthly noise
-    noise_cfg = tier_cfg.get("monthly_new_user_noise", None)
+        chance = get_daily_new_user_chance(tier_name)
+
+    # Monthly multiplier
+    chance *= tier_cfg.get("monthly_new_user_multiplier", {}).get(month_name, 1.0)
+
+    # Monthly noise (MULTIPLIER)
+    noise_cfg = tier_cfg.get("monthly_new_user_noise")
     if noise_cfg:
-        noise = apply_noise(chance, noise_cfg)
-        chance = max(0, noise)
-        chance = min(max(chance, 0), 1)
+        chance *= apply_noise(chance, noise_cfg)
+
+    # FINAL CLAMP — probability must live here
+    chance = max(0.0, min(chance, 1.0))
 
     retries = tier_cfg.get("daily_retry", 1)
-    for retry in range(retries):
-        roll = random.random()
-        roll_result = roll < chance
-        if roll_result:
+    for _ in range(retries):
+        if random.random() < chance:
             return True
+
     return False
+
 
 def generate_new_users(roll_result, tier_name, date, base_user_table):
     if not roll_result:
@@ -122,10 +126,12 @@ def generate_users(dates):
     # Generate new users for the date
     new_user_rows = []
     current_user_count = len(base_user_table)
+    tier_names = list(_tiers.keys())
+    random.shuffle(tier_names)
 
     for date in dates:
         date_str = date.strftime("%Y-%m-%d")
-        for tier_name in _tiers.keys():
+        for tier_name in tier_names:
             roll = roll_new_user_chance(tier_name, date_str)
             new_users = generate_new_users(roll, tier_name, date_str, current_user_count)
             if new_users:
