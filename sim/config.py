@@ -123,6 +123,49 @@ def validate_date_config(date_dict):
             raise ConfigError(f"Invalid date format in '{date_field}': {date_str}. Expected YYYY-MM-DD")
 
 
+def _load_tiers_from_directory():
+    """
+    Load all tier configurations from individual YAML files in config/tiers/ directory.
+    
+    Returns:
+        Dict with merged tier configurations
+        
+    Raises:
+        ConfigError: If tier loading fails
+    """
+    tiers_dir = BASE_DIR / "config/tiers"
+    
+    if not tiers_dir.exists():
+        raise ConfigError(f"Tiers directory not found: {tiers_dir}")
+    
+    merged_tiers = {}
+    yaml_files = sorted(tiers_dir.glob("*.yaml"))
+    
+    if not yaml_files:
+        raise ConfigError(f"No YAML files found in {tiers_dir}")
+    
+    for yaml_file in yaml_files:
+        # Skip template file
+        if yaml_file.name.startswith("_"):
+            continue
+        
+        try:
+            tier_data = load_yaml(yaml_file)
+            if isinstance(tier_data, dict):
+                merged_tiers.update(tier_data)
+            else:
+                raise ConfigError(f"Tier file {yaml_file.name} must contain a dictionary")
+        except ConfigError:
+            raise
+        except Exception as e:
+            raise ConfigError(f"Error loading tier file {yaml_file.name}: {e}")
+    
+    if not merged_tiers:
+        raise ConfigError(f"No tier configurations found in {tiers_dir}")
+    
+    return merged_tiers
+
+
 def _load_and_validate_configs():
     """
     Load and validate all configuration files.
@@ -136,13 +179,12 @@ def _load_and_validate_configs():
     try:
         # Load all configs
         catalog_data = load_yaml(BASE_DIR / "config/catalog.yaml")
-        tiers_data = load_yaml(BASE_DIR / "config/tiers.yaml")
+        tiers = _load_tiers_from_directory()
         sim_data = load_yaml(BASE_DIR / "config/simulation.yaml")
         date_data = load_yaml(BASE_DIR / "config/date.yaml")
         
         # Extract root keys
         catalog = catalog_data.get("catalog")
-        tiers = tiers_data.get("tiers")
         simulation = sim_data.get("simulation")
         date_config = date_data.get("date")
         
@@ -150,7 +192,7 @@ def _load_and_validate_configs():
         if not catalog:
             raise ConfigError("'catalog' key missing from catalog.yaml")
         if not tiers:
-            raise ConfigError("'tiers' key missing from tiers.yaml")
+            raise ConfigError("No tiers found in config/tiers/ directory")
         if not simulation:
             raise ConfigError("'simulation' key missing from simulation.yaml")
         if not date_config:

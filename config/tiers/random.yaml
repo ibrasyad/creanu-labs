@@ -1,0 +1,77 @@
+random_tier:
+  # Regular customers, medium-sized baskets
+  base_user: 10
+
+  daily_retry: 7
+  daily_new_user_chance: 0.14
+  daily_new_user_chance_weekend: 0.21
+
+  daily_new_user_noise:
+    distribution: poisson
+    multiplier: 1.15
+  
+  monthly_new_user_multiplier:
+    january: 1.0
+    february: 1.0
+    march: 1.0
+    april: 1.0
+    may: 1.0
+    june: 1.0
+    july: 1.0
+    august: 1.0
+    september: 1.0
+    october: 1.0
+    november: 1.0
+    december: 1.0
+
+  monthly_new_user_noise:
+    distribution: poisson
+    multiplier: 1.25
+  
+  basket:
+    min_items: 1
+    max_items: 4
+
+  category_weight:
+    vegetables: 1.0
+    fruits: 1.0
+    grains: 1.0
+    dairy: 1.0
+    bakery: 1.0
+    snacks: 1.0
+    beverages: 1.0
+    meat: 1.0
+    seafood: 1.0
+    poultry: 1.0
+    frozen_foods: 1.0
+    personal_care: 1.0
+    household_supplies: 1.0
+    condiments_seasonings: 1.0
+  
+  quantity_model:
+    base_lambda: 1.5
+  
+  quantity_bias:
+    vegetables: 1.0
+    fruits: 1.0
+    grains: 1.0
+    dairy: 1.0
+    bakery: 1.0
+    snacks: 1.0
+    beverages: 1.0
+    meat: 1.0
+    seafood: 1.0
+    poultry: 1.0
+    frozen_foods: 1.0
+    personal_care: 1.0
+    household_supplies: 1.0
+    condiments_seasonings: 1.0
+  
+  transaction_weight:
+    monday: 10
+    tuesday: 10
+    wednesday: 10
+    thursday: 10
+    friday: 10
+    saturday: 10
+    sunday: 10
