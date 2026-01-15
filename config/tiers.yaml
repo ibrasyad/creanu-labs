@@ -7,9 +7,9 @@ tiers:
     base_user: 10
 
     # Defines chance of new users everyday being created in this tier. Basic formula: chance per day * days in month
-    daily_retry: 3
-    daily_new_user_chance: 0.15
-    daily_new_user_chance_weekend: 0.25
+    daily_retry: 7
+    daily_new_user_chance: 0.14
+    daily_new_user_chance_weekend: 0.21
 
     daily_new_user_noise:
       distribution: poisson
@@ -105,9 +105,9 @@ tiers:
     base_user: 25
 
     # Defines chance of new users everyday being created in this tier. Basic formula: chance per day * days in month
-    daily_retry: 2
-    daily_new_user_chance: 0.35
-    daily_new_user_chance_weekend: 0.45
+    daily_retry: 4
+    daily_new_user_chance: 0.1
+    daily_new_user_chance_weekend: 0.18
 
     daily_new_user_noise:
       distribution: poisson
@@ -203,8 +203,8 @@ tiers:
 
     # Defines chance of new users everyday being created in this tier. Basic formula: chance per day * days in month * daily retry
     daily_retry: 1
-    daily_new_user_chance: 0.05
-    daily_new_user_chance_weekend: 0.25
+    daily_new_user_chance: 0.04
+    daily_new_user_chance_weekend: 0.14
 
     daily_new_user_noise:
       distribution: poisson

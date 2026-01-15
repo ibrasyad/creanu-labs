@@ -28,9 +28,10 @@ def apply_noise(base_value, noise_config):
     Args:
         base_value: Base numeric value
         noise_config: Dict with 'distribution' and 'multiplier' keys
+                     multiplier represents the variance range (e.g., 1.15 = ±15%)
         
     Returns:
-        Multiplier for the base value (1 + noise)
+        Noise adjustment as a proportion (e.g., 0.85 to 1.15 for multiplier=1.15)
     """
     if not noise_config:
         return 1.0
@@ -39,11 +40,15 @@ def apply_noise(base_value, noise_config):
     multiplier = noise_config.get("multiplier", 1.0)
     
     if distribution == "poisson":
-        noise = np.random.poisson(multiplier)
+        # Poisson centered around lambda, normalized to variance range
+        # E.g., multiplier=1.15 gives roughly ±15% variance
+        raw = np.random.poisson(1)
+        variance = (raw - 1) * (multiplier - 1)
+        return max(0.0, 1 + variance)
     else:
-        noise = np.random.normal(0, multiplier)
-    
-    return 1 + noise
+        # Normal distribution for smooth variance
+        noise = np.random.normal(0, multiplier - 1)
+        return max(0.0, 1 + noise)
 
 
 def parse_date(date_str):

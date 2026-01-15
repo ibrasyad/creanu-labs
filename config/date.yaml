@@ -2,7 +2,7 @@
 date:
   # Simulation date range
   start_date: "2026-01-01"
-  end_date: "2026-03-31"
+  end_date: "2026-02-28"
 
   transaction_volume:
     # Multiplier for transaction volume by month (1.0 = baseline)

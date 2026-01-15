@@ -59,8 +59,8 @@ def get_daily_new_user_chance(tier_name):
     base_chance = tier_cfg.get("daily_new_user_chance", 0)
     noise_cfg = tier_cfg.get("daily_new_user_noise", None)
     if noise_cfg:
-        noise = apply_noise(base_chance, noise_cfg)
-        return max(0, noise)
+        noise_multiplier = apply_noise(base_chance, noise_cfg)
+        return max(0, base_chance * noise_multiplier)
     return base_chance
 
 def get_daily_new_user_chance_weekend(tier_name):
@@ -68,8 +68,8 @@ def get_daily_new_user_chance_weekend(tier_name):
     base_chance = tier_cfg.get("daily_new_user_chance_weekend", 0.0)
     noise_cfg = tier_cfg.get("daily_new_user_noise", None)
     if noise_cfg:
-        noise = apply_noise(base_chance, noise_cfg)
-        return max(0, noise)
+        noise_multiplier = apply_noise(base_chance, noise_cfg)
+        return max(0, base_chance * noise_multiplier)
     return base_chance
 
 def roll_new_user_chance(tier_name, date):
@@ -95,25 +95,27 @@ def roll_new_user_chance(tier_name, date):
     chance = max(0.0, min(chance, 1.0))
 
     retries = tier_cfg.get("daily_retry", 1)
+    successes = 0
     for _ in range(retries):
         if random.random() < chance:
-            return True
+            successes += 1
 
-    return False
+    return successes
 
 
-def generate_new_users(roll_result, tier_name, date, base_user_table):
-    if not roll_result:
+def generate_new_users(num_users, tier_name, date, current_user_count):
+    if not num_users:
         return []
     
-    user_id_counter = base_user_table + 1
     rows = []
-    user_id = generate_user_id(date, user_id_counter)
-    row = {
-        "tier": tier_name,
-        "user_id": user_id,
-    }
-    rows.append(row)
+    for i in range(num_users):
+        user_id_counter = current_user_count + i + 1
+        user_id = generate_user_id(date, user_id_counter)
+        row = {
+            "tier": tier_name,
+            "user_id": user_id,
+        }
+        rows.append(row)
     return rows
 
 def generate_users(dates):
@@ -126,10 +128,10 @@ def generate_users(dates):
     # Generate new users for the date
     new_user_rows = []
     current_user_count = len(base_user_table)
-    tier_names = list(_tiers.keys())
-    random.shuffle(tier_names)
 
     for date in dates:
+        tier_names = list(_tiers.keys())
+        random.shuffle(tier_names)
         date_str = date.strftime("%Y-%m-%d")
         for tier_name in tier_names:
             roll = roll_new_user_chance(tier_name, date_str)
