@@ -3,7 +3,11 @@ Shared utilities for simulation modules.
 """
 import random
 import numpy as np
+import os
+import pandas as pd
 from datetime import datetime, timedelta
+from scipy.stats import lognorm, norm
+from scipy.optimize import brentq
 
 
 def weighted_choice(weights_dict):
@@ -148,3 +152,40 @@ def generate_catalog_csv(output_path="output/catalog.csv"):
     
     return rows
 
+def controlled_random(mean, min_val, max_val, p=0.99):
+    z = norm.ppf(p)
+
+    for _ in range(5):
+        f = lambda s: np.exp(np.log(mean) - 0.5 * s * s + s * z) - max_val
+
+        lo, hi = 0.01, 1.0
+        while hi < 50 and f(lo) * f(hi) > 0:
+            hi *= 2
+
+        if hi < 50:
+            sigma = brentq(f, lo, hi)
+            mu = np.log(mean) - 0.5 * sigma * sigma
+
+            dist = lognorm(s=sigma, scale=np.exp(mu))
+            a, b = dist.cdf(min_val), dist.cdf(max_val)
+
+            return dist.ppf(np.random.uniform(a, b))
+
+        p = min(p + 0.005, 0.999)
+        z = norm.ppf(p)
+
+    sigma = 0.6 * np.log(max_val / mean)
+    mu = np.log(mean) - 0.5 * sigma * sigma
+    return np.clip(np.random.lognormal(mu, sigma), min_val, max_val)
+
+def append_or_create_csv(path, df):
+    # Nothing to write → do nothing
+    if df is None or df.empty:
+        return False  # explicitly signal "no write happened"
+
+    if os.path.exists(path):
+        df.to_csv(path, mode="a", header=False, index=False)
+    else:
+        df.to_csv(path, index=False)
+
+    return True

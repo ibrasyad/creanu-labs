@@ -182,11 +182,13 @@ def _load_and_validate_configs():
         tiers = _load_tiers_from_directory()
         sim_data = load_yaml(BASE_DIR / "config/simulation.yaml")
         date_data = load_yaml(BASE_DIR / "config/date.yaml")
+        funnel_data = load_yaml(BASE_DIR / "config/funnel.yaml")
         
         # Extract root keys
         catalog = catalog_data.get("catalog")
         simulation = sim_data.get("simulation")
         date_config = date_data.get("date")
+        funnel = funnel_data.get("funnel")
         
         # Validate structure
         if not catalog:
@@ -197,13 +199,15 @@ def _load_and_validate_configs():
             raise ConfigError("'simulation' key missing from simulation.yaml")
         if not date_config:
             raise ConfigError("'date' key missing from date.yaml")
+        if not funnel:
+            raise ConfigError("'funnel' key missing from funnel.yaml")
         
         # Validate content
         validate_catalog(catalog)
         validate_tiers(tiers)
         validate_date_config(date_config)
         
-        return catalog, tiers, simulation, date_config
+        return catalog, tiers, simulation, date_config, funnel
         
     except ConfigError:
         raise
@@ -213,7 +217,7 @@ def _load_and_validate_configs():
 
 # Load all configs at module level with validation
 try:
-    _catalog, _tiers, _sim, _date_config = _load_and_validate_configs()
+    _catalog, _tiers, _sim, _date_config, _funnel = _load_and_validate_configs()
 except ConfigError as e:
     raise SystemExit(f"Configuration Error: {e}")
 
@@ -257,3 +261,6 @@ def get_date_config():
         Dict with date settings
     """
     return _date_config
+
+def get_funnel_config():
+    return _funnel

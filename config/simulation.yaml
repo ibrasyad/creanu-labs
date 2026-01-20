@@ -1,5 +1,15 @@
 # Global simulation defaults (can be overridden by tier-specific settings)
 simulation:
+  # Funnel
+  visit_chance:
+    monday: 0.05
+    tuesday: 0.05
+    wednesday: 0.05
+    thursday: 0.05
+    friday: 0.05
+    saturday: 0.08
+    sunday: 0.08
+
   # Default basket size (used if tier doesn't specify)
   basket:
     min_items: 1

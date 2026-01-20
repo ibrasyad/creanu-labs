@@ -3,17 +3,15 @@ import numpy as np
 import sys
 from pathlib import Path
 
-from pandas import date_range
-
 # Handle both module import and direct script execution
 try:
     from .config import get_catalog, get_tiers, get_simulation, get_date_config
-    from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name
+    from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
 except ImportError:
     # Allow running as a script
     sys.path.insert(0, str(Path(__file__).parent))
     from config import get_catalog, get_tiers, get_simulation, get_date_config
-    from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name
+    from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
 
 # Cache configs
 _catalog = get_catalog()
@@ -28,7 +26,7 @@ def get_base_user(tier_name):
 def generate_user_id(date, user_counter):
     # Generate user_id as yyyymmddUUUUUU format
     date_str = date.replace("-", "")
-    user_id = f"{date_str}{user_counter:06d}"
+    user_id = f"{date_str}{user_counter:08d}"
     return user_id
 
 def generate_base_user_table():
@@ -132,7 +130,7 @@ def generate_users(dates):
     for date in dates:
         tier_names = list(_tiers.keys())
         random.shuffle(tier_names)
-        date_str = date.strftime("%Y-%m-%d")
+        date_str = date
         for tier_name in tier_names:
             roll = roll_new_user_chance(tier_name, date_str)
             new_users = generate_new_users(roll, tier_name, date_str, current_user_count)
