@@ -38,6 +38,11 @@ def generate_visit(user_tier, current_date):
         _sim.get('visit_chance',{}).get(f"{day_of_week}", 0.05)
     )
 
+    noise_cfg = tier_config.get("funnel_noise", None)
+    if noise_cfg:
+        noise_multiplier = apply_noise(visit_chance, noise_cfg)
+        visit_chance = max(0, visit_chance * noise_multiplier)
+
     random_num = random.random()
     # print(random_num)
     will_visit = random_num < visit_chance
@@ -196,6 +201,21 @@ def generate_funnel_table(current_date):
     funnel_df["add_to_cart_datetime"] = funnel_df["add_to_cart"].apply(lambda v: current_date if v else None)
     funnel_df["checkout_datetime"] = funnel_df["checkout"].apply(lambda v: current_date if v else None)
     funnel_df["paid_datetime"] = funnel_df["paid"].apply(lambda v: current_date if v else None)
+
+    column_list = ["tier",
+        "user_id",
+        "landing_page",
+        "landing_page_datetime",
+        "product_view",
+        "product_view_datetime",
+        "add_to_cart",
+        "add_to_cart_datetime",
+        "checkout",
+        "checkout_datetime",
+        "paid",
+        "paid_datetime"]
+    
+    funnel_df = funnel_df[column_list]
 
     return funnel_df
 
