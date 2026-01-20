@@ -9,6 +9,20 @@ budget_tier:
     saturday: 0.08
     sunday: 0.08
   
+  monthly_visit_chance_multiplier:
+    january: 1.0
+    february: 1.0
+    march: 1.0
+    april: 1.0
+    may: 1.0
+    june: 1.0
+    july: 1.0
+    august: 1.0
+    september: 1.0
+    october: 1.0
+    november: 1.0
+    december: 1.0
+  
   landing_page:
     conversion_rate: 0.15
     duration:
@@ -114,12 +128,3 @@ budget_tier:
     personal_care: 0.1
     household_supplies: 0.3
     condiments_seasonings: 0.4
-  
-  transaction_weight:
-    monday: 10
-    tuesday: 10
-    wednesday: 10
-    thursday: 10
-    friday: 10
-    saturday: 10
-    sunday: 10

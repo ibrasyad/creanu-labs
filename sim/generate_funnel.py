@@ -30,13 +30,15 @@ def generate_visit(user_tier, current_date):
     tier_config = _tiers[user_tier]
     # date_info = _date_config
     day_of_week = get_day_of_week(current_date)
-    # month_name = get_month_name(current_date)
+    month_name = get_month_name(current_date)
 
     # Determine visit chance
     visit_chance = tier_config.get('visit_chance',{}).get(
         f"{day_of_week}",
         _sim.get('visit_chance',{}).get(f"{day_of_week}", 0.05)
     )
+
+    visit_chance *= tier_config.get("monthly_visit_chance_multiplier", {}).get(month_name, 1.0)
 
     noise_cfg = tier_config.get("funnel_noise", None)
     if noise_cfg:

@@ -69,7 +69,7 @@ def main():
 
     base_user_table = pd.read_csv("output/users_updated.csv")
     current_user_count = len(base_user_table)
-    print(current_user_count)
+    # print(current_user_count)
 
     # Generate dates for the simulation period
     dates = date_range(date_config["start_date"], date_config["end_date"])
@@ -102,8 +102,7 @@ def main():
             funnel_table
             )
 
-    
-    print(len(final_user_table))
+    # print(len(final_user_table))
         
     #     # -------------------
     #     # Generate the basket
@@ -114,15 +113,15 @@ def main():
     #     date_yyyymmdd = date_iso.replace("-", "")
     #     trx_counter = 1
         
-    #     # Build tier weights for this weekday
-    #     tier_weights = {
-    #         tier_name: tier["transaction_weight"][weekday]
-    #         for tier_name, tier in _tiers.items()
-    #     }
+    #     # Build tier weights for this weekday NOT USED ANYMORE
+    #     tier_weights = { NOT USED ANYMORE
+    #         tier_name: tier["transaction_weight"][weekday] NOT USED ANYMORE
+    #         for tier_name, tier in _tiers.items() NOT USED ANYMORE
+    #     } NOT USED ANYMORE
         
     #     # Generate transactions for this day
     #     for trx_counter in range(int(total_trx)):
-    #         tier_name = weighted_choice(tier_weights)
+    #         tier_name = weighted_choice(tier_weights) NOT USED ANYMORE
     #         basket = generate_basket(tier_name=tier_name)
             
     #         # Generate trx_id as yyyymmdd000000 format

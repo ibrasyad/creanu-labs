@@ -7,6 +7,20 @@ premium_tier:
     friday: 0.05
     saturday: 0.15
     sunday: 0.15
+
+  monthly_visit_chance_multiplier:
+    january: 1.0
+    february: 1.0
+    march: 1.0
+    april: 1.0
+    may: 1.0
+    june: 1.0
+    july: 1.0
+    august: 1.0
+    september: 1.0
+    october: 1.0
+    november: 1.0
+    december: 1.0
   
   landing_page:
     conversion_rate: 0.8
