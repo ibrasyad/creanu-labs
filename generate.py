@@ -9,6 +9,22 @@ from sim.utils import date_range, get_day_of_week, weighted_choice, generate_cat
 from sim.generate_user import generate_new_users, roll_new_user_chance, generate_base_user_table
 from sim.generate_funnel import generate_funnel_table
 
+trx_column_list = [
+        "trx_id",
+        "date",
+        "tier",
+        "total_price"
+    ]
+
+trx_item_column_list = [
+        "trx_id",
+        "tier",
+        "date",
+        "product",
+        "quantity",
+        "unit_price",
+        "total_price"
+    ]
 
 def initial_run():
     # Generate the catalog for csv first
@@ -23,26 +39,12 @@ def initial_run():
 
     # -------------------
     # Create EMPTY transaction_item.csv
-    df_transaction_item = pd.DataFrame(columns=[
-        "tier",
-        "product",
-        "quantity",
-        "unit_price",
-        "total_price",
-        "trx_id",
-        "date"
-    ])
+    df_transaction_item = pd.DataFrame(columns=trx_item_column_list)
     df_transaction_item.to_csv("output/transaction_item.csv", index=False)
 
     # -------------------
     # Create EMPTY transaction.csv
-    df_transaction = pd.DataFrame(columns=[
-        "trx_id",
-        "date",
-        "tier",
-        "product",
-        "total_price"
-    ])
+    df_transaction = pd.DataFrame(columns=trx_column_list)
     df_transaction.to_csv("output/transaction.csv", index=False)
 
     # -------------------
@@ -74,10 +76,9 @@ def main():
     # Generate dates for the simulation period
     dates = date_range(date_config["start_date"], date_config["end_date"])
 
-    rows = []
-    new_user_rows = []
-
     for date in dates:
+        rows = []
+        new_user_rows = []
         
         tier_names = list(_tiers.keys())
         random.shuffle(tier_names)
@@ -101,37 +102,47 @@ def main():
             output_funnel,
             funnel_table
             )
+        
+        # -------------------
+        # Generate the basket
+        trx_table = funnel_table[funnel_table["paid"] == "paid"].copy()
+        rename_column = {
+            "paid_datetime": "date", 
+        }
+        trx_table.rename(columns={ rename_column }, inplace=True)
+        
+        # Convert date to yyyymmdd format
+        date_yyyymmdd = date.replace("-", "")
+        
+        output_item = "output/transaction_item.csv"
+        output_trx = "output/transaction.csv"
+        trx_counter = len(pd.read_csv(output_trx))
 
-    # print(len(final_user_table))
+
         
-    #     # -------------------
-    #     # Generate the basket
-    #     weekday = get_day_of_week(date)
-    #     total_trx = generate_total_trx(date)
+        basket = generate_basket(tier_name=tier_name)
         
-    #     # Convert date to yyyymmdd format
-    #     date_yyyymmdd = date_iso.replace("-", "")
-    #     trx_counter = 1
+        # Generate trx_id as yyyymmdd000000 format
+        trx_id = f"{date_yyyymmdd}{trx_counter + 1:06d}"
         
-    #     # Build tier weights for this weekday NOT USED ANYMORE
-    #     tier_weights = { NOT USED ANYMORE
-    #         tier_name: tier["transaction_weight"][weekday] NOT USED ANYMORE
-    #         for tier_name, tier in _tiers.items() NOT USED ANYMORE
-    #     } NOT USED ANYMORE
+        # # Add date and transaction ID to each basket item
+        # for item in basket:
+        #     item["trx_id"] = trx_id
+        #     item["date"] = date
+        #     rows.append(item)
+
+        # df_item = append_or_create_csv(
+        #     output_item, 
+        #     pd.DataFrame(rows)
+        #     )
         
-    #     # Generate transactions for this day
-    #     for trx_counter in range(int(total_trx)):
-    #         tier_name = weighted_choice(tier_weights) NOT USED ANYMORE
-    #         basket = generate_basket(tier_name=tier_name)
-            
-    #         # Generate trx_id as yyyymmdd000000 format
-    #         trx_id = f"{date_yyyymmdd}{trx_counter + 1:06d}"
-            
-    #         # Add date and transaction ID to each basket item
-    #         for item in basket:
-    #             item["trx_id"] = trx_id
-    #             item["date"] = date
-    #             rows.append(item)
+        # append_or_create_csv(
+        #     output_trx, 
+        #     df_item.groupby(["trx_id", "date", "tier"]).agg({
+        #         "product": "nunique",
+        #         "total_price": "sum"
+        #     }).reset_index()
+        #     )
 
     # # Prepare the data
     # output_item = "output/transaction_item.csv"
