@@ -48,6 +48,8 @@ def generate_base_user_table():
         rows.append({
             "tier": tier_name,
             "user_id": user_id,
+            "registered_date": _date_config["start_date"],
+            "last_active_date": _date_config["start_date"]
         })
 
     return rows

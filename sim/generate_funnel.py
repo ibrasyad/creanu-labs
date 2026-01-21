@@ -25,7 +25,7 @@ _funnel = get_funnel_config()
 
 
 
-def generate_visit(user_tier, current_date):
+def generate_visit(user_tier, current_date, decay=1.0):
     """Generate whether a user visits on a given date."""
     # funnel_config = get_funnel_config()
     tier_config = _tiers[user_tier]
@@ -45,6 +45,9 @@ def generate_visit(user_tier, current_date):
     if noise_cfg:
         noise_multiplier = apply_noise(visit_chance, noise_cfg)
         visit_chance = max(0, visit_chance * noise_multiplier)
+    
+    decay_multiplier = decay or 1.0
+    visit_chance *= decay_multiplier
 
     random_num = random.random()
     # print(random_num)
@@ -166,16 +169,56 @@ def advance_datetime(prev_dt, tier, is_continue):
     seconds = generate_duration(tier, is_continue)
     return prev_dt + pd.to_timedelta(seconds, unit="s")
 
+def get_visit_decay_multiplier(days_since_last_visit: int, visit_decay: list) -> float:
+    """
+    Returns decay multiplier based on days since last visit.
+    
+    Logic:
+    - Use the multiplier of the largest `days` threshold
+      that is <= days_since_last_visit
+    - If days_since_last_visit is below the first threshold,
+      use the first multiplier
+    """
+
+    # Safety: sort by days ascending
+    visit_decay = sorted(visit_decay, key=lambda x: x["days"])
+
+    multiplier = visit_decay[0]["multiplier"]
+
+    for rule in visit_decay:
+        if days_since_last_visit >= rule["days"]:
+            multiplier = rule["multiplier"]
+        else:
+            break
+
+    return multiplier
+
+
 def generate_funnel_table(current_date):
     import pandas as pd
+    visit_decay = _sim.get("visit_decay", [])
+    
     base_date = pd.to_datetime(current_date)
 
     funnel_df = pd.read_csv(BASE_DIR / "output/users_updated.csv")
+    funnel_df["last_active_date"] = (
+        pd.to_datetime(funnel_df["last_active_date"], format="mixed")
+        .dt.normalize()
+    )
+    funnel_df["recency"] = (base_date - funnel_df["last_active_date"]).dt.days
+    funnel_df["visit_decay_multiplier"] = funnel_df["recency"].apply(
+        lambda r: get_visit_decay_multiplier(r, visit_decay)
+    )
+
     funnel_order = _funnel.get("funnel_order", [])
 
     # Determine who visits
     funnel_df[funnel_order[0]] = [
-        generate_visit(tier, current_date) for tier in funnel_df["tier"]
+        generate_visit(tier, current_date, decay)
+        for tier, decay in zip(
+            funnel_df["tier"],
+            funnel_df["visit_decay_multiplier"]
+        )
     ]
 
     # Set landing datetime (same for all rows that visited)

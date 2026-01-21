@@ -70,7 +70,7 @@ def main():
     dates = date_range(date_config["start_date"], date_config["end_date"])
 
     for date in dates:
-        rows = []
+        # rows = []
         new_user_rows = []
         
         tier_names = list(_tiers.keys())
@@ -84,6 +84,8 @@ def main():
     
         if new_user_rows:
             new_user_table = pd.DataFrame(new_user_rows)
+            new_user_table["registered_date"] = date
+            new_user_table["last_active_date"] = date
             new_user_table.to_csv("output/users_new.csv", index=False)
             base_user_table = pd.concat([base_user_table, new_user_table], ignore_index=True)
             base_user_table.to_csv("output/users_updated.csv", index=False)
@@ -98,6 +100,40 @@ def main():
             output_funnel,
             funnel_table
             )
+
+        # Users who visited today (landing_page)
+        visited_users = (
+            funnel_table[funnel_table["activity"] == "landing_page"]
+            [["user_id"]]
+            .drop_duplicates()
+        )
+
+        if not visited_users.empty:
+            visited_users["last_active_date"] = date
+        
+        # Update users table for their activity:
+        if not visited_users.empty:
+            base_user_table["last_active_date"] = (
+                pd.to_datetime(base_user_table["last_active_date"], format="mixed")
+                .dt.normalize()
+            )
+
+            base_user_table = base_user_table.merge(
+                visited_users,
+                on="user_id",
+                how="left",
+                suffixes=("", "_new")
+            )
+
+            base_user_table["last_active_date"] = (
+                base_user_table["last_active_date_new"]
+                .combine_first(base_user_table["last_active_date"])
+            )
+
+            base_user_table.drop(columns=["last_active_date_new"], inplace=True)
+
+            # Persist update
+            base_user_table.to_csv("output/users_updated.csv", index=False)
         
         # -------------------
         # Generate the basket
@@ -153,129 +189,6 @@ def main():
 
         output_trx_item = "output/transaction_item.csv"
         append_or_create_csv(output_trx_item, trx_items[trx_item_column_list])
-        
-        # # Convert date to yyyymmdd format
-        # date_yyyymmdd = date.replace("-", "")
-        
-        # output_item = "output/transaction_item.csv"
-        # output_trx = "output/transaction.csv"
-        # trx_counter = len(pd.read_csv(output_trx))
-
-
-        
-        # basket = generate_basket(tier_name=tier_name)
-        
-        # # Generate trx_id as yyyymmdd000000 format
-        # trx_id = f"{date_yyyymmdd}{trx_counter + 1:06d}"
-        
-        # # Add date and transaction ID to each basket item
-        # for item in basket:
-        #     item["trx_id"] = trx_id
-        #     item["date"] = date
-        #     rows.append(item)
-
-        # df_item = append_or_create_csv(
-        #     output_item, 
-        #     pd.DataFrame(rows)
-        #     )
-        
-        # append_or_create_csv(
-        #     output_trx, 
-        #     df_item.groupby(["trx_id", "date", "tier"]).agg({
-        #         "product": "nunique",
-        #         "total_price": "sum"
-        #     }).reset_index()
-        #     )
-
-    # # Prepare the data
-    # output_item = "output/transaction_item.csv"
-    # output_trx = "output/transaction.csv"
-
-    
-    # df_item = append_or_create_csv(
-    #     output_item, 
-    #     pd.DataFrame(rows)
-    #     )
-    
-    # df_trx = append_or_create_csv(
-    #     output_trx, 
-    #     df_item.groupby(["trx_id", "date", "tier"]).agg({
-    #         "product": "nunique",
-    #         "total_price": "sum"
-    #     }).reset_index()
-    #     )
-        
-
-
-
-
-
-
-
-
-# def main():
-#     # Generate the catalog for csv first
-#     generate_catalog_csv()
-
-#     """Generate transaction data and save to CSV."""
-#     date_config = get_date_config()
-#     tiers = get_tiers()
-    
-#     # Generate dates for the simulation period
-#     dates = date_range(date_config["start_date"], date_config["end_date"])
-    
-#     rows = []
-        
-#     for date in dates:
-#         weekday = get_day_of_week(date)
-#         total_trx = generate_total_trx(date)
-        
-#         # Convert date to yyyymmdd format
-#         date_str = date.replace("-", "")
-#         trx_counter = 1
-        
-#         # Build tier weights for this weekday
-#         tier_weights = {
-#             tier_name: tier["transaction_weight"][weekday]
-#             for tier_name, tier in tiers.items()
-#         }
-        
-#         # Generate transactions for this day
-#         for trx_counter in range(int(total_trx)):
-#             tier_name = weighted_choice(tier_weights)
-#             basket = generate_basket(tier_name=tier_name)
-            
-#             # Generate trx_id as yyyymmdd000000 format
-#             trx_id = f"{date_str}{trx_counter + 1:06d}"
-            
-#             # Add date and transaction ID to each basket item
-#             for item in basket:
-#                 item["trx_id"] = trx_id
-#                 item["date"] = date
-#                 rows.append(item)
-    
-#     # Prepare the data
-#     df_item = pd.DataFrame(rows)
-    
-#     df_trx = df_item.groupby(["trx_id", "date", "tier"]).agg({
-#         "product": "nunique",
-#         "total_price": "sum"
-#     }).reset_index()
-
-#     # Save to CSV
-#     df_item.to_csv("output/transaction_item.csv", index=False)
-#     df_trx.to_csv("output/transaction.csv", index=False)
-    
-#     # Print summary
-#     total_trx = df_item["trx_id"].nunique()
-#     print(f"Generated {len(df_item)} line items from {total_trx} transactions")
-    
-#     for tier_name in df_item['tier'].unique():
-#         tier_transaction_count = df_item[df_item['tier'] == tier_name]['trx_id'].nunique()
-#         print(f" - Tier '{tier_name}': {tier_transaction_count} transactions")
-#         tier_basket_count = df_item[df_item['tier'] == tier_name]['trx_id'].count()
-#         print(f"   - Tier '{tier_name}': {tier_basket_count} total item")
-
 
 
 if __name__ == "__main__":

@@ -1,5 +1,30 @@
 # Global simulation defaults (can be overridden by tier-specific settings)
 simulation:
+  # Decay rate
+  visit_decay:
+    - days: 30
+      multiplier: 1
+    - days: 60
+      multiplier: 0.8
+    - days: 90
+      multiplier: 0.75
+    - days: 120
+      multiplier: 0.7
+    - days: 180
+      multiplier: 0.6
+    - days: 210
+      multiplier: 0.5
+    - days: 240
+      multiplier: 0.4
+    - days: 270
+      multiplier: 0.3
+    - days: 300
+      multiplier: 0.2
+    - days: 330
+      multiplier: 0.15
+    - days: 360
+      multiplier: 0.1
+
   # Funnel
   visit_chance:
     monday: 0.05
