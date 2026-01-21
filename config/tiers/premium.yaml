@@ -9,18 +9,18 @@ premium_tier: # Premium customers, larger baskets
     sunday: 0.15
 
   monthly_visit_chance_multiplier:
-    january: 1.0
-    february: 1.0
+    january: 0.7
+    february: 0.9
     march: 1.0
     april: 1.0
-    may: 1.0
-    june: 1.0
+    may: 0.8
+    june: 0.8
     july: 1.0
-    august: 1.0
-    september: 1.0
-    october: 1.0
-    november: 1.0
-    december: 1.0
+    august: 1.1
+    september: 0.8
+    october: 0.7
+    november: 0.8
+    december: 1.1
   
   landing_page:
     conversion_rate: 0.9
