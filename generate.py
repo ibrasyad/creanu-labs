@@ -12,8 +12,7 @@ from sim.generate_funnel import generate_funnel_table
 trx_column_list = [
         "trx_id",
         "date",
-        "tier",
-        "total_price"
+        "tier"
     ]
 
 trx_item_column_list = [
@@ -105,25 +104,73 @@ def main():
         
         # -------------------
         # Generate the basket
-        trx_table = funnel_table[funnel_table["paid"] == "paid"].copy()
+        filter_column = ["paid_datetime", "tier"]
+        trx_table = funnel_table[funnel_table["paid"] == "paid"][filter_column].copy().reset_index(drop=True)
+        
+        if trx_table.empty:
+            continue
+
         rename_column = {
             "paid_datetime": "date", 
         }
-        trx_table.rename(columns={ rename_column }, inplace=True)
-        
-        # Convert date to yyyymmdd format
-        date_yyyymmdd = date.replace("-", "")
-        
-        output_item = "output/transaction_item.csv"
+        trx_table.rename(columns=rename_column, inplace=True)
+
+        # Assignt trx_id
+        trx_table["date"] = pd.to_datetime(trx_table["date"])
+        trx_table["trx_seq"] = (
+            trx_table
+            .groupby(trx_table["date"].dt.date)
+            .cumcount()
+            .add(1)
+        )
+
+        trx_table["trx_id"] = (
+            trx_table["date"].dt.strftime("%Y%m%d") +
+            trx_table["trx_seq"].astype(str).str.zfill(8)
+        )
+        trx_table.drop(columns=["trx_seq"], inplace=True)
         output_trx = "output/transaction.csv"
-        trx_counter = len(pd.read_csv(output_trx))
+
+        append_or_create_csv(output_trx, trx_table)
+
+        # Generate basket per paid transaction
+        trx_table["basket"] = trx_table["tier"].apply(
+            lambda tier: generate_basket(tier_name=tier)
+        )
+
+        # Explode basket items
+        trx_items = (
+            trx_table
+            .explode("basket")
+            .reset_index(drop=True)
+        )
+
+        # Normalize dict → columns
+        basket_cols = pd.json_normalize(trx_items["basket"])
+
+        # Final transaction_item table
+        trx_items = pd.concat(
+            [trx_items.drop(columns=["basket"]), basket_cols],
+            axis=1
+        )
+
+        output_trx_item = "output/transaction_item.csv"
+        append_or_create_csv(output_trx_item, trx_items)
+
+        
+        # # Convert date to yyyymmdd format
+        # date_yyyymmdd = date.replace("-", "")
+        
+        # output_item = "output/transaction_item.csv"
+        # output_trx = "output/transaction.csv"
+        # trx_counter = len(pd.read_csv(output_trx))
 
 
         
-        basket = generate_basket(tier_name=tier_name)
+        # basket = generate_basket(tier_name=tier_name)
         
-        # Generate trx_id as yyyymmdd000000 format
-        trx_id = f"{date_yyyymmdd}{trx_counter + 1:06d}"
+        # # Generate trx_id as yyyymmdd000000 format
+        # trx_id = f"{date_yyyymmdd}{trx_counter + 1:06d}"
         
         # # Add date and transaction ID to each basket item
         # for item in basket:
