@@ -39,3 +39,23 @@ funnel:
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
+  
+  visit_hour_peak:
+    first:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 10
+    second:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 15
+    third:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 20

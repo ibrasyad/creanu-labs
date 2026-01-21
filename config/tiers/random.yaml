@@ -1,4 +1,4 @@
-random_tier:
+random_tier: # Regular customers, medium-sized baskets
   visit_chance:
     monday: 0.04
     tuesday: 0.04
@@ -60,7 +60,27 @@ random_tier:
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
-  # Regular customers, medium-sized baskets
+  
+  visit_hour_peak:
+    first:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 10
+    second:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 15
+    third:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 20
+    
   base_user: 40
 
   daily_retry: 7

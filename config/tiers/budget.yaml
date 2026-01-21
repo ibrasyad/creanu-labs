@@ -1,13 +1,12 @@
-budget_tier:
-  # Price-sensitive, smaller baskets
+budget_tier: # Price-sensitive, smaller baskets
   visit_chance:
-    monday: 0.05
-    tuesday: 0.05
-    wednesday: 0.05
-    thursday: 0.05
-    friday: 0.05
-    saturday: 0.08
-    sunday: 0.08
+    monday: 0.09
+    tuesday: 0.09
+    wednesday: 0.09
+    thursday: 0.09
+    friday: 0.09
+    saturday: 0.14
+    sunday: 0.14
   
   monthly_visit_chance_multiplier:
     january: 1.0
@@ -24,7 +23,7 @@ budget_tier:
     december: 1.0
   
   landing_page:
-    conversion_rate: 0.8
+    conversion_rate: 0.5
     duration:
       min_duration: 5
       max_duration: 1800
@@ -61,6 +60,26 @@ budget_tier:
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
+  
+  visit_hour_peak:
+    first:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 10
+    second:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 15
+    third:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 20
 
   base_user: 45
 

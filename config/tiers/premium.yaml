@@ -1,4 +1,4 @@
-premium_tier:
+premium_tier: # Premium customers, larger baskets
   visit_chance:
     monday: 0.05
     tuesday: 0.05
@@ -60,7 +60,27 @@ premium_tier:
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
-  # Premium customers, larger baskets
+  
+  visit_hour_peak:
+    first:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 10
+    second:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 15
+    third:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 20
+    
   base_user: 15
 
   daily_retry: 1

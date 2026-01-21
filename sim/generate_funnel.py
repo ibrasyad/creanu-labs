@@ -84,17 +84,16 @@ def generate_funnel(user_tier, is_continue):
     # print(next_step)
     return next_step
 
-
 def generate_duration(user_tier, is_continue):
     if not is_continue:
         return None
-    current_step = "landing_page" if is_continue is True else is_continue
+    # current_step = "landing_page" if is_continue is True else is_continue
+    current_step = is_continue
     
-    funnel_config = get_funnel_config()
     tier_config = _tiers[user_tier]
     
     tier_duration = tier_config.get(current_step, {}).get("duration", {})
-    base_duration = funnel_config.get(current_step, {}).get("duration", {})
+    base_duration = _funnel.get(current_step, {}).get("duration", {})
 
     mean_duration = tier_duration.get(
         "avg_duration",
@@ -112,52 +111,70 @@ def generate_duration(user_tier, is_continue):
     # print(duration_funnel)
     return duration_funnel
 
+def choose_visit_hour_peak(visit_hour_peak_cfg):
+    weight_map = {
+        k: v["weight"]
+        for k, v in visit_hour_peak_cfg.items()
+    }
+    return weighted_choice(weight_map)
 
+def sample_hour_from_peak(peak_cfg):
+    hour_cfg = peak_cfg["hour"]
 
-# generate_funnel("budget_tier", True)
+    return int(
+        controlled_random(
+            mean=hour_cfg["avg"],
+            min_val=hour_cfg["min"],
+            max_val=hour_cfg["max"]
+        )
+    )
 
-# def generate_funnel_table(current_date):
-#     import pandas as pd
+def generate_visit_hour(user_tier, step):
+    tier_config = _tiers[user_tier]
+    peak_config = tier_config.get("visit_hour_peak", _funnel.get("visit_hour_peak", {}))
 
-#     funnel_df = pd.read_csv(BASE_DIR / "output/users_updated.csv")
-#     funnel_df["landing_page"] = funnel_df.apply(
-#         lambda df: generate_visit(df["tier"], current_date), axis=1
-#     )
+    if not peak_config:
+        return int(controlled_random(12, 0, 23))
+    
+    peak_key = choose_visit_hour_peak(peak_config)
+    peak = peak_config[peak_key]
 
-#     funnel_df["landing_page_datetime"] = current_date
+    return sample_hour_from_peak(peak)
 
-#     funnel_df = funnel_df[funnel_df["landing_page"] == "landing_page"].copy()
+def generate_landing_datetime(current_date, tier, step):
+    base = pd.to_datetime(current_date)
 
-#     funnel_df["product_view"] = funnel_df.apply(
-#         lambda df: generate_funnel(df["tier"], df["landing_page"]), axis=1
-#     )
+    return (
+        base
+        + pd.to_timedelta(generate_visit_hour(tier, step), unit="h")
+        + pd.to_timedelta(random.randint(0, 59), unit="m")
+        + pd.to_timedelta(random.randint(0, 59), unit="s")
+    )
 
-#     funnel_df["add_to_cart"] = funnel_df.apply(
-#         lambda df: generate_funnel(df["tier"], df["product_view"]), axis=1
-#     )
+def advance_datetime(prev_dt, tier, is_continue):
+    if not is_continue or prev_dt is None:
+        return None
 
-#     funnel_df["checkout"] = funnel_df.apply(
-#         lambda df: generate_funnel(df["tier"], df["add_to_cart"]), axis=1
-#     )
-
-#     funnel_df["paid"] = funnel_df.apply(
-#         lambda df: generate_funnel(df["tier"], df["checkout"]), axis=1
-#     )
-
-#     return funnel_df
+    seconds = generate_duration(tier, is_continue)
+    return prev_dt + pd.to_timedelta(seconds, unit="s")
 
 def generate_funnel_table(current_date):
     import pandas as pd
+    base_date = pd.to_datetime(current_date)
 
     funnel_df = pd.read_csv(BASE_DIR / "output/users_updated.csv")
+    funnel_order = _funnel.get("funnel_order", [])
 
     # Determine who visits
-    funnel_df["landing_page"] = [
+    funnel_df[funnel_order[0]] = [
         generate_visit(tier, current_date) for tier in funnel_df["tier"]
     ]
 
     # Set landing datetime (same for all rows that visited)
-    funnel_df["landing_page_datetime"] = current_date
+    funnel_df[f"{funnel_order[0]}_datetime"] = [
+        generate_landing_datetime(base_date, tier, funnel_order[0]) if visited else None
+        for tier, visited in zip(funnel_df["tier"], funnel_df[funnel_order[0]])
+    ]
 
     # Keep only visitors
     funnel_df = funnel_df[funnel_df["landing_page"] == "landing_page"].copy()
@@ -181,29 +198,27 @@ def generate_funnel_table(current_date):
             ]
         )
 
-    # Use list comprehensions to ensure scalar outputs (avoid .apply returning Series/DataFrame)
-    funnel_df["product_view"] = [
-        generate_funnel(tier, landing) for tier, landing in zip(funnel_df["tier"], funnel_df["landing_page"])
-    ]
+    funnel_order = _funnel.get("funnel_order", [])
+    prev_step = funnel_order[0]
 
-    funnel_df["add_to_cart"] = [
-        generate_funnel(tier, pv) for tier, pv in zip(funnel_df["tier"], funnel_df["product_view"])
-    ]
+    for step in funnel_order[1:]:
+        funnel_df[step] = [
+            generate_funnel(tier, prev_value)
+            for tier, prev_value in zip(
+                funnel_df["tier"], funnel_df[prev_step]
+            )
+        ]
 
-    funnel_df["checkout"] = [
-        generate_funnel(tier, atc) for tier, atc in zip(funnel_df["tier"], funnel_df["add_to_cart"])
-    ]
+        funnel_df[f"{step}_datetime"] = [
+            advance_datetime(prev_dt, tier, prev_value)
+            for prev_dt, tier, prev_value in zip(
+                funnel_df[f"{prev_step}_datetime"],
+                funnel_df["tier"],
+                funnel_df[prev_step]
+            )
+        ]
 
-    funnel_df["paid"] = [
-        generate_funnel(tier, out) for tier, out in zip(funnel_df["tier"], funnel_df["checkout"])
-    ]
-
-    # (Optionally) fill datetime columns for steps that happened. If your generate_duration returns durations,
-    # you can compute datetimes here — for now set to current_date or None as in your original approach:
-    funnel_df["product_view_datetime"] = funnel_df["product_view"].apply(lambda v: current_date if v else None)
-    funnel_df["add_to_cart_datetime"] = funnel_df["add_to_cart"].apply(lambda v: current_date if v else None)
-    funnel_df["checkout_datetime"] = funnel_df["checkout"].apply(lambda v: current_date if v else None)
-    funnel_df["paid_datetime"] = funnel_df["paid"].apply(lambda v: current_date if v else None)
+        prev_step = step
 
     column_list = ["tier",
         "user_id",
