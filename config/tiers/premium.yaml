@@ -23,14 +23,14 @@ premium_tier:
     december: 1.0
   
   landing_page:
-    conversion_rate: 0.8
+    conversion_rate: 0.9
     duration:
       min_duration: 5
       max_duration: 1800
       avg_duration: 190
 
   product_view:
-    conversion_rate: 0.7
+    conversion_rate: 0.8
     duration:
       min_duration: 5
       max_duration: 3600
@@ -61,7 +61,7 @@ premium_tier:
     distribution: poisson
     multiplier: 1.15
   # Premium customers, larger baskets
-  base_user: 10
+  base_user: 15
 
   daily_retry: 1
   daily_new_user_chance: 0.04
@@ -127,12 +127,3 @@ premium_tier:
     personal_care: 1.0
     household_supplies: 1.0
     condiments_seasonings: 1.0
-  
-  transaction_weight:
-    monday: 7
-    tuesday: 7
-    wednesday: 7
-    thursday: 7
-    friday: 7
-    saturday: 30
-    sunday: 30

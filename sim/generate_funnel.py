@@ -2,6 +2,7 @@ import random
 import numpy as np
 import sys
 from pathlib import Path
+import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -220,6 +221,39 @@ def generate_funnel_table(current_date):
     funnel_df = funnel_df[column_list]
 
     return funnel_df
+
+def funnel_wide_to_activity_log(df):
+    if df is None or df.empty:
+        return pd.DataFrame(
+            columns=["tier", "user_id", "activity", "activity_datetime"]
+        )
+
+    df = df.copy()
+
+    steps = [
+        ("landing_page", "landing_page_datetime"),
+        ("product_view", "product_view_datetime"),
+        ("add_to_cart", "add_to_cart_datetime"),
+        ("checkout", "checkout_datetime"),
+        ("paid", "paid_datetime"),
+    ]
+
+    rows = []
+
+    for _, row in df.iterrows():
+        for activity_col, datetime_col in steps:
+            activity = row[activity_col]
+            ts = row[datetime_col]
+
+            if pd.notna(activity) and pd.notna(ts):
+                rows.append({
+                    "tier": row["tier"],
+                    "user_id": row["user_id"],
+                    "activity": activity,
+                    "activity_datetime": ts,
+                })
+
+    return pd.DataFrame(rows)
 
 # date_here = date_range("2025-01-01","2025-02-01")
 # for i in date_here:

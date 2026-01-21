@@ -24,14 +24,14 @@ budget_tier:
     december: 1.0
   
   landing_page:
-    conversion_rate: 0.15
+    conversion_rate: 0.8
     duration:
       min_duration: 5
       max_duration: 1800
       avg_duration: 190
 
   product_view:
-    conversion_rate: 0.25
+    conversion_rate: 0.55
     duration:
       min_duration: 5
       max_duration: 3600
@@ -62,9 +62,9 @@ budget_tier:
     distribution: poisson
     multiplier: 1.15
 
-  base_user: 25
+  base_user: 45
 
-  daily_retry: 4
+  daily_retry: 5
   daily_new_user_chance: 0.1
   daily_new_user_chance_weekend: 0.18
 

@@ -175,7 +175,7 @@ def generate_basket(tier_name=None, seed=None):
         unit_price = int(round(max(1, raw_price), -2))
 
         basket.append({
-            "tier": tier_name,
+            # "tier": tier_name,
             "product": product_name,
             "quantity": quantity,
             "unit_price": unit_price,

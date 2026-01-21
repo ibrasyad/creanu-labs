@@ -7,7 +7,7 @@ from sim.config import get_date_config, get_tiers
 from sim.generate_basket import generate_basket, generate_total_trx
 from sim.utils import date_range, get_day_of_week, weighted_choice, generate_catalog_csv, append_or_create_csv
 from sim.generate_user import generate_new_users, roll_new_user_chance, generate_base_user_table
-from sim.generate_funnel import generate_funnel_table
+from sim.generate_funnel import generate_funnel_table, funnel_wide_to_activity_log
 
 trx_column_list = [
         "trx_id",
@@ -51,16 +51,8 @@ def initial_run():
     df_funnel = pd.DataFrame(columns=[
         "tier",
         "user_id",
-        "landing_page",
-        "landing_page_datetime",
-        "product_view",
-        "product_view_datetime",
-        "add_to_cart",
-        "add_to_cart_datetime",
-        "checkout",
-        "checkout_datetime",
-        "paid",
-        "paid_datetime"
+        "activity",
+        "activity_datetime"
     ])
     df_funnel.to_csv("output/funnel.csv", index=False)
 
@@ -91,12 +83,15 @@ def main():
         if new_user_rows:
             new_user_table = pd.DataFrame(new_user_rows)
             new_user_table.to_csv("output/users_new.csv", index=False)
-            final_user_table = pd.concat([base_user_table, new_user_table], ignore_index=True)
-            final_user_table.to_csv("output/users_updated.csv", index=False)
+            base_user_table = pd.concat([base_user_table, new_user_table], ignore_index=True)
+            base_user_table.to_csv("output/users_updated.csv", index=False)
         
         # Generate funnel here
         output_funnel = "output/funnel.csv"
         funnel_table = generate_funnel_table(date)
+
+        funnel_table = funnel_wide_to_activity_log(funnel_table)
+
         append_or_create_csv(
             output_funnel,
             funnel_table
@@ -104,14 +99,14 @@ def main():
         
         # -------------------
         # Generate the basket
-        filter_column = ["paid_datetime", "tier"]
-        trx_table = funnel_table[funnel_table["paid"] == "paid"][filter_column].copy().reset_index(drop=True)
+        filter_column = ["activity_datetime", "tier"]
+        trx_table = funnel_table[funnel_table["activity"] == "paid"][filter_column].copy().reset_index(drop=True)
         
         if trx_table.empty:
             continue
 
         rename_column = {
-            "paid_datetime": "date", 
+            "activity_datetime": "date", 
         }
         trx_table.rename(columns=rename_column, inplace=True)
 
@@ -125,13 +120,13 @@ def main():
         )
 
         trx_table["trx_id"] = (
-            trx_table["date"].dt.strftime("%Y%m%d") +
+            trx_table["date"].dt.strftime("%Y%m%d") + "-" +
             trx_table["trx_seq"].astype(str).str.zfill(8)
         )
         trx_table.drop(columns=["trx_seq"], inplace=True)
         output_trx = "output/transaction.csv"
 
-        append_or_create_csv(output_trx, trx_table)
+        append_or_create_csv(output_trx, trx_table[trx_column_list])
 
         # Generate basket per paid transaction
         trx_table["basket"] = trx_table["tier"].apply(
@@ -155,8 +150,7 @@ def main():
         )
 
         output_trx_item = "output/transaction_item.csv"
-        append_or_create_csv(output_trx_item, trx_items)
-
+        append_or_create_csv(output_trx_item, trx_items[trx_item_column_list])
         
         # # Convert date to yyyymmdd format
         # date_yyyymmdd = date.replace("-", "")

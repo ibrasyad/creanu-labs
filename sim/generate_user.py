@@ -26,7 +26,7 @@ def get_base_user(tier_name):
 def generate_user_id(date, user_counter):
     # Generate user_id as yyyymmddUUUUUU format
     date_str = date.replace("-", "")
-    user_id = f"{date_str}{user_counter:08d}"
+    user_id = f"{date_str}-{user_counter:08d}"
     return user_id
 
 def generate_base_user_table():
