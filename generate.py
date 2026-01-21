@@ -10,6 +10,7 @@ from sim.generate_user import generate_new_users, roll_new_user_chance, generate
 from sim.generate_funnel import generate_funnel_table, funnel_wide_to_activity_log
 
 trx_column_list = [
+        "session_id",
         "trx_id",
         "date",
         "tier"
@@ -49,6 +50,7 @@ def initial_run():
     # -------------------
     # Create EMPTY funnel.csv
     df_funnel = pd.DataFrame(columns=[
+        "session_id",
         "tier",
         "user_id",
         "activity",
@@ -99,7 +101,7 @@ def main():
         
         # -------------------
         # Generate the basket
-        filter_column = ["activity_datetime", "tier"]
+        filter_column = ["session_id", "activity_datetime", "tier"]
         trx_table = funnel_table[funnel_table["activity"] == "paid"][filter_column].copy().reset_index(drop=True)
         
         if trx_table.empty:

@@ -52,6 +52,14 @@ def generate_visit(user_tier, current_date):
     # print(user_tier, current_date, day_of_week, visit_chance, random_num, will_visit)
     return "landing_page" if will_visit is True else None
 
+def generate_session_ids(df, current_date):
+    date_str = pd.to_datetime(current_date).strftime("%Y%m%d")
+
+    return [
+        f"{date_str}-{i:08d}"
+        for i in range(1, len(df) + 1)
+    ]
+
 def generate_funnel(user_tier, is_continue):
     if not is_continue:
         return None
@@ -179,10 +187,17 @@ def generate_funnel_table(current_date):
     # Keep only visitors
     funnel_df = funnel_df[funnel_df["landing_page"] == "landing_page"].copy()
 
+    # Sort to make session_id deterministic (optional but recommended)
+    funnel_df = funnel_df.sort_values("landing_page_datetime").reset_index(drop=True)
+
+    # Generate session_id
+    funnel_df["session_id"] = generate_session_ids(funnel_df, current_date)
+
     # If nobody visited, return an empty dataframe with the expected columns
     if funnel_df.empty:
         return pd.DataFrame(
             columns=[
+                "session_id",
                 "tier",
                 "user_id",
                 "landing_page",
@@ -220,7 +235,9 @@ def generate_funnel_table(current_date):
 
         prev_step = step
 
-    column_list = ["tier",
+    column_list = [
+        "session_id",
+        "tier",
         "user_id",
         "landing_page",
         "landing_page_datetime",
@@ -240,7 +257,7 @@ def generate_funnel_table(current_date):
 def funnel_wide_to_activity_log(df):
     if df is None or df.empty:
         return pd.DataFrame(
-            columns=["tier", "user_id", "activity", "activity_datetime"]
+            columns=["session_id", "tier", "user_id", "activity", "activity_datetime"]
         )
 
     df = df.copy()
@@ -262,6 +279,7 @@ def funnel_wide_to_activity_log(df):
 
             if pd.notna(activity) and pd.notna(ts):
                 rows.append({
+                    "session_id": row["session_id"],
                     "tier": row["tier"],
                     "user_id": row["user_id"],
                     "activity": activity,
