@@ -13,7 +13,7 @@ budget_tier: # Price-sensitive, smaller baskets
     february: 0.9
     march: 1.0
     april: 0.7
-    may: 0.65
+    may: 0.75
     june: 0.8
     july: 0.9
     august: 1.15
