@@ -129,23 +129,20 @@ def choose_visit_hour_peak(visit_hour_peak_cfg):
     }
     return weighted_choice(weight_map)
 
-def sample_hour_from_peak(peak_cfg):
-    hour_cfg = peak_cfg["hour"]
+def sample_hour_from_peak(peak):
+    avg = peak["hour"]["avg"]
+    min_h = peak["hour"]["min"]
+    max_h = peak["hour"]["max"]
 
-    return int(
-        controlled_random(
-            mean=hour_cfg["avg"],
-            min_val=hour_cfg["min"],
-            max_val=hour_cfg["max"]
-        )
-    )
+    hour = np.random.normal(loc=avg, scale=2)
+    return int(np.clip(round(hour), min_h, max_h))
 
 def generate_visit_hour(user_tier, step):
     tier_config = _tiers[user_tier]
     peak_config = tier_config.get("visit_hour_peak", _funnel.get("visit_hour_peak", {}))
 
     if not peak_config:
-        return int(controlled_random(12, 0, 23))
+        return int(np.clip(round(np.random.normal(loc=19, scale=2)), 0, 23))
     
     peak_key = choose_visit_hour_peak(peak_config)
     peak = peak_config[peak_key]

@@ -2,20 +2,24 @@
 simulation:
   # Decay rate
   visit_decay:
-    - days: 7
+    - days: 0
       multiplier: 1
+    - days: 7
+      multiplier: 0.8
     - days: 14
-      multiplier: 0.7
-    - days: 28
+      multiplier: 0.6
+    - days: 21
       multiplier: 0.5
-    - days: 60
+    - days: 28
       multiplier: 0.4
-    - days: 90
+    - days: 60
       multiplier: 0.3
-    - days: 120
+    - days: 90
       multiplier: 0.2
-    - days: 150
+    - days: 120
       multiplier: 0.1
+    - days: 150
+      multiplier: 0.05
 
   # Funnel
   visit_chance:

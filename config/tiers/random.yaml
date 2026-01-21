@@ -92,18 +92,18 @@ random_tier: # Regular customers, medium-sized baskets
     multiplier: 1.15
   
   monthly_new_user_multiplier:
-    january: 1.0
-    february: 1.0
+    january: 0.8
+    february: 0.9
     march: 1.0
-    april: 1.0
-    may: 1.0
-    june: 1.0
-    july: 1.0
-    august: 1.0
-    september: 1.0
-    october: 1.0
-    november: 1.0
-    december: 1.0
+    april: 0.7
+    may: 0.75
+    june: 0.8
+    july: 0.9
+    august: 1.15
+    september: 0.8
+    october: 0.7
+    november: 0.9
+    december: 1.1
 
   monthly_new_user_noise:
     distribution: poisson
