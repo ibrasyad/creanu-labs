@@ -2,22 +2,27 @@ import random
 import numpy as np
 import sys
 from pathlib import Path
+from datetime import datetime
 
 # Handle both module import and direct script execution
 try:
-    from .config import get_catalog, get_tiers, get_simulation, get_date_config
+    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
     from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
+    from .growth import get_daily_growth_multiplier
 except ImportError:
     # Allow running as a script
     sys.path.insert(0, str(Path(__file__).parent))
-    from config import get_catalog, get_tiers, get_simulation, get_date_config
+    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
     from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
+    from growth import get_daily_growth_multiplier
+    
 
 # Cache configs
 _catalog = get_catalog()
 _tiers = get_tiers()
 _sim = get_simulation()
 _date_config = get_date_config()
+_growth = get_growth_config()
 
 def get_base_user(tier_name):
     base_user = _tiers[tier_name]["base_user"]
@@ -100,7 +105,23 @@ def roll_new_user_chance(tier_name, date):
         if random.random() < chance:
             successes += 1
 
-    return successes
+    # --------------------
+    # APPLY GROWTH (AFTER ROLL)
+    # --------------------
+    simulation_start = _date_config["start_date"]
+    date_obj = datetime.strptime(date, "%Y-%m-%d")
+
+    growth_multiplier = get_daily_growth_multiplier(
+        date=date_obj,
+        simulation_start=datetime.strptime(simulation_start, "%Y-%m-%d"),
+        growth_cfg=_growth,
+        tier_name=tier_name,
+        metric="new_user",
+    )
+
+    adjusted_successes = int(successes * growth_multiplier)
+
+    return adjusted_successes
 
 
 def generate_new_users(num_users, tier_name, date, current_user_count):

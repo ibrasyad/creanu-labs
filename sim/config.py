@@ -183,12 +183,14 @@ def _load_and_validate_configs():
         sim_data = load_yaml(BASE_DIR / "config/simulation.yaml")
         date_data = load_yaml(BASE_DIR / "config/date.yaml")
         funnel_data = load_yaml(BASE_DIR / "config/funnel.yaml")
+        growth_data = load_yaml(BASE_DIR / "config/growth.yaml")
         
         # Extract root keys
         catalog = catalog_data.get("catalog")
         simulation = sim_data.get("simulation")
         date_config = date_data.get("date")
         funnel = funnel_data.get("funnel")
+        growth = growth_data.get("growth")
         
         # Validate structure
         if not catalog:
@@ -201,13 +203,15 @@ def _load_and_validate_configs():
             raise ConfigError("'date' key missing from date.yaml")
         if not funnel:
             raise ConfigError("'funnel' key missing from funnel.yaml")
+        if not growth:
+            raise ConfigError("'growth' key missing from growth.yaml")
         
         # Validate content
         validate_catalog(catalog)
         validate_tiers(tiers)
         validate_date_config(date_config)
         
-        return catalog, tiers, simulation, date_config, funnel
+        return catalog, tiers, simulation, date_config, funnel, growth
         
     except ConfigError:
         raise
@@ -217,7 +221,7 @@ def _load_and_validate_configs():
 
 # Load all configs at module level with validation
 try:
-    _catalog, _tiers, _sim, _date_config, _funnel = _load_and_validate_configs()
+    _catalog, _tiers, _sim, _date_config, _funnel, _growth = _load_and_validate_configs()
 except ConfigError as e:
     raise SystemExit(f"Configuration Error: {e}")
 
@@ -264,3 +268,6 @@ def get_date_config():
 
 def get_funnel_config():
     return _funnel
+
+def get_growth_config():
+    return _growth

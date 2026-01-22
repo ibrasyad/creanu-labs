@@ -8,12 +8,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Handle both module import and direct script execution
 try:
-    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config
+    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config, get_growth_config
     from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, controlled_random, date_range
 except ImportError:
     # Allow running as a script
     sys.path.insert(0, str(Path(__file__).parent))
-    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config
+    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config, get_growth_config
     from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, controlled_random, date_range
 
 # Cache configs
@@ -22,7 +22,7 @@ _tiers = get_tiers()
 _sim = get_simulation()
 _date_config = get_date_config()
 _funnel = get_funnel_config()
-
+_growth = get_growth_config()
 
 
 def generate_visit(user_tier, current_date, decay=1.0):
