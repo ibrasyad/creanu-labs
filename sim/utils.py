@@ -133,7 +133,7 @@ def generate_catalog_csv(output_path="output/catalog.csv"):
     
     # Flatten the nested structure
     for category, subcategories in catalog.items():
-        for subcategory, products in subcategories.items():
+        for subcategory, products in subcategories.get("product", {}).items():
             for product, attrs in products.items():
                 base_price = attrs.get("base_price", 0)
                 rows.append({

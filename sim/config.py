@@ -42,34 +42,90 @@ def load_yaml(path):
     except Exception as e:
         raise ConfigError(f"Error reading {path}: {e}")
 
-
 def validate_catalog(catalog_dict):
     """
     Validate catalog structure.
-    
-    Args:
-        catalog_dict: Catalog configuration dict
-        
-    Raises:
-        ConfigError: If catalog is invalid
+
+    Expected structure:
+    category -> subcategory -> { cooldown, product }
+    product -> product_name -> { base_price }
     """
     if not isinstance(catalog_dict, dict):
         raise ConfigError("Catalog must be a dictionary of categories")
-    
+
     for category, subcats in catalog_dict.items():
         if not isinstance(subcats, dict):
             raise ConfigError(f"Category '{category}' must contain subcategories")
+
+        for subcat_name, subcat_cfg in subcats.items():
+            if not isinstance(subcat_cfg, dict):
+                raise ConfigError(
+                    f"Subcategory '{subcat_name}' in '{category}' must be a dict"
+                )
+
+            # ---- cooldown (optional but must be valid if present)
+            cooldown = subcat_cfg.get("cooldown")
+            if cooldown is not None and (
+                not isinstance(cooldown, int) or cooldown < 0
+            ):
+                raise ConfigError(
+                    f"Subcategory '{subcat_name}' cooldown must be a non-negative int"
+                )
+
+            # ---- product block (required)
+            products = subcat_cfg.get("product")
+            if not isinstance(products, dict) or not products:
+                raise ConfigError(
+                    f"Subcategory '{subcat_name}' must contain a 'product' dict"
+                )
+
+            for product_name, attrs in products.items():
+                if not isinstance(attrs, dict):
+                    raise ConfigError(
+                        f"Product '{product_name}' in '{subcat_name}' must be a dict"
+                    )
+
+                if "base_price" not in attrs:
+                    raise ConfigError(
+                        f"Product '{product_name}' missing 'base_price'"
+                    )
+
+                if (
+                    not isinstance(attrs["base_price"], (int, float))
+                    or attrs["base_price"] <= 0
+                ):
+                    raise ConfigError(
+                        f"Product '{product_name}' base_price must be a positive number"
+                    )
+
+
+# def validate_catalog(catalog_dict):
+#     """
+#     Validate catalog structure.
+    
+#     Args:
+#         catalog_dict: Catalog configuration dict
         
-        for subcat, products in subcats.get("product", {}).items():
-            if not isinstance(products, dict):
-                raise ConfigError(f"Subcategory '{subcat}' must contain products")
+#     Raises:
+#         ConfigError: If catalog is invalid
+#     """
+#     if not isinstance(catalog_dict, dict):
+#         raise ConfigError("Catalog must be a dictionary of categories")
+    
+#     for category, subcats in catalog_dict.items():
+#         if not isinstance(subcats, dict):
+#             raise ConfigError(f"Category '{category}' must contain subcategories")
+        
+#         for subcat, products in subcats.get("product", {}).items():
+#             if not isinstance(products, dict):
+#                 raise ConfigError(f"Subcategory '{subcat}' must contain products")
             
-            for product, attrs in products.items():
-                if not isinstance(attrs, dict) or "base_price" not in attrs:
-                    raise ConfigError(f"Product '{product}' must have 'base_price'")
+#             for product, attrs in products.items():
+#                 if not isinstance(attrs, dict) or "base_price" not in attrs:
+#                     raise ConfigError(f"Product '{product}' must have 'base_price'")
                 
-                if not isinstance(attrs["base_price"], (int, float)) or attrs["base_price"] <= 0:
-                    raise ConfigError(f"Product '{product}' base_price must be positive number")
+#                 if not isinstance(attrs["base_price"], (int, float)) or attrs["base_price"] <= 0:
+#                     raise ConfigError(f"Product '{product}' base_price must be positive number")
 
 
 def validate_tiers(tiers_dict):
@@ -184,6 +240,7 @@ def _load_and_validate_configs():
         date_data = load_yaml(BASE_DIR / "config/date.yaml")
         funnel_data = load_yaml(BASE_DIR / "config/funnel.yaml")
         growth_data = load_yaml(BASE_DIR / "config/growth.yaml")
+        event_data = load_yaml(BASE_DIR / "config/event.yaml")
         
         # Extract root keys
         catalog = catalog_data.get("catalog")
@@ -191,6 +248,7 @@ def _load_and_validate_configs():
         date_config = date_data.get("date")
         funnel = funnel_data.get("funnel")
         growth = growth_data.get("growth")
+        event = event_data.get("event")
         
         # Validate structure
         if not catalog:
@@ -205,13 +263,15 @@ def _load_and_validate_configs():
             raise ConfigError("'funnel' key missing from funnel.yaml")
         if not growth:
             raise ConfigError("'growth' key missing from growth.yaml")
+        if not event:
+            raise ConfigError("'event' key missing from growth.yaml")
         
         # Validate content
         validate_catalog(catalog)
         validate_tiers(tiers)
         validate_date_config(date_config)
         
-        return catalog, tiers, simulation, date_config, funnel, growth
+        return catalog, tiers, simulation, date_config, funnel, growth, event
         
     except ConfigError:
         raise
@@ -221,7 +281,7 @@ def _load_and_validate_configs():
 
 # Load all configs at module level with validation
 try:
-    _catalog, _tiers, _sim, _date_config, _funnel, _growth = _load_and_validate_configs()
+    _catalog, _tiers, _sim, _date_config, _funnel, _growth, _event = _load_and_validate_configs()
 except ConfigError as e:
     raise SystemExit(f"Configuration Error: {e}")
 
@@ -271,3 +331,6 @@ def get_funnel_config():
 
 def get_growth_config():
     return _growth
+
+def get_event_config():
+    return _event

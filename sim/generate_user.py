@@ -6,15 +6,17 @@ from datetime import datetime
 
 # Handle both module import and direct script execution
 try:
-    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
+    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config, get_event_config
     from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
     from .growth import get_growth_multiplier
+    from .event import get_event_multiplier
 except ImportError:
     # Allow running as a script
     sys.path.insert(0, str(Path(__file__).parent))
-    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
+    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config, get_event_config
     from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
     from growth import get_growth_multiplier
+    from event import get_event_multiplier
     
 
 # Cache configs
@@ -23,6 +25,7 @@ _tiers = get_tiers()
 _sim = get_simulation()
 _date_config = get_date_config()
 _growth = get_growth_config()
+_event = get_event_config()
 
 def get_base_user(tier_name):
     base_user = _tiers[tier_name]["base_user"]
@@ -103,7 +106,7 @@ def roll_new_user_chance(tier_name, date):
         chance *= apply_noise(chance, noise_cfg)
 
     # --------------------
-    # APPLY GROWTH (BEFORE ROLL)
+    # APPLY GROWTH
     # --------------------
     simulation_start = datetime.strptime(
         _date_config["start_date"], "%Y-%m-%d"
@@ -119,6 +122,19 @@ def roll_new_user_chance(tier_name, date):
     )
 
     chance *= growth_multiplier
+
+    # --------------------
+    # Apply Event
+    # --------------------
+    year = date_obj.year
+    month = date_obj.month
+    event_mult = get_event_multiplier(
+        year, month,
+        metric="new_user",
+        tier=tier_name
+    )
+
+    chance *= event_mult
 
     # --------------------
     # FINAL CLAMP

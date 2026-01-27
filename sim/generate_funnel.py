@@ -3,18 +3,23 @@ import numpy as np
 import sys
 from pathlib import Path
 import pandas as pd
+from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Handle both module import and direct script execution
 try:
-    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config, get_growth_config
+    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config, get_growth_config, get_event_config
     from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, controlled_random, date_range
+    from .growth import get_growth_multiplier
+    from .event import get_event_multiplier
 except ImportError:
     # Allow running as a script
     sys.path.insert(0, str(Path(__file__).parent))
-    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config, get_growth_config
+    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_funnel_config, get_growth_config, get_event_config
     from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, controlled_random, date_range
+    from growth import get_growth_multiplier
+    from event import get_event_multiplier
 
 # Cache configs
 _catalog = get_catalog()
@@ -23,6 +28,7 @@ _sim = get_simulation()
 _date_config = get_date_config()
 _funnel = get_funnel_config()
 _growth = get_growth_config()
+_event = get_event_config()
 
 
 def generate_visit(user_tier, current_date, decay=1.0):
@@ -49,6 +55,33 @@ def generate_visit(user_tier, current_date, decay=1.0):
     decay_multiplier = decay or 1.0
     visit_chance *= decay_multiplier
 
+    # Apply Growth
+    simulation_start = datetime.strptime(
+        _date_config["start_date"], "%Y-%m-%d"
+    )
+    date_obj = datetime.strptime(current_date, "%Y-%m-%d")
+
+    growth_multiplier = get_growth_multiplier(
+        date=date_obj,
+        simulation_start=simulation_start,
+        growth_cfg=_growth,
+        tier_name=user_tier,
+        metric="visit",
+    )
+
+    visit_chance *= growth_multiplier
+
+    # Apply Event
+    year = date_obj.year
+    month = date_obj.month
+    event_mult = get_event_multiplier(
+        year, month,
+        metric="new_user",
+        tier=user_tier
+    )
+
+    visit_chance *= event_mult
+
     random_num = random.random()
     # print(random_num)
     will_visit = random_num < visit_chance
@@ -63,7 +96,7 @@ def generate_session_ids(df, current_date):
         for i in range(1, len(df) + 1)
     ]
 
-def generate_funnel(user_tier, is_continue):
+def generate_funnel(user_tier, is_continue, current_date):
     if not is_continue:
         return None
     current_step = "landing_page" if is_continue is True else is_continue
@@ -81,6 +114,33 @@ def generate_funnel(user_tier, is_continue):
     if noise_cfg:
         noise_multiplier = apply_noise(base_chance, noise_cfg)
         base_chance = max(0, base_chance * noise_multiplier)
+
+    # Apply Growth
+    simulation_start = datetime.strptime(
+        _date_config["start_date"], "%Y-%m-%d"
+    )
+    date_obj = datetime.strptime(current_date, "%Y-%m-%d")
+
+    growth_multiplier = get_growth_multiplier(
+        date=date_obj,
+        simulation_start=simulation_start,
+        growth_cfg=_growth,
+        tier_name=user_tier,
+        metric="conversion",
+    )
+
+    base_chance *= growth_multiplier
+
+    # Apply Event
+    year = date_obj.year
+    month = date_obj.month
+    event_mult = get_event_multiplier(
+        year, month,
+        metric="new_user",
+        tier=user_tier
+    )
+
+    base_chance *= event_mult
     
     random_num = random.random()
     # print(random_num)
@@ -258,7 +318,7 @@ def generate_funnel_table(current_date):
 
     for step in funnel_order[1:]:
         funnel_df[step] = [
-            generate_funnel(tier, prev_value)
+            generate_funnel(tier, prev_value, current_date)
             for tier, prev_value in zip(
                 funnel_df["tier"], funnel_df[prev_step]
             )

@@ -39,6 +39,14 @@ def resolve_year_key(year, yearly_cfg):
         return "year_8_plus"
     return None
 
+def get_nested(cfg, *keys):
+    val = cfg
+    for k in keys:
+        if val is None:
+            return None
+        val = val.get(k)
+    return val
+
 
 def get_growth_multiplier(
     *,
@@ -54,20 +62,18 @@ def get_growth_multiplier(
     if year_key not in growth_cfg["yearly"]:
         year_key = "year_8_plus"
 
-    base = growth_cfg["base"]
-    yearly = growth_cfg["yearly"][year_key]
-
-    def pick(cfg, *keys, default=1.0):
-        val = cfg
-        for k in keys:
-            if val is None:
-                return default
-            val = val.get(k)
-        return default if val is None else val
+    yearly = growth_cfg["yearly"].get(year_key, {})
+    base = growth_cfg.get("base", {})
 
     return (
-        pick(base, "overall", metric) *
-        pick(base, "tiers", tier_name, metric) *
-        pick(yearly, "overall", metric) *
-        pick(yearly, "tiers", tier_name, metric)
+        # 1️⃣ yearly tier
+        get_nested(yearly, "tiers", tier_name, metric)
+        # 2️⃣ yearly overall
+        or get_nested(yearly, "overall", metric)
+        # 3️⃣ base tier
+        or get_nested(base, "tiers", tier_name, metric)
+        # 4️⃣ base overall
+        or get_nested(base, "overall", metric)
+        # 5️⃣ default
+        or 1.0
     )
