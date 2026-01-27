@@ -60,7 +60,7 @@ def validate_catalog(catalog_dict):
         if not isinstance(subcats, dict):
             raise ConfigError(f"Category '{category}' must contain subcategories")
         
-        for subcat, products in subcats.items():
+        for subcat, products in subcats.get("product", {}).items():
             if not isinstance(products, dict):
                 raise ConfigError(f"Subcategory '{subcat}' must contain products")
             

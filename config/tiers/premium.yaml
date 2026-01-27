@@ -1,4 +1,4 @@
-premium_tier: # Premium customers, larger baskets
+premium: # Premium customers, larger baskets
   visit_chance:
     monday: 0.05
     tuesday: 0.05
@@ -81,9 +81,9 @@ premium_tier: # Premium customers, larger baskets
         max: 23
         avg: 20
     
-  base_user: 15
+  base_user: 4
 
-  daily_retry: 1
+  daily_retry: 2
   daily_new_user_chance: 0.04
   daily_new_user_chance_weekend: 0.14
 

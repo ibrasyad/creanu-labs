@@ -5,6 +5,7 @@ import random
 import numpy as np
 import sys
 from pathlib import Path
+from datetime import datetime
 
 # Handle both module import and direct script execution
 try:
@@ -93,6 +94,65 @@ def generate_total_trx(date_str):
     
     return int(base_trx * monthly_rate)
 
+def get_subcategory_cooldown(category, subcategory):
+    return _catalog[category][subcategory].get("cooldown", 1)
+
+
+def is_subcategory_under_cooldown(
+    customer_id,
+    category,
+    subcategory,
+    current_date,
+    purchase_history_df,
+    catalog
+):
+    cooldown_days = get_subcategory_cooldown(catalog, category, subcategory)
+
+    if cooldown_days <= 0 or purchase_history_df is None:
+        return False
+
+    history = purchase_history_df[
+        (purchase_history_df["customer_id"] == customer_id) &
+        (purchase_history_df["subcategory"] == subcategory)
+    ]
+
+    if history.empty:
+        return False
+
+    last_purchase = history["last_purchase_date"].max()
+    days_since = (current_date - last_purchase).days
+
+    return days_since < cooldown_days
+
+
+def pick_available_subcategory(
+    customer_id,
+    category,
+    tier,
+    current_date,
+    purchase_history_df,
+    max_retries=10
+):
+    subcats = _catalog[category]
+    sub_weights = tier.get("subcategory_weight", {}).get(category)
+
+    for _ in range(max_retries):
+        if sub_weights:
+            subcategory = weighted_choice(sub_weights)
+        else:
+            subcategory = random.choice(list(subcats))
+
+        if not is_subcategory_under_cooldown(
+            customer_id,
+            category,
+            subcategory,
+            current_date,
+            purchase_history_df,
+            _catalog
+        ):
+            return subcategory
+
+    return None
 
 def generate_basket(tier_name=None, seed=None):
     """
@@ -139,26 +199,28 @@ def generate_basket(tier_name=None, seed=None):
             subcategory = random.choice(list(subcats))
 
         # Check if subcategory allows duplicates
-        allows_dup = dup_rules.get(subcategory, True)  # default to allowing
-        if not allows_dup and subcategory in picked_subcategories:
-            # Skip and try again (find a new subcategory)
+        cooldown = get_subcategory_cooldown(category, subcategory)
+        # cooldown > 1 means "do not repeat in same basket"
+        if cooldown > 1 and subcategory in picked_subcategories:
             max_retries = 10
             for _ in range(max_retries):
                 category = weighted_choice(tier["category_weight"])
                 subcats = _catalog[category]
                 sub_weights = tier.get("subcategory_weight", {}).get(category)
-                
+
                 if sub_weights:
                     subcategory = weighted_choice(sub_weights)
                 else:
                     subcategory = random.choice(list(subcats))
-                
+
+                cooldown = get_subcategory_cooldown(category, subcategory)
                 allows_dup = dup_rules.get(subcategory, True)
-                if allows_dup or subcategory not in picked_subcategories:
+
+                if (cooldown <= 1) or (subcategory not in picked_subcategories):
                     break
 
         # Select product
-        products = subcats[subcategory]
+        products = subcats[subcategory].get("product", {})
         product_name = random.choice(list(products))
         product = products[product_name]
 

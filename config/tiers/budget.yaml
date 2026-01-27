@@ -1,4 +1,4 @@
-budget_tier: # Price-sensitive, smaller baskets
+budget: # Price-sensitive, smaller baskets
   visit_chance:
     monday: 0.09
     tuesday: 0.09
@@ -81,7 +81,7 @@ budget_tier: # Price-sensitive, smaller baskets
         max: 23
         avg: 20
 
-  base_user: 45
+  base_user: 8
 
   daily_retry: 5
   daily_new_user_chance: 0.1

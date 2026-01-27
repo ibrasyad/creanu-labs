@@ -8,13 +8,13 @@ from datetime import datetime
 try:
     from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
     from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
-    from .growth import get_daily_growth_multiplier
+    from .growth import get_growth_multiplier
 except ImportError:
     # Allow running as a script
     sys.path.insert(0, str(Path(__file__).parent))
     from config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
     from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
-    from growth import get_daily_growth_multiplier
+    from growth import get_growth_multiplier
     
 
 # Cache configs
@@ -82,46 +82,60 @@ def roll_new_user_chance(tier_name, date):
     month_name = get_month_name(date)
     day_of_week = get_day_of_week(date)
 
-    # Base chance (weekday vs weekend)
+    # --------------------
+    # BASE CHANCE
+    # --------------------
     if day_of_week in ["saturday", "sunday"]:
         chance = get_daily_new_user_chance_weekend(tier_name)
     else:
         chance = get_daily_new_user_chance(tier_name)
 
-    # Monthly multiplier
+    # --------------------
+    # MONTHLY SEASONALITY
+    # --------------------
     chance *= tier_cfg.get("monthly_new_user_multiplier", {}).get(month_name, 1.0)
 
-    # Monthly noise (MULTIPLIER)
+    # --------------------
+    # MONTHLY NOISE
+    # --------------------
     noise_cfg = tier_cfg.get("monthly_new_user_noise")
     if noise_cfg:
         chance *= apply_noise(chance, noise_cfg)
 
-    # FINAL CLAMP — probability must live here
-    chance = max(0.0, min(chance, 1.0))
-
-    retries = tier_cfg.get("daily_retry", 1)
-    successes = 0
-    for _ in range(retries):
-        if random.random() < chance:
-            successes += 1
-
     # --------------------
-    # APPLY GROWTH (AFTER ROLL)
+    # APPLY GROWTH (BEFORE ROLL)
     # --------------------
-    simulation_start = _date_config["start_date"]
+    simulation_start = datetime.strptime(
+        _date_config["start_date"], "%Y-%m-%d"
+    )
     date_obj = datetime.strptime(date, "%Y-%m-%d")
 
-    growth_multiplier = get_daily_growth_multiplier(
+    growth_multiplier = get_growth_multiplier(
         date=date_obj,
-        simulation_start=datetime.strptime(simulation_start, "%Y-%m-%d"),
+        simulation_start=simulation_start,
         growth_cfg=_growth,
         tier_name=tier_name,
         metric="new_user",
     )
 
-    adjusted_successes = int(successes * growth_multiplier)
+    chance *= growth_multiplier
 
-    return adjusted_successes
+    # --------------------
+    # FINAL CLAMP
+    # --------------------
+    chance = max(0.0, min(chance, 1.0))
+
+    # --------------------
+    # BERNOULLI TRIALS
+    # --------------------
+    retries = tier_cfg.get("daily_retry", 1)
+    successes = 0
+
+    for _ in range(retries):
+        if random.random() < chance:
+            successes += 1
+
+    return successes
 
 
 def generate_new_users(num_users, tier_name, date, current_user_count):

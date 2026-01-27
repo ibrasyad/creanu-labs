@@ -1,0 +1,57 @@
+events:
+  - name: "Launch Campaign"
+    description: "Initial marketing push after launch"
+    year: 1
+    months: [1, 2]
+    overall:
+      new_user: 1.4
+      visit: 1.2
+    tiers:
+      budget:
+        new_user: 1.5
+      premium:
+        conversion: 1.1
+
+  - name: "New Year Promotion"
+    description: "Annual New Year traffic spike"
+    year: 2
+    months: [1]
+    overall:
+      visit: 1.3
+    tiers:
+      budget:
+        visit: 1.4
+        conversion: 1.2
+
+  - name: "Premium Landing Page A/B Test"
+    description: "Improved premium landing page"
+    year: 3
+    months: [6, 7, 8]
+    tiers:
+      premium:
+        conversion: 1.2
+
+  - name: "Economic Downturn"
+    description: "Macroeconomic slowdown"
+    year: 4
+    months: [3, 4, 5]
+    overall:
+      new_user: 0.7
+      visit: 0.85
+
+  - name: "Competitor Price War"
+    description: "Aggressive discounting in budget segment"
+    year: 5
+    months: [9, 10]
+    tiers:
+      budget:
+        conversion: 1.3
+        new_user: 0.9
+
+  - name: "Platform UX Regression"
+    description: "Bad release hurts engagement"
+    year: 6
+    months: [2]
+    overall:
+      visit: 0.8
+      conversion: 0.85

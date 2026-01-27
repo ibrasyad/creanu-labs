@@ -4,10 +4,20 @@ growth:
       new_user: 1.0
       visit: 1.0
       conversion: 1.0
+
     tiers:
-      budget: 1.0
-      premium: 1.0
-      random: 1.0
+      budget:
+        new_user: 1.0
+        visit: 1.0
+        conversion: 1.0
+      premium:
+        new_user: 1.0
+        visit: 1.0
+        conversion: 1.0
+      random:
+        new_user: 1.0
+        visit: 1.0
+        conversion: 1.0
 
   yearly:
     # -------------------------
@@ -15,91 +25,181 @@ growth:
     # -------------------------
     year_1:
       overall:
-        new_user: 1.35        # aggressive acquisition
+        new_user: 1.35
+        visit: 0.85
+        conversion: 1.00
+
       tiers:
-        budget: 1.4           # mass-market focus
-        premium: 1.1
-        random: 1.0
+        budget:
+          new_user: 1.45
+          visit: 1.20
+          conversion: 0.95
+        premium:
+          new_user: 1.10
+          visit: 1.05
+          conversion: 1.05
+        random:
+          new_user: 1.00
+          visit: 1.00
+          conversion: 1.00
 
     # -------------------------
-    # YEAR 2 — Still growing, but learning
+    # YEAR 2 — Still growing, learning efficiency
     # -------------------------
     year_2:
       overall:
-        new_user: 1.20
+        new_user: 1.25
+        visit: 0.90
+        conversion: 0.85
+
       tiers:
-        budget: 1.25
-        premium: 1.15
-        random: 1.0
+        budget:
+          new_user: 1.10        # saturation begins
+          visit: 1.25           # promo-heavy
+          conversion: 1.15
+        premium:
+          new_user: 1.20
+          visit: 1.10
+          conversion: 1.15
+        random:
+          new_user: 1.00
+          visit: 1.00
+          conversion: 1.00
 
     # -------------------------
     # YEAR 3 — Strategic shift: premium push
     # -------------------------
     year_3:
       overall:
-        new_user: 0.90        # growth slows due to focus shift
-        visit: 0.95
+        new_user: 0.90
+        visit: 1.45
+        conversion: 1.05
+
       tiers:
-        budget: 0.75          # deprioritized
-        premium: 1.45         # strong premium acceleration
-        random: 0.85
+        budget:
+          new_user: 0.60        # acquisition deprioritized
+          visit: 1.10           # existing users still active
+          conversion: 1.20
+        premium:
+          new_user: 1.50
+          visit: 1.25
+          conversion: 1.30
+        random:
+          new_user: 0.85
+          visit: 0.95
+          conversion: 1.00
 
     # -------------------------
     # YEAR 4 — Correction & rebalance
     # -------------------------
     year_4:
       overall:
-        new_user: 1.00        # stabilizes
-        visit: 1.00
+        new_user: 1.10
+        visit: 1.55
+        conversion: 1.15
+
       tiers:
-        budget: 1.05
-        premium: 1.20         # still growing, but less hype-driven
-        random: 1.0
+        budget:
+          new_user: 1.00
+          visit: 1.10
+          conversion: 1.10
+        premium:
+          new_user: 1.20
+          visit: 1.15
+          conversion: 1.15
+        random:
+          new_user: 1.00
+          visit: 1.00
+          conversion: 1.00
 
     # -------------------------
-    # YEAR 5 — Market saturation begins
+    # YEAR 5 — Market saturation
     # -------------------------
     year_5:
       overall:
         new_user: 0.85
-        visit: 0.95
+        visit: 1.15
+        conversion: 1.00
+
       tiers:
-        budget: 0.95
-        premium: 1.05
-        random: 0.95
+        budget:
+          new_user: 0.85
+          visit: 1.00
+          conversion: 1.05
+        premium:
+          new_user: 1.05
+          visit: 1.05
+          conversion: 1.10
+        random:
+          new_user: 0.95
+          visit: 0.95
+          conversion: 1.00
 
     # -------------------------
     # YEAR 6 — Efficiency mode
     # -------------------------
     year_6:
       overall:
-        new_user: 0.80
-        visit: 0.95
+        new_user: 0.95
+        visit: 1.35
+        conversion: 1.05
+
       tiers:
-        budget: 0.90
-        premium: 1.00
-        random: 0.95
+        budget:
+          new_user: 0.80
+          visit: 0.95
+          conversion: 1.05
+        premium:
+          new_user: 0.95
+          visit: 1.05
+          conversion: 1.10
+        random:
+          new_user: 0.95
+          visit: 0.95
+          conversion: 1.00
 
     # -------------------------
     # YEAR 7 — Mature product
     # -------------------------
     year_7:
       overall:
-        new_user: 0.75
-        visit: 0.90
+        new_user: 0.85
+        visit: 1.25
+        conversion: 1.00
+
       tiers:
-        budget: 0.85
-        premium: 0.95
-        random: 0.90
+        budget:
+          new_user: 0.75
+          visit: 0.90
+          conversion: 1.00
+        premium:
+          new_user: 0.90
+          visit: 0.95
+          conversion: 1.05
+        random:
+          new_user: 0.90
+          visit: 0.90
+          conversion: 1.00
 
     # -------------------------
     # YEAR 8+ — Long-term steady state
     # -------------------------
     year_8_plus:
       overall:
-        new_user: 0.65
-        visit: 0.85
+        new_user: 0.95
+        visit: 1.35
+        conversion: 1.00
+
       tiers:
-        budget: 0.80
-        premium: 0.90
-        random: 0.90
+        budget:
+          new_user: 0.70
+          visit: 0.85
+          conversion: 1.00
+        premium:
+          new_user: 0.85
+          visit: 0.90
+          conversion: 1.05
+        random:
+          new_user: 0.90
+          visit: 0.85
+          conversion: 1.00

@@ -21,12 +21,14 @@ _sim = get_simulation()
 _date_config = get_date_config()
 _growth = get_growth_config()
 
-DAYS_IN_YEAR = 365
 
-
-def get_simulation_year(current_date, simulation_start):
-    delta_days = (current_date - simulation_start).days
-    return delta_days // DAYS_IN_YEAR + 1
+def get_simulation_year(date, simulation_start):
+    """
+    Year 1 = simulation_start.year
+    Year 2 = simulation_start.year + 1
+    etc.
+    """
+    return date.year - simulation_start.year + 1
 
 
 def resolve_year_key(year, yearly_cfg):
@@ -38,44 +40,34 @@ def resolve_year_key(year, yearly_cfg):
     return None
 
 
-def get_daily_growth_multiplier(
+def get_growth_multiplier(
     *,
     date,
     simulation_start,
     growth_cfg,
     tier_name,
-    metric="new_user",
+    metric,
 ):
-    """
-    Returns DAILY multiplier derived from YEARLY intent
-    """
+    sim_year = date.year - simulation_start.year + 1
 
-    year = get_simulation_year(date, simulation_start)
-    yearly_cfg = growth_cfg.get("yearly", {})
+    year_key = f"year_{sim_year}"
+    if year_key not in growth_cfg["yearly"]:
+        year_key = "year_8_plus"
 
-    year_key = resolve_year_key(year, yearly_cfg)
-    if not year_key:
-        return 1.0
+    base = growth_cfg["base"]
+    yearly = growth_cfg["yearly"][year_key]
 
-    year_block = yearly_cfg[year_key]
+    def pick(cfg, *keys, default=1.0):
+        val = cfg
+        for k in keys:
+            if val is None:
+                return default
+            val = val.get(k)
+        return default if val is None else val
 
-    # ---- overall yearly intent
-    overall_yearly = (
-        year_block
-        .get("overall", {})
-        .get(metric, 1.0)
+    return (
+        pick(base, "overall", metric) *
+        pick(base, "tiers", tier_name, metric) *
+        pick(yearly, "overall", metric) *
+        pick(yearly, "tiers", tier_name, metric)
     )
-
-    # ---- tier yearly intent
-    tier_yearly = (
-        year_block
-        .get("tiers", {})
-        .get(tier_name, 1.0)
-    )
-
-    yearly_multiplier = overall_yearly * tier_yearly
-
-    # Convert annual intent → daily-safe multiplier
-    daily_multiplier = yearly_multiplier ** (1 / DAYS_IN_YEAR)
-
-    return daily_multiplier

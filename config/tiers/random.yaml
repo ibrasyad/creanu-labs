@@ -1,4 +1,4 @@
-random_tier: # Regular customers, medium-sized baskets
+random: # Regular customers, medium-sized baskets
   visit_chance:
     monday: 0.04
     tuesday: 0.04
@@ -81,9 +81,9 @@ random_tier: # Regular customers, medium-sized baskets
         max: 23
         avg: 20
     
-  base_user: 40
+  base_user: 10
 
-  daily_retry: 7
+  daily_retry: 6
   daily_new_user_chance: 0.14
   daily_new_user_chance_weekend: 0.21
 
