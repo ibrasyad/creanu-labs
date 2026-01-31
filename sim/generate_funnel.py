@@ -76,7 +76,7 @@ def generate_visit(user_tier, current_date, decay=1.0):
     month = date_obj.month
     event_mult = get_event_multiplier(
         year, month,
-        metric="new_user",
+        metric="visit",
         tier=user_tier
     )
 
@@ -136,7 +136,7 @@ def generate_funnel(user_tier, is_continue, current_date):
     month = date_obj.month
     event_mult = get_event_multiplier(
         year, month,
-        metric="new_user",
+        metric="conversion",
         tier=user_tier
     )
 

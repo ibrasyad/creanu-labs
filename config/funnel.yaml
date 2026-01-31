@@ -5,7 +5,7 @@ funnel:
     conversion_rate: 0.15
     duration:
       min_duration: 5
-      avg_duration: 1800
+      max_duration: 1800
       avg_duration: 190
 
   product_view:

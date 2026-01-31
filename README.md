@@ -42,7 +42,7 @@ pip install -e ".[dev]"
 # Generate a full year of transaction data
 python generate.py
 
-# Output will be saved to: output/baskets.csv
+# Output will be saved to: output/transaction.csv and output/transaction_item.csv
 ```
 
 ## 📋 Configuration Guide
@@ -131,7 +131,7 @@ simulation:
      - Randomize quantity and price around base values
 
 3. **Output:**
-   - Write all items to `output/baskets.csv`
+   - Write all items to `output/transaction.csv` and `output/transaction_item.csv`
    - Print summary statistics
 
 ## 🔧 Project Structure
@@ -153,7 +153,13 @@ lettuce-melon/
 │   ├── generate_date.py        # Date utilities
 │   └── utils.py               # Shared utilities
 ├── output/
-│   └── baskets.csv            # Generated data (output)
+│   ├── transaction.csv         # Generated transaction headers
+│   ├── transaction_item.csv    # Generated transaction line items
+│   ├── users_base.csv          # Initial user base
+│   ├── users_updated.csv       # Updated user table
+│   ├── users_new.csv           # New users
+│   ├── funnel.csv              # Funnel activity data
+│   └── catalog.csv             # Flattened product catalog
 └── tests/                      # Unit & integration tests (coming soon)
 ```
 
@@ -163,7 +169,7 @@ lettuce-melon/
 ```bash
 python generate.py
 ```
-Generates 1 year of transactions using all config files, outputs to `output/baskets.csv`
+Generates 1 year of transactions using all config files, outputs to `output/transaction.csv` and `output/transaction_item.csv`
 
 ### Programmatic Usage
 ```python

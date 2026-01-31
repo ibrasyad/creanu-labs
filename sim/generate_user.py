@@ -53,9 +53,16 @@ def generate_base_user_table():
     # Assign IDs sequentially
     for i, tier_name in enumerate(tier_list, start=1):
         user_id = generate_user_id(_date_config["start_date"], i)
+        city = weighted_choice(_tiers[tier_name]["city"])
+        gender = weighted_choice(_tiers[tier_name]["gender"])
+        acquisition_channel = weighted_choice(_tiers[tier_name]["acquisition_channel"])
+        
         rows.append({
             "tier": tier_name,
             "user_id": user_id,
+            "city": city,
+            "gender": gender,
+            "acquisition_channel": acquisition_channel,
             "registered_date": _date_config["start_date"],
             "last_active_date": _date_config["start_date"]
         })
@@ -162,9 +169,15 @@ def generate_new_users(num_users, tier_name, date, current_user_count):
     for i in range(num_users):
         user_id_counter = current_user_count + i + 1
         user_id = generate_user_id(date, user_id_counter)
+        city = weighted_choice(_tiers[tier_name]["city"])
+        gender = weighted_choice(_tiers[tier_name]["gender"])
+        acquisition_channel = weighted_choice(_tiers[tier_name]["acquisition_channel"])
         row = {
             "tier": tier_name,
             "user_id": user_id,
+            "city": city,
+            "gender": gender,
+            "acquisition_channel": acquisition_channel,
         }
         rows.append(row)
     return rows

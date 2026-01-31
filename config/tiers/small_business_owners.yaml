@@ -1,0 +1,169 @@
+small_business_owners: # Restaurant/cafe suppliers
+  profile: aggressive
+  priority: high
+  description: "Business owners purchasing bulk supplies for restaurants/cafes"
+  visit_chance:
+    monday: 0.08
+    tuesday: 0.08
+    wednesday: 0.08
+    thursday: 0.08
+    friday: 0.09
+    saturday: 0.12
+    sunday: 0.07
+
+  monthly_visit_chance_multiplier:
+    january: 0.9
+    february: 0.95
+    march: 1.0
+    april: 1.0
+    may: 1.0
+    june: 1.0
+    july: 1.0
+    august: 1.0
+    september: 1.0
+    october: 1.0
+    november: 1.1
+    december: 1.2
+  
+  landing_page:
+    conversion_rate: 0.75
+    duration:
+      min_duration: 5
+      max_duration: 1800
+      avg_duration: 200
+
+  product_view:
+    conversion_rate: 0.7
+    duration:
+      min_duration: 5
+      max_duration: 3600
+      avg_duration: 800
+
+  add_to_cart:
+    conversion_rate: 0.8
+    duration:
+      min_duration: 5
+      max_duration: 900
+      avg_duration: 500
+
+  checkout:
+    conversion_rate: 0.85
+    duration:
+      min_duration: 5
+      max_duration: 86400
+      avg_duration: 2200
+
+  paid:
+    conversion_rate: 1
+    duration:
+      min_duration: 0
+      max_duration: 0
+      avg_duration: 0
+  
+  funnel_noise:
+    distribution: poisson
+    multiplier: 1.15
+  
+  visit_hour_peak:
+    first:
+      weight: 18
+      hour:
+        min: 0
+        max: 23
+        avg: 6
+    second:
+      weight: 12
+      hour:
+        min: 0
+        max: 23
+        avg: 10
+    third:
+      weight: 5
+      hour:
+        min: 0
+        max: 23
+        avg: 15
+
+  base_user: 3
+
+  daily_retry: 2
+  daily_new_user_chance: 0.05
+  daily_new_user_chance_weekend: 0.08
+
+  daily_new_user_noise:
+    distribution: poisson
+    multiplier: 1.15
+  
+  monthly_new_user_multiplier:
+    january: 0.9
+    february: 0.95
+    march: 1.0
+    april: 1.0
+    may: 1.0
+    june: 1.0
+    july: 1.0
+    august: 1.0
+    september: 1.0
+    october: 1.0
+    november: 1.1
+    december: 1.2
+
+  monthly_new_user_noise:
+    distribution: poisson
+    multiplier: 1.25
+  
+  basket:
+    min_items: 10
+    max_items: 20
+
+  category_weight:
+    vegetables: 1.6
+    fruits: 1.2
+    grains: 2.5
+    dairy: 1.8
+    bakery: 1.5
+    snacks: 0.6
+    beverages: 1.0
+    meat: 2.2
+    seafood: 2.0
+    poultry: 2.3
+    frozen_foods: 1.4
+    personal_care: 0.2
+    household_supplies: 0.8
+    condiments_seasonings: 2.8
+  
+  quantity_model:
+    base_lambda: 3.0
+  
+  quantity_bias:
+    vegetables: 2.0
+    fruits: 1.5
+    grains: 3.5
+    dairy: 2.2
+    bakery: 1.8
+    snacks: 0.5
+    beverages: 1.0
+    meat: 3.0
+    seafood: 2.8
+    poultry: 3.2
+    frozen_foods: 1.6
+    personal_care: 0.2
+    household_supplies: 1.0
+    condiments_seasonings: 3.5
+  
+  city:
+    west_jakarta: 10
+    east_jakarta: 10
+    north_jakarta: 10
+    central_jakarta: 10
+    south_jakarta: 10
+    tangerang_city: 10
+    south_tangerang: 10
+  
+  gender:
+    male: 10
+    female: 10
+
+  acquisition_channel:
+    organic: 10
+    paid: 10

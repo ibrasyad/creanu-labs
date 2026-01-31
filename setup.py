@@ -6,8 +6,12 @@ from setuptools import setup, find_packages
 setup(
     name="lettuce-melon",
     version="0.1.0",
-    description="Transaction data generation simulator with customer tier-based shopping behavior",
+    description="A realistic transaction data generator that simulates customer shopping behavior across different customer tiers",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     author="ibrasyad",
+    author_email="ibnura96@gmail.com",
+    url="https://github.com/ibrasyad/lettuce-melon",
     license="MIT",
     packages=find_packages(),
     python_requires=">=3.8",
@@ -15,6 +19,7 @@ setup(
         "pyyaml>=6.0",
         "pandas>=1.3.0",
         "numpy>=1.20.0",
+        "scipy>=1.7.0",
     ],
     extras_require={
         "dev": [
@@ -37,5 +42,11 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Software Development :: Testing",
+        "Topic :: Scientific/Engineering :: Information Analysis",
     ],
+    keywords="transaction simulation, e-commerce, data generation, customer behavior, analytics",
+    include_package_data=True,
+    zip_safe=False,
 )

@@ -34,8 +34,9 @@ event:
     end_month: 1
     overall:
       visit: 1.15
-    tiers:
-      budget:
+    # Profile-based targeting instead of specific tiers
+    profiles:
+      conservative:
         visit: 1.4
         conversion: 1.2
 
@@ -45,7 +46,8 @@ event:
     year: 3
     start_month: 5
     end_month: null
-    tiers:
-      budget:
+    # Profile-based targeting instead of specific tiers
+    profiles:
+      aggressive:
         conversion:
           landing_page: 1.25

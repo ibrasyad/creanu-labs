@@ -5,19 +5,20 @@ growth:
       visit: 1.0
       conversion: 1.0
 
-    tiers:
-      budget:
+    # Growth profiles that apply to tiers based on their profile metadata
+    tier_profiles:
+      conservative:  # For budget-conscious tiers
         new_user: 1.0
         visit: 1.0
         conversion: 1.0
-      premium:
-        new_user: 1.0
-        visit: 1.0
-        conversion: 1.0
-      random:
-        new_user: 1.0
-        visit: 1.0
-        conversion: 1.0
+      aggressive:   # For growth-focused tiers  
+        new_user: 1.2
+        visit: 1.1
+        conversion: 1.1
+      balanced:     # For steady tiers
+        new_user: 1.1
+        visit: 1.05
+        conversion: 1.05
 
   yearly:
     # -------------------------
@@ -28,20 +29,21 @@ growth:
         new_user: 1.35
         visit: 0.85
         conversion: 1.00
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 1
+      profile_multipliers:
+        conservative:
           new_user: 1.45
           visit: 1.20
           conversion: 0.95
-        premium:
-          new_user: 1.10
-          visit: 1.05
+        aggressive:
+          new_user: 1.20
+          visit: 1.15
+          conversion: 1.10
+        balanced:
+          new_user: 1.15
+          visit: 1.10
           conversion: 1.05
-        random:
-          new_user: 1.00
-          visit: 1.00
-          conversion: 1.00
 
     # -------------------------
     # YEAR 2 — Still growing, learning efficiency
@@ -51,20 +53,21 @@ growth:
         new_user: 1.25
         visit: 0.90
         conversion: 0.85
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 2
+      profile_multipliers:
+        conservative:
           new_user: 1.10        # saturation begins
           visit: 1.25           # promo-heavy
           conversion: 1.15
-        premium:
+        aggressive:
           new_user: 1.20
+          visit: 1.20
+          conversion: 1.20
+        balanced:
+          new_user: 1.05
           visit: 1.10
-          conversion: 1.15
-        random:
-          new_user: 1.00
-          visit: 1.00
-          conversion: 1.00
+          conversion: 1.10
 
     # -------------------------
     # YEAR 3 — Strategic shift: premium push
@@ -74,20 +77,21 @@ growth:
         new_user: 0.90
         visit: 1.45
         conversion: 1.05
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 3
+      profile_multipliers:
+        conservative:
           new_user: 0.60        # acquisition deprioritized
           visit: 1.10           # existing users still active
           conversion: 1.20
-        premium:
-          new_user: 1.50
+        aggressive:
+          new_user: 1.40
           visit: 1.25
           conversion: 1.30
-        random:
-          new_user: 0.85
-          visit: 0.95
-          conversion: 1.00
+        balanced:
+          new_user: 1.10
+          visit: 1.15
+          conversion: 1.15
 
     # -------------------------
     # YEAR 4 — Correction & rebalance
@@ -97,20 +101,21 @@ growth:
         new_user: 1.10
         visit: 1.55
         conversion: 1.15
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 4
+      profile_multipliers:
+        conservative:
           new_user: 1.00
           visit: 1.10
           conversion: 1.10
-        premium:
+        aggressive:
           new_user: 1.20
           visit: 1.15
           conversion: 1.15
-        random:
-          new_user: 1.00
-          visit: 1.00
-          conversion: 1.00
+        balanced:
+          new_user: 1.05
+          visit: 1.05
+          conversion: 1.05
 
     # -------------------------
     # YEAR 5 — Market saturation
@@ -120,17 +125,18 @@ growth:
         new_user: 0.85
         visit: 1.15
         conversion: 1.00
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 5
+      profile_multipliers:
+        conservative:
           new_user: 0.85
           visit: 1.00
           conversion: 1.05
-        premium:
+        aggressive:
           new_user: 1.05
           visit: 1.05
           conversion: 1.10
-        random:
+        balanced:
           new_user: 0.95
           visit: 0.95
           conversion: 1.00
@@ -143,19 +149,20 @@ growth:
         new_user: 0.95
         visit: 1.35
         conversion: 1.05
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 6
+      profile_multipliers:
+        conservative:
           new_user: 0.80
           visit: 0.95
           conversion: 1.05
-        premium:
+        aggressive:
           new_user: 0.95
           visit: 1.05
           conversion: 1.10
-        random:
-          new_user: 0.95
-          visit: 0.95
+        balanced:
+          new_user: 0.85
+          visit: 0.90
           conversion: 1.00
 
     # -------------------------
@@ -166,20 +173,21 @@ growth:
         new_user: 0.85
         visit: 1.25
         conversion: 1.00
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 7
+      profile_multipliers:
+        conservative:
           new_user: 0.75
           visit: 0.90
           conversion: 1.00
-        premium:
+        aggressive:
           new_user: 0.90
           visit: 0.95
           conversion: 1.05
-        random:
-          new_user: 0.90
-          visit: 0.90
-          conversion: 1.00
+        balanced:
+          new_user: 0.80
+          visit: 0.80
+          conversion: 0.95
 
     # -------------------------
     # YEAR 8+ — Long-term steady state
@@ -189,17 +197,18 @@ growth:
         new_user: 0.95
         visit: 1.35
         conversion: 1.00
-
-      tiers:
-        budget:
+      
+      # Profile-based growth multipliers for Year 8+
+      profile_multipliers:
+        conservative:
           new_user: 0.70
           visit: 0.85
           conversion: 1.00
-        premium:
+        aggressive:
           new_user: 0.85
           visit: 0.90
           conversion: 1.05
-        random:
-          new_user: 0.90
-          visit: 0.85
-          conversion: 1.00
+        balanced:
+          new_user: 0.75
+          visit: 0.75
+          conversion: 0.90

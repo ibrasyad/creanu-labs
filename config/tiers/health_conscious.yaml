@@ -1,0 +1,169 @@
+health_conscious: # Fresh & organic focused
+  profile: conservative
+  priority: medium
+  description: "Health-focused buyers who prefer fresh and organic products"
+  visit_chance:
+    monday: 0.06
+    tuesday: 0.06
+    wednesday: 0.06
+    thursday: 0.06
+    friday: 0.07
+    saturday: 0.12
+    sunday: 0.11
+
+  monthly_visit_chance_multiplier:
+    january: 0.8
+    february: 0.85
+    march: 1.0
+    april: 1.1
+    may: 1.2
+    june: 1.1
+    july: 1.0
+    august: 0.9
+    september: 1.1
+    october: 1.2
+    november: 1.0
+    december: 0.8
+  
+  landing_page:
+    conversion_rate: 0.85
+    duration:
+      min_duration: 5
+      max_duration: 1800
+      avg_duration: 220
+
+  product_view:
+    conversion_rate: 0.8
+    duration:
+      min_duration: 5
+      max_duration: 3600
+      avg_duration: 720
+
+  add_to_cart:
+    conversion_rate: 0.85
+    duration:
+      min_duration: 5
+      max_duration: 900
+      avg_duration: 480
+
+  checkout:
+    conversion_rate: 0.9
+    duration:
+      min_duration: 5
+      max_duration: 86400
+      avg_duration: 2000
+
+  paid:
+    conversion_rate: 1
+    duration:
+      min_duration: 0
+      max_duration: 0
+      avg_duration: 0
+  
+  funnel_noise:
+    distribution: poisson
+    multiplier: 1.15
+  
+  visit_hour_peak:
+    first:
+      weight: 15
+      hour:
+        min: 0
+        max: 23
+        avg: 7
+    second:
+      weight: 10
+      hour:
+        min: 0
+        max: 23
+        avg: 12
+    third:
+      weight: 8
+      hour:
+        min: 0
+        max: 23
+        avg: 17
+
+  base_user: 5
+
+  daily_retry: 3
+  daily_new_user_chance: 0.1
+  daily_new_user_chance_weekend: 0.16
+
+  daily_new_user_noise:
+    distribution: poisson
+    multiplier: 1.15
+  
+  monthly_new_user_multiplier:
+    january: 0.8
+    february: 0.85
+    march: 1.0
+    april: 1.1
+    may: 1.2
+    june: 1.1
+    july: 1.0
+    august: 0.9
+    september: 1.1
+    october: 1.2
+    november: 1.0
+    december: 0.8
+
+  monthly_new_user_noise:
+    distribution: poisson
+    multiplier: 1.25
+  
+  basket:
+    min_items: 4
+    max_items: 8
+
+  category_weight:
+    vegetables: 2.0
+    fruits: 1.8
+    grains: 1.2
+    dairy: 1.5
+    bakery: 0.8
+    snacks: 0.4
+    beverages: 1.3
+    meat: 0.6
+    seafood: 1.2
+    poultry: 1.4
+    frozen_foods: 0.5
+    personal_care: 1.1
+    household_supplies: 0.6
+    condiments_seasonings: 0.9
+  
+  quantity_model:
+    base_lambda: 1.6
+  
+  quantity_bias:
+    vegetables: 2.2
+    fruits: 2.0
+    grains: 1.3
+    dairy: 1.8
+    bakery: 0.6
+    snacks: 0.3
+    beverages: 1.5
+    meat: 0.5
+    seafood: 1.4
+    poultry: 1.6
+    frozen_foods: 0.4
+    personal_care: 1.2
+    household_supplies: 0.5
+    condiments_seasonings: 1.0
+  
+  city:
+    west_jakarta: 10
+    east_jakarta: 10
+    north_jakarta: 10
+    central_jakarta: 10
+    south_jakarta: 10
+    tangerang_city: 10
+    south_tangerang: 10
+  
+  gender:
+    male: 10
+    female: 10
+
+  acquisition_channel:
+    organic: 10
+    paid: 10

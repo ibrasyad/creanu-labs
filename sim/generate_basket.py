@@ -94,8 +94,25 @@ def generate_total_trx(date_str):
     
     return int(base_trx * monthly_rate)
 
-def get_subcategory_cooldown(category, subcategory):
-    return _catalog[category][subcategory].get("cooldown", 1)
+def get_effective_cooldown(catalog, category, subcategory, product_name):
+    """
+    Get cooldown for a specific product, checking product-level override first.
+    
+    Args:
+        catalog: Catalog dict
+        category: Category name
+        subcategory: Subcategory name
+        product_name: Product name
+        
+    Returns:
+        Cooldown days (int)
+    """
+    # Check product-level cooldown first
+    product_cooldown = catalog[category][subcategory]["product"][product_name].get("cooldown")
+    if product_cooldown is not None:
+        return product_cooldown
+    # Fall back to subcategory cooldown
+    return catalog[category][subcategory].get("cooldown", 1)
 
 
 def is_subcategory_under_cooldown(
@@ -106,11 +123,7 @@ def is_subcategory_under_cooldown(
     purchase_history_df,
     catalog
 ):
-    cooldown_days = get_subcategory_cooldown(catalog, category, subcategory)
-
-    if cooldown_days <= 0 or purchase_history_df is None:
-        return False
-
+    # Get the most recent purchase in this subcategory
     history = purchase_history_df[
         (purchase_history_df["customer_id"] == customer_id) &
         (purchase_history_df["subcategory"] == subcategory)
@@ -119,9 +132,18 @@ def is_subcategory_under_cooldown(
     if history.empty:
         return False
 
-    last_purchase = history["last_purchase_date"].max()
-    days_since = (current_date - last_purchase).days
+    # Find the most recent purchase and its specific cooldown
+    most_recent = history.loc[history["last_purchase_date"].idxmax()]
+    last_product = most_recent["product"]
+    last_purchase_date = most_recent["last_purchase_date"]
+    
+    # Get the cooldown for the specific product that was purchased
+    cooldown_days = get_effective_cooldown(catalog, category, subcategory, last_product)
+    
+    if cooldown_days <= 0:
+        return False
 
+    days_since = (current_date - last_purchase_date).days
     return days_since < cooldown_days
 
 
@@ -199,7 +221,9 @@ def generate_basket(tier_name=None, seed=None):
             subcategory = random.choice(list(subcats))
 
         # Check if subcategory allows duplicates
-        cooldown = get_subcategory_cooldown(category, subcategory)
+        products = subcats[subcategory].get("product", {})
+        product_name = random.choice(list(products))
+        cooldown = get_effective_cooldown(_catalog, category, subcategory, product_name)
         # cooldown > 1 means "do not repeat in same basket"
         if cooldown > 1 and subcategory in picked_subcategories:
             max_retries = 10
@@ -213,7 +237,7 @@ def generate_basket(tier_name=None, seed=None):
                 else:
                     subcategory = random.choice(list(subcats))
 
-                cooldown = get_subcategory_cooldown(category, subcategory)
+                cooldown = get_effective_cooldown(_catalog, category, subcategory, product_name)
                 allows_dup = dup_rules.get(subcategory, True)
 
                 if (cooldown <= 1) or (subcategory not in picked_subcategories):

@@ -1,4 +1,3 @@
-tier,user_id,registered_date,last_active_date
-random,20241231-00001718,2024-12-31,2024-12-31
-random,20241231-00001719,2024-12-31,2024-12-31
-random,20241231-00001720,2024-12-31,2024-12-31
+tier,user_id,city,gender,acquisition_channel,registered_date,last_active_date
+random,20221231-00000677,central_jakarta,female,organic,2022-12-31,2022-12-31
+random,20221231-00000678,south_tangerang,female,organic,2022-12-31,2022-12-31
