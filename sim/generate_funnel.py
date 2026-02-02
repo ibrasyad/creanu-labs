@@ -108,7 +108,7 @@ def generate_funnel(user_tier, is_continue, current_date):
     
     # tier_duration = tier_config.get(current_step, {}).get("duration", {})
     # base_duration = funnel_config.get(current_step, {}).get("duration", {})
-    base_chance = tier_config.get(current_step, {}).get("conversion_rate", funnel_config.get(current_step, {}).get("conversion_rate", {}))
+    base_chance = tier_config.get(current_step, {}).get("conversion_rate", funnel_config.get(current_step, {}).get("conversion_rate", 0.0))
 
     noise_cfg = tier_config.get("funnel_noise", None)
     if noise_cfg:
