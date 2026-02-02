@@ -1,61 +1,83 @@
+# =============================================================================
+# CONVERSION FUNNEL CONFIGURATION
+# =============================================================================
+# Funnel stages: landing_page → product_view → add_to_cart → checkout → paid
+# - conversion_rate: Probability of moving to next stage
+# - duration: Time spent at each stage (in seconds)
+# =============================================================================
+
 funnel:
+  # Order of funnel stages (must match stage names below)
   funnel_order: ["landing_page", "product_view", "add_to_cart", "checkout", "paid"]
-  # Duration in seconds
-  landing_page:
-    conversion_rate: 0.15
-    duration:
-      min_duration: 5
-      max_duration: 1800
-      avg_duration: 190
 
-  product_view:
-    conversion_rate: 0.25
-    duration:
-      min_duration: 5
-      max_duration: 3600
-      avg_duration: 560
-
-  add_to_cart:
-    conversion_rate: 0.8
-    duration:
-      min_duration: 5
-      max_duration: 900
-      avg_duration: 400
-
-  checkout:
-    conversion_rate: 0.85
-    duration:
-      min_duration: 5
-      max_duration: 86400
-      avg_duration: 2100
-
-  paid:
-    conversion_rate: 1
-    duration:
-      min_duration: 0
-      max_duration: 0
-      avg_duration: 0
+  # ==================== FUNNEL STAGES ====================
   
+  # Landing Page - First touchpoint
+  landing_page:
+    conversion_rate: 0.15   # 15% proceed to product view
+    duration:
+      min_duration: 5       # 5 seconds minimum
+      max_duration: 1800    # 30 minutes maximum
+      avg_duration: 190     # ~3 minutes average
+
+  # Product View - Browsing products
+  product_view:
+    conversion_rate: 0.25   # 25% add to cart
+    duration:
+      min_duration: 5       # 5 seconds minimum
+      max_duration: 3600    # 1 hour maximum
+      avg_duration: 560     # ~9 minutes average
+
+  # Add to Cart - Product added to basket
+  add_to_cart:
+    conversion_rate: 0.80   # 80% proceed to checkout
+    duration:
+      min_duration: 5       # 5 seconds minimum
+      max_duration: 900      # 15 minutes maximum
+      avg_duration: 400     # ~7 minutes average
+
+  # Checkout - Payment process
+  checkout:
+    conversion_rate: 0.85   # 85% complete purchase
+    duration:
+      min_duration: 5       # 5 seconds minimum
+      max_duration: 86400   # 24 hours maximum (saved carts)
+      avg_duration: 2100    # ~35 minutes average
+
+  # Paid - Transaction completed
+  paid:
+    conversion_rate: 1.0    # 100% (final stage)
+    duration:
+      min_duration: 0       # No time spent
+      max_duration: 0       # No time spent
+      avg_duration: 0       # No time spent
+
+  # ==================== VARIATION & TIMING ====================
+  
+  # Random variation applied to funnel conversion rates
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
-  
+
+  # Peak visit hours during the day (3 peaks)
   visit_hour_peak:
-    first:
+    first:                     # Morning peak
       weight: 10
       hour:
         min: 0
         max: 23
-        avg: 10
-    second:
+        avg: 10               # 10 AM average
+        
+    second:                    # Afternoon peak
       weight: 10
       hour:
         min: 0
         max: 23
-        avg: 15
-    third:
+        avg: 15               # 3 PM average
+        
+    third:                     # Evening peak
       weight: 10
       hour:
         min: 0
         max: 23
-        avg: 20
+        avg: 20               # 8 PM average

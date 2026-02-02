@@ -1,169 +1,213 @@
-students: # Budget-conscious convenience seekers
-  profile: conservative
-  priority: low
+# =============================================================================
+# STUDENTS TIER CONFIGURATION
+# =============================================================================
+# Budget-conscious convenience seekers
+# Profile: conservative | Priority: low
+# =============================================================================
+
+students:
+  # ==================== TIER METADATA ====================
+  profile:     conservative
+  priority:    low
   description: "Budget-conscious students seeking affordable convenience"
-  visit_chance:
-    monday: 0.03
-    tuesday: 0.03
-    wednesday: 0.03
-    thursday: 0.03
-    friday: 0.05
-    saturday: 0.08
-    sunday: 0.09
 
-  monthly_visit_chance_multiplier:
-    january: 0.6
-    february: 0.7
-    march: 0.8
-    april: 0.7
-    may: 0.75
-    june: 0.8
-    july: 0.9
-    august: 1.2
-    september: 1.3
-    october: 1.1
-    november: 0.9
-    december: 0.7
+  # ==================== VISIT PATTERNS ====================
   
+  # Daily visit probability by weekday
+  visit_chance:
+    monday:    0.03   # 3% - low weekday activity
+    tuesday:   0.03   # 3% - study focus
+    wednesday: 0.03   # 3% - mid-week
+    thursday:  0.03   # 3% - near weekend
+    friday:    0.05   # 5% - pre-weekend
+    saturday:  0.08   # 8% - weekend shopping
+    sunday:    0.09   # 9% - highest weekend
+
+  # Monthly visit multipliers (academic calendar impact)
+  monthly_visit_chance_multiplier:
+    january:   0.6   # Winter break - low activity
+    february:  0.7   # Back to school
+    march:     0.8   # Mid-semester
+    april:     0.7   # Exam period
+    may:       0.75  # End of semester
+    june:      0.8   # Summer session
+    july:      0.9   # Summer break
+    august:    1.2   # Back to school prep
+    september: 1.3   # Fall semester start
+    october:   1.1   # Settled in
+    november:  0.9   # Pre-exam
+    december:  0.7   # Final exams
+  
+  # ==================== CONVERSION FUNNEL ====================
+  
+  # Landing page - Quick browsing, low commitment
   landing_page:
-    conversion_rate: 0.6
+    conversion_rate: 0.60   # 60% proceed (selective)
     duration:
       min_duration: 5
-      max_duration: 1800
-      avg_duration: 150
+      max_duration: 1800    # 30 minutes max
+      avg_duration: 150    # ~2.5 minutes
 
+  # Product view - Price-sensitive browsing
   product_view:
-    conversion_rate: 0.7
+    conversion_rate: 0.70   # 70% add to cart
     duration:
       min_duration: 5
-      max_duration: 3600
-      avg_duration: 400
+      max_duration: 3600    # 1 hour max
+      avg_duration: 400    # ~7 minutes
 
+  # Add to cart - Cautious consideration
   add_to_cart:
-    conversion_rate: 0.75
+    conversion_rate: 0.75   # 75% proceed to checkout
     duration:
       min_duration: 5
-      max_duration: 900
-      avg_duration: 300
+      max_duration: 900     # 15 minutes max
+      avg_duration: 300    # 5 minutes
 
+  # Checkout - Budget review
   checkout:
-    conversion_rate: 0.8
+    conversion_rate: 0.80   # 80% complete purchase
     duration:
       min_duration: 5
-      max_duration: 86400
-      avg_duration: 1500
+      max_duration: 86400   # 24 hours max
+      avg_duration: 1500   # 25 minutes
 
+  # Paid - Transaction completed
   paid:
-    conversion_rate: 1
+    conversion_rate: 1.0    # 100% (final stage)
     duration:
       min_duration: 0
       max_duration: 0
       avg_duration: 0
-  
+
+  # Random variation in funnel performance
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
   
+  # ==================== VISIT TIMING ====================
+  
+  # Peak visit hours (student schedule)
   visit_hour_peak:
-    first:
+    first:                     # Morning (between classes)
       weight: 3
       hour:
         min: 0
         max: 23
-        avg: 11
-    second:
+        avg: 11               # 11 AM average
+        
+    second:                    # Afternoon (after classes)
       weight: 8
       hour:
         min: 0
         max: 23
-        avg: 16
-    third:
+        avg: 16               # 4 PM average
+        
+    third:                     # Evening (study break)
       weight: 18
       hour:
         min: 0
         max: 23
-        avg: 21
+        avg: 21               # 9 PM average
 
+  # ==================== USER ACQUISITION ====================
+  
+  # Base user count
   base_user: 10
 
+  # Daily acquisition attempts
   daily_retry: 6
-  daily_new_user_chance: 0.15
-  daily_new_user_chance_weekend: 0.22
+  daily_new_user_chance: 0.15        # 15% on weekdays
+  daily_new_user_chance_weekend: 0.22 # 22% on weekends
 
+  # Random variation in daily acquisition
   daily_new_user_noise:
     distribution: poisson
     multiplier: 1.15
-  
-  monthly_new_user_multiplier:
-    january: 0.6
-    february: 0.7
-    march: 0.8
-    april: 0.7
-    may: 0.75
-    june: 0.8
-    july: 0.9
-    august: 1.2
-    september: 1.3
-    october: 1.1
-    november: 0.9
-    december: 0.7
 
+  # Monthly acquisition multipliers (academic calendar)
+  monthly_new_user_multiplier:
+    january:   0.6   # Winter break
+    february:  0.7   # Back to school
+    march:     0.8   # Mid-semester
+    april:     0.7   # Exam period
+    may:       0.75  # End of semester
+    june:      0.8   # Summer session
+    july:      0.9   # Summer break
+    august:    1.2   # Back to school prep
+    september: 1.3   # Fall semester start
+    october:   1.1   # Settled in
+    november:  0.9   # Pre-exam
+    december:  0.7   # Final exams
+
+  # Random variation in monthly acquisition
   monthly_new_user_noise:
     distribution: poisson
     multiplier: 1.25
   
+  # ==================== SHOPPING BEHAVIOR ====================
+  
+  # Basket size (small, budget-conscious)
   basket:
-    min_items: 2
-    max_items: 5
+    min_items: 2   # Minimum items
+    max_items: 5   # Maximum items
 
+  # Category preferences (budget-friendly items)
   category_weight:
-    vegetables: 0.5
-    fruits: 0.6
-    grains: 0.8
-    dairy: 0.9
-    bakery: 1.3
-    snacks: 1.8
-    beverages: 1.7
-    meat: 0.7
-    seafood: 0.5
-    poultry: 0.9
-    frozen_foods: 1.6
-    personal_care: 0.8
-    household_supplies: 0.7
-    condiments_seasonings: 0.9
-  
+    vegetables:           0.5   # Low priority
+    fruits:              0.6   # Low-moderate
+    grains:              0.8   # Staple foods
+    dairy:               0.9   # Essential
+    bakery:              1.3   # Preferred (affordable)
+    snacks:              1.8   # High preference
+    beverages:           1.7   # High preference
+    meat:                0.7   # Lower (expensive)
+    seafood:             0.5   # Low (expensive)
+    poultry:             0.9   # Moderate
+    frozen_foods:        1.6   # High (convenient)
+    personal_care:       0.8   # Essential
+    household_supplies:  0.7   # Lower priority
+    condiments_seasonings: 0.9   # Moderate
+
+  # Quantity model (smaller quantities)
   quantity_model:
-    base_lambda: 1.2
-  
+    base_lambda: 1.2   # Lower average units
+
+  # Quantity bias per category
   quantity_bias:
-    vegetables: 0.4
-    fruits: 0.5
-    grains: 0.7
-    dairy: 0.9
-    bakery: 1.4
-    snacks: 2.0
-    beverages: 1.9
-    meat: 0.6
-    seafood: 0.4
-    poultry: 1.0
-    frozen_foods: 1.8
-    personal_care: 0.8
-    household_supplies: 0.6
-    condiments_seasonings: 1.0
+    vegetables:           0.4   # Very small quantities
+    fruits:              0.5   # Small quantities
+    grains:              0.7   # Moderate (staples)
+    dairy:               0.9   # Near normal
+    bakery:              1.4   # Higher (snacks)
+    snacks:              2.0   # High (favorite)
+    beverages:           1.9   # High (favorite)
+    meat:                0.6   # Low (expensive)
+    seafood:             0.4   # Very low
+    poultry:             1.0   # Normal
+    frozen_foods:        1.8   # High (convenient)
+    personal_care:       0.8   # Moderate
+    household_supplies:  0.6   # Low
+    condiments_seasonings: 1.0   # Normal
   
+  # ==================== DEMOGRAPHIC DISTRIBUTION ====================
+  
+  # Geographic distribution (Jakarta area)
   city:
-    west_jakarta: 10
-    east_jakarta: 10
-    north_jakarta: 10
-    central_jakarta: 10
-    south_jakarta: 10
-    tangerang_city: 10
-    south_tangerang: 10
-  
+    west_jakarta:     10
+    east_jakarta:     10
+    north_jakarta:    10
+    central_jakarta:  10
+    south_jakarta:    10
+    tangerang_city:   10
+    south_tangerang:  10
+
+  # Gender distribution
   gender:
-    male: 10
+    male:   10
     female: 10
 
+  # Acquisition channels
   acquisition_channel:
-    organic: 10
-    paid: 10
+    organic: 10   # Natural discovery
+    paid:    10   # Advertising

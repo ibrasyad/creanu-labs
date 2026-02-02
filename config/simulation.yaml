@@ -1,111 +1,156 @@
-# Global simulation defaults (can be overridden by tier-specific settings)
+# =============================================================================
+# GLOBAL SIMULATION DEFAULTS
+# =============================================================================
+# These settings can be overridden by tier-specific configurations
+# =============================================================================
+
 simulation:
-  # Decay rate
+  # ==================== USER BEHAVIOR ====================
+  
+  # Visit decay rate over time (user engagement drops without activity)
   visit_decay:
     - days: 0
-      multiplier: 1
+      multiplier: 1.00   # Fresh users
     - days: 7
-      multiplier: 0.8
+      multiplier: 0.80   # 1 week old
     - days: 14
-      multiplier: 0.6
+      multiplier: 0.60   # 2 weeks old
     - days: 21
-      multiplier: 0.5
+      multiplier: 0.50   # 3 weeks old
     - days: 28
-      multiplier: 0.4
+      multiplier: 0.40   # 1 month old
     - days: 60
-      multiplier: 0.3
+      multiplier: 0.30   # 2 months old
     - days: 90
-      multiplier: 0.2
+      multiplier: 0.20   # 3 months old
     - days: 120
-      multiplier: 0.1
+      multiplier: 0.10   # 4 months old
     - days: 150
-      multiplier: 0.05
+      multiplier: 0.05   # 5+ months old
 
-  # Funnel
+  # Daily visit probability by weekday
   visit_chance:
-    monday: 0.05
-    tuesday: 0.05
-    wednesday: 0.05
-    thursday: 0.05
-    friday: 0.05
-    saturday: 0.08
-    sunday: 0.08
+    monday:    0.05   # 5% chance
+    tuesday:   0.05   # 5% chance
+    wednesday: 0.05   # 5% chance
+    thursday:  0.05   # 5% chance
+    friday:    0.05   # 5% chance
+    saturday:  0.08   # 8% chance (higher weekend)
+    sunday:    0.08   # 8% chance (higher weekend)
 
-  # Default basket size (used if tier doesn't specify)
+  # ==================== SHOPPING BEHAVIOR ====================
+  
+  # Default basket size (if tier doesn't specify)
   basket:
-    min_items: 1
-    max_items: 8
+    min_items: 1   # Minimum items per transaction
+    max_items: 8   # Maximum items per transaction
 
-  # Default quantity distribution (used if tier doesn't specify)
+  # Default quantity distribution (if tier doesn't specify)
   quantity_model:
-    # Expected avg units per product (Poisson parameter)
-    base_lambda: 1.3
+    base_lambda: 1.3   # Expected avg units per product (Poisson parameter)
 
-  # Price randomization around base_price
+  # Price randomization around base prices
   price_variation:
-    # 8% standard deviation for normal distribution
-    std_pct: 0.08
+    std_pct: 0.08   # 8% standard deviation for normal distribution
 
-  # Per-subcategory duplicate control: can same subcategory appear multiple times in basket?
+  # ==================== SUBCATEGORY DUPLICATE CONTROL ====================
+  # Controls whether same subcategory can appear multiple times in basket
   # true = multiple items from same subcategory allowed (e.g., 2 different leafy greens)
   # false = only 1 item from that subcategory per basket (e.g., only 1 type of rice)
+  
   subcategory_allow_duplicates:
-    # vegetables: 
-    leafy_greens: true
-    root_vegetables: true
-    # fruits: 
-    citrus: true
-    berries: true
-    tropical: true
-    stone_fruits: true
-    melons: true
-    # grains: 
-    rice: false
-    # dairy: 
-    milk: true
-    cheese: true
-    yogurt: true
-    butter: true
-    eggs: true
-    # bakery: 
-    bread: true
-    pastries: true
-    cakes: true
-    cookies: true
-    muffins: true
-    # snacks: 
-    chips: true
-    nuts: true
-    granola_bars: true
-    popcorn: true
-    dried_fruits: true
-    # beverages: 
-    soda: true
-    juice: true
-    water: true
-    coffee: true
-    tea: true
-    # meat: 
-    beef: true
-    lamb: true
-    # seafood: 
-    fish: true
-    # poultry: 
-    whole_chicken: false
-    chicken_parts: true
-    # frozen_foods: 
-    frozen_vegetables: true
-    frozen_meals: true
-    # personal_care: 
-    skincare: true
-    haircare: true
-    oral_care: true
-    # household_supplies: 
+    # Vegetables
+    leafy_greens:      true
+    root_vegetables:   true
+    
+    # Fruits
+    citrus:            true
+    berries:           true
+    tropical:          true
+    stone_fruits:      true
+    melons:            true
+    
+    # Grains
+    rice:              false   # Usually only one type of rice
+    
+    # Dairy & Eggs
+    milk:              true
+    cheese:            true
+    yogurt:            true
+    butter:            true
+    eggs:              true
+    
+    # Bakery
+    bread:             true
+    pastries:          true
+    cakes:             true
+    cookies:           true
+    muffins:           true
+    
+    # Snacks
+    chips:             true
+    nuts:              true
+    granola_bars:      true
+    popcorn:           true
+    dried_fruits:      true
+    
+    # Beverages
+    soda:              true
+    juice:             true
+    water:             true
+    coffee:            true
+    tea:               true
+    
+    # Meat & Seafood
+    beef:              true
+    lamb:              true
+    fish:              true
+    shrimp:            true
+    tuna:              true
+    
+    # Poultry
+    whole_chicken:     false   # Usually only one whole chicken
+    chicken_parts:     true
+    
+    # Frozen Foods
+    frozen_vegetables:  true
+    frozen_meals:      true
+    
+    # Personal Care
+    skincare:          true
+    haircare:          true
+    oral_care:         true
+    
+    # Household Supplies
     cleaning_products: true
-    paper_goods: true
-    # condiments_seasonings: 
-    sauces: true
-    spices: true
-    oils: false
-    dressings: true
-    marinades: true
+    paper_goods:       true
+    
+    # Condiments & Seasonings
+    sauces:            true
+    spices:            true
+    oils:              false   # Usually only one type of cooking oil
+    dressings:         true
+    marinades:         true
+    
+    # Ready to Eat
+    instant_noodles_cup:   true
+    instant_noodles_pack:  true
+    
+    # Pantry
+    pasta:             true
+    rice_vermicelli:   true
+    flour:             true
+    sugar:             true
+    salt:              true
+    
+    # Breakfast
+    cereals:           true
+    oatmeal:           true
+    
+    # Health
+    supplements:        true
+    vitamins:          true
+    
+    # Processed Foods
+    canned_goods:      true
+    packaged_meals:    true

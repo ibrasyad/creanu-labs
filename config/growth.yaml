@@ -1,214 +1,240 @@
+# =============================================================================
+# GROWTH MODEL CONFIGURATION
+# =============================================================================
+# Multipliers for user acquisition, visit frequency, and conversion rates
+# - new_user: User acquisition growth
+# - visit: Visit frequency/engagement
+# - conversion: Conversion rate improvements
+# =============================================================================
+
 growth:
+  # ==================== BASE GROWTH PROFILES ====================
+  # Default growth rates applied to tiers based on their profile metadata
+  
   base:
+    # Default multipliers for all tiers
     overall:
-      new_user: 1.0
-      visit: 1.0
-      conversion: 1.0
+      new_user:  1.0   # Baseline acquisition
+      visit:     1.0   # Baseline engagement
+      conversion: 1.0  # Baseline conversion
 
-    # Growth profiles that apply to tiers based on their profile metadata
+    # Profile-specific growth patterns
     tier_profiles:
-      conservative:  # For budget-conscious tiers
-        new_user: 1.0
-        visit: 1.0
-        conversion: 1.0
-      aggressive:   # For growth-focused tiers  
-        new_user: 1.2
-        visit: 1.1
-        conversion: 1.1
-      balanced:     # For steady tiers
-        new_user: 1.1
-        visit: 1.05
-        conversion: 1.05
+      conservative:  # Budget-conscious tiers
+        new_user:  1.0   # Slow, steady acquisition
+        visit:     1.0   # Consistent engagement
+        conversion: 1.0  # Stable conversion
+        
+      aggressive:   # Growth-focused tiers  
+        new_user:  1.2   # +20% faster acquisition
+        visit:     1.1   # +10% higher engagement
+        conversion: 1.1  # +10% better conversion
+        
+      balanced:     # Steady, reliable tiers
+        new_user:  1.1   # +10% moderate acquisition
+        visit:     1.05  # +5% engagement
+        conversion: 1.05  # +5% conversion
 
+  # ==================== YEARLY GROWTH STRATEGIES ====================
+  
   yearly:
-    # -------------------------
-    # YEAR 1 — Launch & land grab
-    # -------------------------
+    # --------------------
+    # YEAR 1 — Launch & Land Grab
+    # --------------------
     year_1:
       overall:
-        new_user: 1.35
-        visit: 0.85
-        conversion: 1.00
-      
-      # Profile-based growth multipliers for Year 1
+        new_user:  1.35  # +35% aggressive acquisition
+        visit:     0.85  # -15% lower engagement (focus on acquisition)
+        conversion: 1.00  # Neutral conversion
+        
+      # Profile-based growth multipliers
       profile_multipliers:
         conservative:
-          new_user: 1.45
-          visit: 1.20
-          conversion: 0.95
+          new_user:  1.45  # +45% strong acquisition
+          visit:     1.20  # +20% good engagement
+          conversion: 0.95  # -5% slight conversion dip
+          
         aggressive:
-          new_user: 1.20
-          visit: 1.15
-          conversion: 1.10
+          new_user:  1.20  # +20% moderate acquisition
+          visit:     1.15  # +15% engagement
+          conversion: 1.10  # +10% conversion
+          
         balanced:
-          new_user: 1.15
-          visit: 1.10
-          conversion: 1.05
+          new_user:  1.15  # +15% steady acquisition
+          visit:     1.10  # +10% engagement
+          conversion: 1.05  # +5% conversion
 
-    # -------------------------
-    # YEAR 2 — Still growing, learning efficiency
-    # -------------------------
+    # --------------------
+    # YEAR 2 — Learning & Efficiency
+    # --------------------
     year_2:
       overall:
-        new_user: 1.25
-        visit: 0.90
-        conversion: 0.85
-      
-      # Profile-based growth multipliers for Year 2
+        new_user:  1.25  # +25% continued acquisition
+        visit:     0.90  # -10% still optimizing
+        conversion: 0.85  # -15% conversion challenges
+        
       profile_multipliers:
         conservative:
-          new_user: 1.10        # saturation begins
-          visit: 1.25           # promo-heavy
-          conversion: 1.15
+          new_user:  1.10  # +10% saturation begins
+          visit:     1.25  # +25% promo-heavy engagement
+          conversion: 1.15  # +15% improving conversion
+          
         aggressive:
-          new_user: 1.20
-          visit: 1.20
-          conversion: 1.20
+          new_user:  1.20  # +20% strong acquisition
+          visit:     1.20  # +20% high engagement
+          conversion: 1.20  # +20% best conversion
+          
         balanced:
-          new_user: 1.05
-          visit: 1.10
-          conversion: 1.10
+          new_user:  1.05  # +5% moderate acquisition
+          visit:     1.10  # +10% engagement
+          conversion: 1.10  # +10% conversion
 
-    # -------------------------
-    # YEAR 3 — Strategic shift: premium push
-    # -------------------------
+    # --------------------
+    # YEAR 3 — Strategic Shift: Premium Push
+    # --------------------
     year_3:
       overall:
-        new_user: 0.90
-        visit: 1.45
-        conversion: 1.05
-      
-      # Profile-based growth multipliers for Year 3
+        new_user:  0.90  # -10% deprioritize acquisition
+        visit:     1.45  # +45% focus on existing users
+        conversion: 1.05  # +5% conversion improvements
+        
       profile_multipliers:
         conservative:
-          new_user: 0.60        # acquisition deprioritized
-          visit: 1.10           # existing users still active
-          conversion: 1.20
+          new_user:  0.60  # -40% acquisition deprioritized
+          visit:     1.10  # +10% existing users active
+          conversion: 1.20  # +20% conversion focus
+          
         aggressive:
-          new_user: 1.40
-          visit: 1.25
-          conversion: 1.30
+          new_user:  1.40  # +40% still acquiring
+          visit:     1.25  # +25% high engagement
+          conversion: 1.30  # +30% premium conversion
+          
         balanced:
-          new_user: 1.10
-          visit: 1.15
-          conversion: 1.15
+          new_user:  1.10  # +10% moderate acquisition
+          visit:     1.15  # +15% engagement
+          conversion: 1.15  # +15% conversion
 
-    # -------------------------
-    # YEAR 4 — Correction & rebalance
-    # -------------------------
+    # --------------------
+    # YEAR 4 — Correction & Rebalance
+    # --------------------
     year_4:
       overall:
-        new_user: 1.10
-        visit: 1.55
-        conversion: 1.15
-      
-      # Profile-based growth multipliers for Year 4
+        new_user:  1.10  # +10% renewed acquisition
+        visit:     1.55  # +55% peak engagement
+        conversion: 1.15  # +15% strong conversion
+        
       profile_multipliers:
         conservative:
-          new_user: 1.00
-          visit: 1.10
-          conversion: 1.10
+          new_user:  1.00  # 0% stable acquisition
+          visit:     1.10  # +10% engagement
+          conversion: 1.10  # +10% conversion
+          
         aggressive:
-          new_user: 1.20
-          visit: 1.15
-          conversion: 1.15
+          new_user:  1.20  # +20% strong acquisition
+          visit:     1.15  # +15% engagement
+          conversion: 1.15  # +15% conversion
+          
         balanced:
-          new_user: 1.05
-          visit: 1.05
-          conversion: 1.05
+          new_user:  1.05  # +5% moderate acquisition
+          visit:     1.05  # +5% engagement
+          conversion: 1.05  # +5% conversion
 
-    # -------------------------
-    # YEAR 5 — Market saturation
-    # -------------------------
+    # --------------------
+    # YEAR 5 — Market Saturation
+    # --------------------
     year_5:
       overall:
-        new_user: 0.85
-        visit: 1.15
-        conversion: 1.00
-      
-      # Profile-based growth multipliers for Year 5
+        new_user:  0.85  # -15% acquisition slowdown
+        visit:     1.15  # +15% stable engagement
+        conversion: 1.00  # 0% stable conversion
+        
       profile_multipliers:
         conservative:
-          new_user: 0.85
-          visit: 1.00
-          conversion: 1.05
+          new_user:  0.85  # -15% acquisition decline
+          visit:     1.00  # 0% stable engagement
+          conversion: 1.05  # +5% slight conversion
+          
         aggressive:
-          new_user: 1.05
-          visit: 1.05
-          conversion: 1.10
+          new_user:  1.05  # +5% minimal acquisition
+          visit:     1.05  # +5% engagement
+          conversion: 1.10  # +10% conversion
+          
         balanced:
-          new_user: 0.95
-          visit: 0.95
-          conversion: 1.00
+          new_user:  0.95  # -5% acquisition decline
+          visit:     0.95  # -5% engagement decline
+          conversion: 1.00  # 0% stable conversion
 
-    # -------------------------
-    # YEAR 6 — Efficiency mode
-    # -------------------------
+    # --------------------
+    # YEAR 6 — Efficiency Mode
+    # --------------------
     year_6:
       overall:
-        new_user: 0.95
-        visit: 1.35
-        conversion: 1.05
-      
-      # Profile-based growth multipliers for Year 6
+        new_user:  0.95  # -5% minimal acquisition
+        visit:     1.35  # +35% efficiency focus
+        conversion: 1.05  # +5% conversion optimization
+        
       profile_multipliers:
         conservative:
-          new_user: 0.80
-          visit: 0.95
-          conversion: 1.05
+          new_user:  0.80  # -20% acquisition decline
+          visit:     0.95  # -5% engagement decline
+          conversion: 1.05  # +5% conversion
+          
         aggressive:
-          new_user: 0.95
-          visit: 1.05
-          conversion: 1.10
+          new_user:  0.95  # -5% minimal acquisition
+          visit:     1.05  # +5% engagement
+          conversion: 1.10  # +10% conversion
+          
         balanced:
-          new_user: 0.85
-          visit: 0.90
-          conversion: 1.00
+          new_user:  0.85  # -15% acquisition decline
+          visit:     0.90  # -10% engagement decline
+          conversion: 1.00  # 0% stable conversion
 
-    # -------------------------
-    # YEAR 7 — Mature product
-    # -------------------------
+    # --------------------
+    # YEAR 7 — Mature Product
+    # --------------------
     year_7:
       overall:
-        new_user: 0.85
-        visit: 1.25
-        conversion: 1.00
-      
-      # Profile-based growth multipliers for Year 7
+        new_user:  0.85  # -15% acquisition decline
+        visit:     1.25  # +25% engagement focus
+        conversion: 1.00  # 0% stable conversion
+        
       profile_multipliers:
         conservative:
-          new_user: 0.75
-          visit: 0.90
-          conversion: 1.00
+          new_user:  0.75  # -25% acquisition decline
+          visit:     0.90  # -10% engagement decline
+          conversion: 1.00  # 0% stable conversion
+          
         aggressive:
-          new_user: 0.90
-          visit: 0.95
-          conversion: 1.05
+          new_user:  0.90  # -10% acquisition decline
+          visit:     0.95  # -5% engagement decline
+          conversion: 1.05  # +5% conversion
+          
         balanced:
-          new_user: 0.80
-          visit: 0.80
-          conversion: 0.95
+          new_user:  0.80  # -20% acquisition decline
+          visit:     0.80  # -20% engagement decline
+          conversion: 0.95  # -5% conversion decline
 
-    # -------------------------
-    # YEAR 8+ — Long-term steady state
-    # -------------------------
+    # --------------------
+    # YEAR 8+ — Long-term Steady State
+    # --------------------
     year_8_plus:
       overall:
-        new_user: 0.95
-        visit: 1.35
-        conversion: 1.00
-      
-      # Profile-based growth multipliers for Year 8+
+        new_user:  0.95  # -5% minimal acquisition
+        visit:     1.35  # +35% engagement maintenance
+        conversion: 1.00  # 0% stable conversion
+        
       profile_multipliers:
         conservative:
-          new_user: 0.70
-          visit: 0.85
-          conversion: 1.00
+          new_user:  0.70  # -30% low acquisition
+          visit:     0.85  # -15% lower engagement
+          conversion: 1.00  # 0% stable conversion
+          
         aggressive:
-          new_user: 0.85
-          visit: 0.90
-          conversion: 1.05
+          new_user:  0.85  # -15% minimal acquisition
+          visit:     0.90  # -10% engagement
+          conversion: 1.05  # +5% conversion
+          
         balanced:
-          new_user: 0.75
-          visit: 0.75
-          conversion: 0.90
+          new_user:  0.75  # -25% low acquisition
+          visit:     0.75  # -25% lower engagement
+          conversion: 0.90  # -10% conversion decline

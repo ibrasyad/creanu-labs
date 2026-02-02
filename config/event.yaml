@@ -1,53 +1,84 @@
-event:
-  # template:
-  #   name: "Launch Campaign"
-  #   description: "Initial marketing push after launch"
-  #   year: 1
-  #   start_month: 1
-  #   end_month: 3
-  #   overall:
-  #     new_user: 1.4
-  #     visit: 1.2
-  #     conversion: 1.2
-  #   # Tiers number OVERWRITE the overall
-  #   tiers:
-  #     budget:
-  #       new_user: 1.5
-  #       visit: 1.5
-  #       conversion: 1.5
-  launch_campaign:
-    name: "Launch Campaign"
-    description: "Initial marketing push after launch"
-    year: 1
-    start_month: 1
-    end_month: 3
-    overall:
-      new_user: 1.4
-      visit: 1.3
-      conversion: 1.1
+# =============================================================================
+# MARKETING EVENTS & CAMPAIGNS CONFIGURATION
+# =============================================================================
+# Event template structure:
+# - name: Human-readable event name
+# - description: Brief explanation of the event
+# - year: Simulation year when event occurs
+# - start_month/end_month: Event duration (null = ongoing)
+# - overall: Default multipliers for all tiers
+# - tiers: Specific tier overrides (optional)
+# - profiles: Profile-based targeting (optional)
+# =============================================================================
 
-  new_year_promotion:
-    name: "New Year Promotion"
-    description: "Annual New Year traffic spike"
-    year: 2
+event:
+  # ==================== LAUNCH CAMPAIGN ====================
+  launch_campaign:
+    name:        "Launch Campaign"
+    description: "Initial marketing push after launch"
+    year:        1
     start_month: 1
-    end_month: 1
+    end_month:   3
+    
+    # Default multipliers for all tiers
     overall:
-      visit: 1.15
+      new_user:  1.4   # +40% new user acquisition
+      visit:     1.3   # +30% visit frequency
+      conversion: 1.1  # +10% conversion rate
+
+  # ==================== NEW YEAR PROMOTION ====================
+  new_year_promotion:
+    name:        "New Year Promotion"
+    description: "Annual New Year traffic spike"
+    year:        2
+    start_month: 1
+    end_month:   1
+    
+    # Focus on existing user activity
+    overall:
+      visit: 1.15   # +15% visit frequency
+    
     # Profile-based targeting instead of specific tiers
     profiles:
       conservative:
-        visit: 1.4
-        conversion: 1.2
+        visit:      1.4   # +40% visits for budget-conscious users
+        conversion: 1.2   # +20% conversion rate
 
+  # ==================== LANDING PAGE A/B TEST ====================
   landing_page_ab_test:
-    name: "Landing Page A/B Test"
-    description: "Improved landing page"
-    year: 3
+    name:        "Landing Page A/B Test"
+    description: "Improved landing page conversion"
+    year:        3
     start_month: 5
-    end_month: null
+    end_month:   null   # Ongoing improvement
+    
     # Profile-based targeting instead of specific tiers
     profiles:
       aggressive:
         conversion:
-          landing_page: 1.25
+          landing_page: 1.25   # +25% landing page conversion
+
+# =============================================================================
+# EVENT TEMPLATE (for reference)
+# =============================================================================
+# template:
+#   name: "Campaign Name"
+#   description: "Campaign description"
+#   year: 1
+#   start_month: 1
+#   end_month: 3
+#   overall:
+#     new_user: 1.4
+#     visit: 1.2
+#     conversion: 1.2
+#   # Tier-specific overrides (optional)
+#   tiers:
+#     budget:
+#       new_user: 1.5
+#       visit: 1.5
+#       conversion: 1.5
+#   # Profile-based targeting (optional)
+#   profiles:
+#     conservative:
+#       visit: 1.4
+#       conversion: 1.2

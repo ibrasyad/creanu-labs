@@ -1,169 +1,213 @@
-random: # Regular customers, medium-sized baskets
-  profile: balanced
-  priority: medium
+# =============================================================================
+# RANDOM TIER CONFIGURATION
+# =============================================================================
+# Regular customers with average purchasing patterns
+# Profile: balanced | Priority: medium
+# =============================================================================
+
+random:
+  # ==================== TIER METADATA ====================
+  profile:     balanced
+  priority:    medium
   description: "Regular customers with average purchasing patterns"
-  visit_chance:
-    monday: 0.04
-    tuesday: 0.04
-    wednesday: 0.04
-    thursday: 0.04
-    friday: 0.04
-    saturday: 0.07
-    sunday: 0.07
 
-  monthly_visit_chance_multiplier:
-    january: 0.8
-    february: 0.9
-    march: 1.0
-    april: 0.7
-    may: 0.75
-    june: 0.8
-    july: 0.9
-    august: 1.15
-    september: 0.8
-    october: 0.7
-    november: 0.9
-    december: 1.1
+  # ==================== VISIT PATTERNS ====================
   
+  # Daily visit probability by weekday
+  visit_chance:
+    monday:    0.04   # 4% - consistent weekday
+    tuesday:   0.04   # 4% - consistent weekday
+    wednesday: 0.04   # 4% - consistent weekday
+    thursday:  0.04   # 4% - consistent weekday
+    friday:    0.04   # 4% - consistent weekday
+    saturday:  0.07   # 7% - weekend increase
+    sunday:    0.07   # 7% - weekend increase
+
+  # Monthly visit multipliers (seasonal variations)
+  monthly_visit_chance_multiplier:
+    january:   0.8   # Post-holiday slowdown
+    february:  0.9   # Recovery
+    march:     1.0   # Normal
+    april:     0.7   # Spring dip
+    may:       0.75  # Moderate
+    june:      0.8   # Summer start
+    july:      0.9   # Summer
+    august:    1.15  # Late summer peak
+    september: 0.8   # Back to school
+    october:   0.7   # Fall dip
+    november:  0.9   # Pre-holiday
+    december:  1.1   # Holiday season
+  
+  # ==================== CONVERSION FUNNEL ====================
+  
+  # Landing page - Standard browsing behavior
   landing_page:
-    conversion_rate: 0.65
+    conversion_rate: 0.65   # 65% proceed (average)
     duration:
       min_duration: 5
-      max_duration: 1800
-      avg_duration: 190
+      max_duration: 1800    # 30 minutes max
+      avg_duration: 190    # ~3 minutes
 
+  # Product view - Normal browsing
   product_view:
-    conversion_rate: 0.75
+    conversion_rate: 0.75   # 75% add to cart
     duration:
       min_duration: 5
-      max_duration: 3600
-      avg_duration: 560
+      max_duration: 3600    # 1 hour max
+      avg_duration: 560    # ~9 minutes
 
+  # Add to cart - Standard consideration
   add_to_cart:
-    conversion_rate: 0.8
+    conversion_rate: 0.80   # 80% proceed to checkout
     duration:
       min_duration: 5
-      max_duration: 900
-      avg_duration: 400
+      max_duration: 900     # 15 minutes max
+      avg_duration: 400    # ~7 minutes
 
+  # Checkout - Normal checkout process
   checkout:
-    conversion_rate: 0.85
+    conversion_rate: 0.85   # 85% complete purchase
     duration:
       min_duration: 5
-      max_duration: 86400
-      avg_duration: 2100
+      max_duration: 86400   # 24 hours max
+      avg_duration: 2100   # 35 minutes
 
+  # Paid - Transaction completed
   paid:
-    conversion_rate: 1
+    conversion_rate: 1.0    # 100% (final stage)
     duration:
       min_duration: 0
       max_duration: 0
       avg_duration: 0
-  
+
+  # Random variation in funnel performance
   funnel_noise:
     distribution: poisson
     multiplier: 1.15
   
+  # ==================== VISIT TIMING ====================
+  
+  # Peak visit hours (standard schedule)
   visit_hour_peak:
-    first:
+    first:                     # Morning peak
       weight: 10
       hour:
         min: 0
         max: 23
-        avg: 10
-    second:
+        avg: 10               # 10 AM average
+        
+    second:                    # Afternoon peak
       weight: 10
       hour:
         min: 0
         max: 23
-        avg: 15
-    third:
+        avg: 15               # 3 PM average
+        
+    third:                     # Evening peak
       weight: 10
       hour:
         min: 0
         max: 23
-        avg: 20
+        avg: 20               # 8 PM average
     
+  # ==================== USER ACQUISITION ====================
+  
+  # Base user count
   base_user: 10
 
+  # Daily acquisition attempts
   daily_retry: 6
-  daily_new_user_chance: 0.14
-  daily_new_user_chance_weekend: 0.21
+  daily_new_user_chance: 0.14        # 14% on weekdays
+  daily_new_user_chance_weekend: 0.21 # 21% on weekends
 
+  # Random variation in daily acquisition
   daily_new_user_noise:
     distribution: poisson
     multiplier: 1.15
-  
-  monthly_new_user_multiplier:
-    january: 0.8
-    february: 0.9
-    march: 1.0
-    april: 0.7
-    may: 0.75
-    june: 0.8
-    july: 0.9
-    august: 1.15
-    september: 0.8
-    october: 0.7
-    november: 0.9
-    december: 1.1
 
+  # Monthly acquisition multipliers (seasonal)
+  monthly_new_user_multiplier:
+    january:   0.8   # Post-holiday slowdown
+    february:  0.9   # Recovery
+    march:     1.0   # Normal
+    april:     0.7   # Spring dip
+    may:       0.75  # Moderate
+    june:      0.8   # Summer start
+    july:      0.9   # Summer
+    august:    1.15  # Late summer peak
+    september: 0.8   # Back to school
+    october:   0.7   # Fall dip
+    november:  0.9   # Pre-holiday
+    december:  1.1   # Holiday season
+
+  # Random variation in monthly acquisition
   monthly_new_user_noise:
     distribution: poisson
     multiplier: 1.25
   
+  # ==================== SHOPPING BEHAVIOR ====================
+  
+  # Basket size (average)
   basket:
-    min_items: 1
-    max_items: 4
+    min_items: 1   # Minimum items
+    max_items: 4   # Maximum items
 
+  # Category preferences (balanced)
   category_weight:
-    vegetables: 1.0
-    fruits: 1.0
-    grains: 1.0
-    dairy: 1.0
-    bakery: 1.0
-    snacks: 1.0
-    beverages: 1.0
-    meat: 1.0
-    seafood: 1.0
-    poultry: 1.0
-    frozen_foods: 1.0
-    personal_care: 1.0
-    household_supplies: 1.0
-    condiments_seasonings: 1.0
-  
+    vegetables:           1.0   # Normal preference
+    fruits:              1.0   # Normal preference
+    grains:              1.0   # Normal preference
+    dairy:               1.0   # Normal preference
+    bakery:              1.0   # Normal preference
+    snacks:              1.0   # Normal preference
+    beverages:           1.0   # Normal preference
+    meat:                1.0   # Normal preference
+    seafood:             1.0   # Normal preference
+    poultry:             1.0   # Normal preference
+    frozen_foods:        1.0   # Normal preference
+    personal_care:       1.0   # Normal preference
+    household_supplies:  1.0   # Normal preference
+    condiments_seasonings: 1.0   # Normal preference
+
+  # Quantity model (standard)
   quantity_model:
-    base_lambda: 1.5
-  
+    base_lambda: 1.5   # Standard average units
+
+  # Quantity bias per category (balanced)
   quantity_bias:
-    vegetables: 1.0
-    fruits: 1.0
-    grains: 1.0
-    dairy: 1.0
-    bakery: 1.0
-    snacks: 1.0
-    beverages: 1.0
-    meat: 1.0
-    seafood: 1.0
-    poultry: 1.0
-    frozen_foods: 1.0
-    personal_care: 1.0
-    household_supplies: 1.0
-    condiments_seasonings: 1.0
+    vegetables:           1.0   # Normal quantities
+    fruits:              1.0   # Normal quantities
+    grains:              1.0   # Normal quantities
+    dairy:               1.0   # Normal quantities
+    bakery:              1.0   # Normal quantities
+    snacks:              1.0   # Normal quantities
+    beverages:           1.0   # Normal quantities
+    meat:                1.0   # Normal quantities
+    seafood:             1.0   # Normal quantities
+    poultry:             1.0   # Normal quantities
+    frozen_foods:        1.0   # Normal quantities
+    personal_care:       1.0   # Normal quantities
+    household_supplies:  1.0   # Normal quantities
+    condiments_seasonings: 1.0   # Normal quantities
   
+  # ==================== DEMOGRAPHIC DISTRIBUTION ====================
+  
+  # Geographic distribution (Jakarta area)
   city:
-    west_jakarta: 10
-    east_jakarta: 10
-    north_jakarta: 10
-    central_jakarta: 10
-    south_jakarta: 10
-    tangerang_city: 10
-    south_tangerang: 10
-  
+    west_jakarta:     10
+    east_jakarta:     10
+    north_jakarta:    10
+    central_jakarta:  10
+    south_jakarta:    10
+    tangerang_city:   10
+    south_tangerang:  10
+
+  # Gender distribution
   gender:
-    male: 10
+    male:   10
     female: 10
 
+  # Acquisition channels
   acquisition_channel:
-    organic: 10
-    paid: 10
+    organic: 10   # Natural discovery
+    paid:    10   # Advertising

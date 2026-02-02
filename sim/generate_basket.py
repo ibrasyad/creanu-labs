@@ -220,10 +220,14 @@ def generate_basket(tier_name=None, seed=None):
         else:
             subcategory = random.choice(list(subcats))
 
-        # Check if subcategory allows duplicates
+        # Select product
         products = subcats[subcategory].get("product", {})
         product_name = random.choice(list(products))
+        product = products[product_name]
+        
         cooldown = get_effective_cooldown(_catalog, category, subcategory, product_name)
+        allows_dup = dup_rules.get(subcategory, True)
+        
         # cooldown > 1 means "do not repeat in same basket"
         if cooldown > 1 and subcategory in picked_subcategories:
             max_retries = 10
@@ -237,16 +241,16 @@ def generate_basket(tier_name=None, seed=None):
                 else:
                     subcategory = random.choice(list(subcats))
 
+                # Select product
+                products = subcats[subcategory].get("product", {})
+                product_name = random.choice(list(products))
+                product = products[product_name]
+                
                 cooldown = get_effective_cooldown(_catalog, category, subcategory, product_name)
                 allows_dup = dup_rules.get(subcategory, True)
 
                 if (cooldown <= 1) or (subcategory not in picked_subcategories):
                     break
-
-        # Select product
-        products = subcats[subcategory].get("product", {})
-        product_name = random.choice(list(products))
-        product = products[product_name]
 
         # Calculate quantity
         base_lambda = tier.get("quantity_model", {}).get("base_lambda") or \

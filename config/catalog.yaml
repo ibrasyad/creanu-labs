@@ -1,556 +1,507 @@
-# Product catalog structure: category → subcategory → product → base_price (in rupiah)
+# =============================================================================
+# PRODUCT CATALOG CONFIGURATION
+# =============================================================================
+# Structure: category → subcategory → product → base_price (in rupiah)
+# Cooldown: Days before same subcategory can appear again in basket
+# =============================================================================
+
 catalog:
+  # ==================== VEGETABLES ====================
   vegetables:
+    # Leafy Greens
     leafy_greens:
       cooldown: 1
       product:
-        spinach:
-          base_price: 4000
-        kale:
-          base_price: 5000
-        lettuce:
-          base_price: 3000
+        spinach:      { base_price: 4000 }
+        kale:         { base_price: 5000 }
+        lettuce:      { base_price: 3000 }
+
+    # Root Vegetables
     root_vegetables:
       cooldown: 1
       product:
-        carrots:
-          base_price: 2250
-        potatoes:
-          base_price: 2250
-        beets:
-          base_price: 3250
+        carrots:      { base_price: 2250 }
+        potatoes:     { base_price: 2250 }
+        beets:        { base_price: 3250 }
 
+  # ==================== FRUITS ====================
   fruits:
+    # Citrus Fruits
     citrus:
       cooldown: 1
       product:
-        oranges:
-          base_price: 3000
-        lemons:
-          base_price: 4250
-        limes:
-          base_price: 1750
+        oranges:      { base_price: 3000 }
+        lemons:       { base_price: 4250 }
+        limes:        { base_price: 1750 }
+
+    # Berries
     berries:
       cooldown: 1
       product:
-        strawberries:
-          base_price: 12000
-        blueberries:
-          base_price: 15000
-        raspberries:
-          base_price: 18000
+        strawberries: { base_price: 12000 }
+        blueberries:  { base_price: 15000 }
+        raspberries:  { base_price: 18000 }
+
+    # Tropical Fruits
     tropical:
       cooldown: 1
       product:
-        mangoes:
-          base_price: 4500
-        pineapples:
-          base_price: 5500
-        bananas:
-          base_price: 4000
+        mangoes:      { base_price: 4500 }
+        pineapples:   { base_price: 5500 }
+        bananas:      { base_price: 4000 }
+
+    # Stone Fruits
     stone_fruits:
       cooldown: 1
       product:
-        peaches:
-          base_price: 3500
-        plums:
-          base_price: 3000
-        cherries:
-          base_price: 6500
+        peaches:      { base_price: 3500 }
+        plums:        { base_price: 3000 }
+        cherries:     { base_price: 6500 }
+
+    # Melons
     melons:
       cooldown: 1
       product:
-        watermelon:
-          base_price: 55000
-        cantaloupe:
-          base_price: 40000
-        honeydew:
-          base_price: 42000
+        watermelon:   { base_price: 55000 }
+        cantaloupe:   { base_price: 40000 }
+        honeydew:     { base_price: 42000 }
 
+  # ==================== GRAINS ====================
   grains:
     rice:
       cooldown: 21
       product:
-        white_rice_5kg:
-          base_price: 70000
-        brown_rice_1kg:
-          base_price: 25000
-          cooldown: 10
-        premium_white_rice_5kg:
-          base_price: 105000
+        white_rice_5kg:           { base_price: 70000 }
+        brown_rice_1kg:           { base_price: 25000, cooldown: 10 }
+        premium_white_rice_5kg:    { base_price: 105000 }
 
+  # ==================== DAIRY & EGGS ====================
   dairy:
+    # Milk Products
     milk:
       cooldown: 4
       product:
-        whole_milk_1L:
-          base_price: 21500
-        skim_milk_1L:
-          base_price: 25500
-        almond_milk_1L:
-          base_price: 30000
-        soy_milk_1L:
-          base_price: 22000
-        oat_milk_1L:
-          base_price: 32000
+        whole_milk_1L:    { base_price: 21500 }
+        skim_milk_1L:     { base_price: 25500 }
+        almond_milk_1L:   { base_price: 30000 }
+        soy_milk_1L:      { base_price: 22000 }
+        oat_milk_1L:      { base_price: 32000 }
+
+    # Cheese
     cheese:
       cooldown: 1
       product:
-        cheddar_cheese_200g:
-          base_price: 37500
-        mozzarella_cheese_200g:
-          base_price: 45000
+        cheddar_cheese_200g:  { base_price: 37500 }
+        mozzarella_cheese_200g: { base_price: 45000 }
+
+    # Yogurt
     yogurt:
       cooldown: 3
       product:
-        greek_yogurt_150g:
-          base_price: 20000
-        flavored_yogurt_150g:
-          base_price: 16000
+        greek_yogurt_150g:     { base_price: 20000 }
+        flavored_yogurt_150g:  { base_price: 16000 }
+
+    # Butter & Spreads
     butter:
       cooldown: 7
       product:
-        salted_butter_200g:
-          base_price: 20000
-        unsalted_butter_200g:
-          base_price: 22000
-        margarine_200g:
-          base_price: 8500
+        salted_butter_200g:    { base_price: 20000 }
+        unsalted_butter_200g:  { base_price: 22000 }
+        margarine_200g:        { base_price: 8500 }
+
+    # Eggs
     eggs:
       cooldown: 4
       product:
-        regular_eggs_10pcs:
-          base_price: 19500
-        organic_eggs_10pcs:
-          base_price: 29500
+        regular_eggs_10pcs:    { base_price: 19500 }
+        organic_eggs_10pcs:    { base_price: 29500 }
 
+  # ==================== BAKERY ====================
   bakery:
+    # Bread
     bread:
       cooldown: 5
       product:
-        whole_wheat_bread:
-          base_price: 21500
-        white_bread:
-          base_price: 14500
-        multigrain_bread:
-          base_price: 22500
+        whole_wheat_bread: { base_price: 21500 }
+        white_bread:       { base_price: 14500 }
+        multigrain_bread:  { base_price: 22500 }
+
+    # Pastries
     pastries:
       cooldown: 1
       product:
-        croissant:
-          base_price: 11500
-        danish:
-          base_price: 12500
-        muffin:
-          base_price: 9500
+        croissant:   { base_price: 11500 }
+        danish:      { base_price: 12500 }
+        muffin:      { base_price: 9500 }
+
+    # Cakes
     cakes:
       cooldown: 5
       product:
-        chocolate_cake:
-          base_price: 50000
-        vanilla_cake:
-          base_price: 45000
-        red_velvet_cake:
-          base_price: 57500
+        chocolate_cake:   { base_price: 50000 }
+        vanilla_cake:      { base_price: 45000 }
+        red_velvet_cake:   { base_price: 57500 }
+
+    # Cookies
     cookies:
       cooldown: 1
       product:
-        chocolate_chip_cookies:
-          base_price: 7500
-        oatmeal_raisin_cookies:
-          base_price: 10000
-        sugar_cookies:
-          base_price: 5000
+        chocolate_chip_cookies: { base_price: 7500 }
+        oatmeal_raisin_cookies: { base_price: 10000 }
+        sugar_cookies:           { base_price: 5000 }
+
+    # Muffins
     muffins:
       cooldown: 1
       product:
-        blueberry_muffin:
-          base_price: 8000
-        banana_nut_muffin:
-          base_price: 9000
-        chocolate_muffin:
-          base_price: 7000
+        blueberry_muffin:  { base_price: 8000 }
+        banana_nut_muffin: { base_price: 9000 }
+        chocolate_muffin:  { base_price: 7000 }
 
+  # ==================== SNACKS ====================
   snacks:
+    # Chips
     chips:
       cooldown: 1
       product:
-        potato_chips_150g:
-          base_price: 16500
-        tortilla_chips_150g:
-          base_price: 18000
-        veggie_chips_150g:
-          base_price: 20500
+        potato_chips_150g:   { base_price: 16500 }
+        tortilla_chips_150g:  { base_price: 18000 }
+        veggie_chips_150g:    { base_price: 20500 }
+
+    # Nuts
     nuts:
       cooldown: 2
       product:
-        almonds_200g:
-          base_price: 57500
-        cashews_200g:
-          base_price: 57500
-        mixed_nuts_200g:
-          base_price: 50000
+        almonds_200g:   { base_price: 57500 }
+        cashews_200g:   { base_price: 57500 }
+        mixed_nuts_200g: { base_price: 50000 }
+
+    # Granola Bars
     granola_bars:
       cooldown: 1
       product:
-        honey_granola_bars_100g:
-          base_price: 25000
-        chocolate_granola_bars_100g:
-          base_price: 25000
-        fruit_granola_bars_100g:
-          base_price: 25000
+        honey_granola_bars_100g:    { base_price: 25000 }
+        chocolate_granola_bars_100g: { base_price: 25000 }
+        fruit_granola_bars_100g:     { base_price: 25000 }
+
+    # Popcorn
     popcorn:
       cooldown: 1
       product:
-        buttered_popcorn_100g:
-          base_price: 12500
-        cheese_popcorn_100g:
-          base_price: 14500
-        caramel_popcorn_100g:
-          base_price: 17500
+        buttered_popcorn_100g: { base_price: 12500 }
+        cheese_popcorn_100g:   { base_price: 14500 }
+        caramel_popcorn_100g:  { base_price: 17500 }
+
+    # Dried Fruits
     dried_fruits:
       cooldown: 1
       product:
-        dried_mangoes_100g:
-          base_price: 30000
-        dried_apricots_100g:
-          base_price: 25000
-        dried_cranberries_100g:
-          base_price: 27000
+        dried_mangoes_100g:  { base_price: 30000 }
+        dried_apricots_100g: { base_price: 25000 }
+        dried_cranberries_100g: { base_price: 27000 }
 
+  # ==================== BEVERAGES ====================
   beverages:
+    # Soda
     soda:
       cooldown: 3
       product:
-        cola_500mL:
-          base_price: 20000
-        lemon_lime_500mL:
-          base_price: 20000
-        orange_soda_500mL:
-          base_price: 20000
+        cola_500mL:        { base_price: 20000 }
+        lemon_lime_500mL:  { base_price: 20000 }
+        orange_soda_500mL: { base_price: 20000 }
+
+    # Juice
     juice:
       cooldown: 3
       product:
-        orange_juice_750mL:
-          base_price: 37500
-        apple_juice_750mL:
-          base_price: 32500
-        mixed_fruit_juice_750mL:
-          base_price: 42500
+        orange_juice_750mL:    { base_price: 37500 }
+        apple_juice_750mL:      { base_price: 32500 }
+        mixed_fruit_juice_750mL: { base_price: 42500 }
+
+    # Water
     water:
       cooldown: 1
       product:
-        mineral_water_A_600mL:
-          base_price: 3000
-        mineral_water_B_600mL:
-          base_price: 4500
-        mineral_water_C_600mL:
-          base_price: 6000
+        mineral_water_A_600mL: { base_price: 3000 }
+        mineral_water_B_600mL: { base_price: 4500 }
+        mineral_water_C_600mL: { base_price: 6000 }
+
+    # Coffee
     coffee:
       cooldown: 7
       product:
-        ground_coffee_250g:
-          base_price: 25000
-        instant_coffee_200g:
-          base_price: 18500
+        ground_coffee_250g: { base_price: 25000 }
+        instant_coffee_200g: { base_price: 18500 }
+
+    # Tea
     tea:
       cooldown: 7
       product:
-        black_tea_100g:
-          base_price: 12500
-        green_tea_100g:
-          base_price: 15000
-        jasmine_tea_100g:
-          base_price: 17500
+        black_tea_100g:   { base_price: 12500 }
+        green_tea_100g:   { base_price: 15000 }
+        jasmine_tea_100g: { base_price: 17500 }
 
+  # ==================== MEAT ====================
   meat:
+    # Beef
     beef:
       cooldown: 5
       product:
-        ground_beef_500g:
-          base_price: 55000
-        beef_steak_300g:
-          base_price: 70000
-        beef_roast_1kg:
-          base_price: 155000
-          cooldown: 7
+        ground_beef_500g: { base_price: 55000 }
+        beef_steak_300g:  { base_price: 70000 }
+        beef_roast_1kg:   { base_price: 155000, cooldown: 7 }
+
+    # Lamb
     lamb:
       cooldown: 5
       product:
-        lamb_leg_1kg:
-          base_price: 175000
-          cooldown: 7
-        lamb_chop_300g:
-          base_price: 77500
+        lamb_leg_1kg:     { base_price: 175000, cooldown: 7 }
+        lamb_chop_300g:   { base_price: 77500 }
 
+  # ==================== SEAFOOD ====================
   seafood:
+    # Fish
     fish:
       cooldown: 5
       product:
-        salmon_fillet_500g:
-          base_price: 90000
-        dori_fillet_500g:
-          base_price: 42500
+        salmon_fillet_500g: { base_price: 90000 }
+        dori_fillet_500g:   { base_price: 42500 }
+
+    # Shrimp
     shrimp:
       cooldown: 5
       product:
-        shrimp_frozen_500g:
-          base_price: 75000
-        shrimp_fresh_500g:
-          base_price: 95000
+        shrimp_frozen_500g: { base_price: 75000 }
+        shrimp_fresh_500g:  { base_price: 95000 }
+
+    # Tuna
     tuna:
       cooldown: 5
       product:
-        tuna_steak_500g:
-          base_price: 65000
-        tuna_fillet_500g:
-          base_price: 60000
+        tuna_steak_500g: { base_price: 65000 }
+        tuna_fillet_500g: { base_price: 60000 }
 
+  # ==================== POULTRY ====================
   poultry:
+    # Whole Chicken
     whole_chicken:
       cooldown: 5
-      product: 
-        whole_chicken_1kg:
-          base_price: 57500
+      product:
+        whole_chicken_1kg: { base_price: 57500 }
+
+    # Chicken Parts
     chicken_parts:
       cooldown: 4
       product:
-        chicken_breast_500g:
-          base_price: 38500
-        chicken_thigh_500g:
-          base_price: 36500
-        chicken_wings_500g:
-          base_price: 30000
+        chicken_breast_500g: { base_price: 38500 }
+        chicken_thigh_500g:  { base_price: 36500 }
+        chicken_wings_500g:  { base_price: 30000 }
 
+  # ==================== FROZEN FOODS ====================
   frozen_foods:
+    # Frozen Vegetables
     frozen_vegetables:
       cooldown: 7
       product:
-        mixed_vegetables_1kg:
-          base_price: 32500
-        peas_1kg:
-          base_price: 29500
-        corn_1kg:
-          base_price: 29500
+        mixed_vegetables_1kg: { base_price: 32500 }
+        peas_1kg:             { base_price: 29500 }
+        corn_1kg:             { base_price: 29500 }
+
+    # Frozen Meals
     frozen_meals:
       cooldown: 1
       product:
-        frozen_pizza:
-          base_price: 50000
-        frozen_dumplings:
-          base_price: 42500
-        frozen_noodles:
-          base_price: 37500
+        frozen_pizza:    { base_price: 50000 }
+        frozen_dumplings: { base_price: 42500 }
+        frozen_noodles:   { base_price: 37500 }
 
+  # ==================== PERSONAL CARE ====================
   personal_care:
+    # Skincare
     skincare:
       cooldown: 7
       product:
-        facial_cleanser:
-          base_price: 20000
-        moisturizer:
-          base_price: 27500
-        sunscreen:
-          base_price: 32500
+        facial_cleanser: { base_price: 20000 }
+        moisturizer:     { base_price: 27500 }
+        sunscreen:       { base_price: 32500 }
+
+    # Haircare
     haircare:
       cooldown: 7
       product:
-        shampoo:
-          base_price: 20000
-        conditioner:
-          base_price: 23000
+        shampoo:    { base_price: 20000 }
+        conditioner: { base_price: 23000 }
+
+    # Oral Care
     oral_care:
       cooldown: 7
       product:
-        toothpaste:
-          base_price: 15000
-        toothbrush:
-          base_price: 10000
+        toothpaste:  { base_price: 15000 }
+        toothbrush:  { base_price: 10000 }
 
+  # ==================== HOUSEHOLD SUPPLIES ====================
   household_supplies:
+    # Cleaning Products
     cleaning_products:
       cooldown: 7
       product:
-        all_purpose_cleaner:
-          base_price: 25000
-        dish_soap:
-          base_price: 18500
-        laundry_detergent:
-          base_price: 37500
+        all_purpose_cleaner: { base_price: 25000 }
+        dish_soap:           { base_price: 18500 }
+        laundry_detergent:    { base_price: 37500 }
+
+    # Paper Goods
     paper_goods:
       cooldown: 2
       product:
-        paper_towels:
-          base_price: 12500
-        toilet_paper:
-          base_price: 15000
+        paper_towels: { base_price: 12500 }
+        toilet_paper: { base_price: 15000 }
 
+  # ==================== CONDIMENTS & SEASONINGS ====================
   condiments_seasonings:
+    # Sauces
     sauces:
       cooldown: 2
       product:
-        ketchup:
-          base_price: 12500
-        mustard:
-          base_price: 10000
-        mayonnaise:
-          base_price: 15000
+        ketchup:     { base_price: 12500 }
+        mustard:     { base_price: 10000 }
+        mayonnaise:  { base_price: 15000 }
+
+    # Spices
     spices:
       cooldown: 5
       product:
-        black_pepper:
-          base_price: 7500
-        cinnamon:
-          base_price: 9500
-        paprika:
-          base_price: 8500
+        black_pepper: { base_price: 7500 }
+        cinnamon:     { base_price: 9500 }
+        paprika:      { base_price: 8500 }
+
+    # Oils
     oils:
       cooldown: 3
       product:
-        olive_oil_500mL:
-          base_price: 50000
-        vegetable_oil_1L:
-          base_price: 22000
-        vegetable_oil_5L:
-          base_price: 85000
-          cooldown: 12
-        coconut_oil_500mL:
-          base_price: 27500
+        olive_oil_500mL:     { base_price: 50000 }
+        vegetable_oil_1L:    { base_price: 22000 }
+        vegetable_oil_5L:    { base_price: 85000, cooldown: 12 }
+        coconut_oil_500mL:   { base_price: 27500 }
+
+    # Dressings
     dressings:
       cooldown: 3
       product:
-        ranch_dressing_250mL:
-          base_price: 18500
-        italian_dressing_250mL:
-          base_price: 17000
-        vinaigrette_250mL:
-          base_price: 16000
+        ranch_dressing_250mL:   { base_price: 18500 }
+        italian_dressing_250mL: { base_price: 17000 }
+        vinaigrette_250mL:      { base_price: 16000 }
+
+    # Marinades
     marinades:
       cooldown: 2
       product:
-        teriyaki_marinade_250mL:
-          base_price: 25000
-        barbecue_marinade_250mL:
-          base_price: 23000
-        lemon_herb_marinade_250mL:
-          base_price: 27000
+        teriyaki_marinade_250mL:  { base_price: 25000 }
+        barbecue_marinade_250mL:  { base_price: 23000 }
+        lemon_herb_marinade_250mL: { base_price: 27000 }
+
+  # ==================== READY TO EAT ====================
   ready_to_eat:
+    # Instant Noodles (Cup)
     instant_noodles_cup:
       cooldown: 1
       product:
-        instant_noodles_cup_chicken:
-          base_price: 7000
-        instant_noodles_cup_beef:
-          base_price: 7500
-        instant_noodles_cup_vegetable:
-          base_price: 6500
-  
+        instant_noodles_cup_chicken:    { base_price: 7000 }
+        instant_noodles_cup_beef:       { base_price: 7500 }
+        instant_noodles_cup_vegetable:  { base_price: 6500 }
+
+    # Instant Noodles (Pack)
     instant_noodles_pack:
       cooldown: 3
       product:
-        instant_noodles_pack_shrimp:
-          base_price: 12000
-        instant_noodles_pack_curry:
-          base_price: 11000
+        instant_noodles_pack_shrimp: { base_price: 12000 }
+        instant_noodles_pack_curry:  { base_price: 11000 }
 
+  # ==================== PANTRY ====================
   pantry:
+    # Pasta
     pasta:
       cooldown: 7
       product:
-        spaghetti_500g:
-          base_price: 15000
-        penne_500g:
-          base_price: 15000
-        macaroni_500g:
-          base_price: 14000
+        spaghetti_500g: { base_price: 15000 }
+        penne_500g:     { base_price: 15000 }
+        macaroni_500g:  { base_price: 14000 }
+
+    # Canned Goods
     canned_goods:
       cooldown: 5
       product:
-        canned_tomatoes_400g:
-          base_price: 12000
-        canned_sardines_155g:
-          base_price: 8500
-        canned_tuna_170g:
-          base_price: 13500
-        canned_baked_beans_425g:
-          base_price: 10000
+        canned_tomatoes_400g:   { base_price: 12000 }
+        canned_sardines_155g:   { base_price: 8500 }
+        canned_tuna_170g:       { base_price: 13500 }
+        canned_baked_beans_425g: { base_price: 10000 }
+
+    # Sugar & Salt
     sugar_salt:
       cooldown: 30
       product:
-        white_sugar_1kg:
-          base_price: 18000
-        brown_sugar_500g:
-          base_price: 12000
-        salt_500g:
-          base_price: 5000
-        iodized_salt_500g:
-          base_price: 6000
+        white_sugar_1kg:   { base_price: 18000 }
+        brown_sugar_500g:  { base_price: 12000 }
+        salt_500g:         { base_price: 5000 }
+        iodized_salt_500g: { base_price: 6000 }
+
+    # Flour
     flour:
       cooldown: 14
       product:
-        all_purpose_flour_1kg:
-          base_price: 16000
-        wheat_flour_1kg:
-          base_price: 14000
+        all_purpose_flour_1kg: { base_price: 16000 }
+        wheat_flour_1kg:       { base_price: 14000 }
 
+  # ==================== BREAKFAST ====================
   breakfast:
+    # Cereals
     cereals:
       cooldown: 7
       product:
-        cornflakes_300g:
-          base_price: 22000
-        oatmeal_500g:
-          base_price: 25000
-        muesli_500g:
-          base_price: 35000
+        cornflakes_300g: { base_price: 22000 }
+        oatmeal_500g:    { base_price: 25000 }
+        muesli_500g:     { base_price: 35000 }
+
+    # Spreads
     spreads:
       cooldown: 7
       product:
-        strawberry_jam_250g:
-          base_price: 18000
-        peanut_butter_250g:
-          base_price: 28000
-        chocolate_spread_250g:
-          base_price: 25000
-        honey_250g:
-          base_price: 35000
+        strawberry_jam_250g:  { base_price: 18000 }
+        peanut_butter_250g:   { base_price: 28000 }
+        chocolate_spread_250g: { base_price: 25000 }
+        honey_250g:           { base_price: 35000 }
 
+  # ==================== HEALTH ====================
   health:
+    # Vitamins
     vitamins:
       cooldown: 30
       product:
-        vitamin_c_30tabs:
-          base_price: 35000
-        multivitamins_30tabs:
-          base_price: 45000
-        vitamin_d_30tabs:
-          base_price: 40000
+        vitamin_c_30tabs:    { base_price: 35000 }
+        multivitamins_30tabs: { base_price: 45000 }
+        vitamin_d_30tabs:     { base_price: 40000 }
+
+    # Supplements
     supplements:
       cooldown: 30
       product:
-        fish_oil_30caps:
-          base_price: 55000
-        probiotics_30caps:
-          base_price: 65000
-        calcium_30tabs:
-          base_price: 50000
+        fish_oil_30caps:    { base_price: 55000 }
+        probiotics_30caps:  { base_price: 65000 }
+        calcium_30tabs:     { base_price: 50000 }
 
+  # ==================== PROCESSED FOODS ====================
   processed_foods:
+    # Sausages
     sausages:
       cooldown: 5
       product:
-        chicken_sausages_500g:
-          base_price: 35000
-        beef_sausages_500g:
-          base_price: 45000
-        cheese_sausages_500g:
-          base_price: 40000
+        chicken_sausages_500g: { base_price: 35000 }
+        beef_sausages_500g:    { base_price: 45000 }
+        cheese_sausages_500g:  { base_price: 40000 }
+
+    # Deli Meats
     deli_meats:
       cooldown: 4
       product:
-        chicken_ham_200g:
-          base_price: 30000
-        beef_salami_200g:
-          base_price: 40000
-        turkey_breast_200g:
-          base_price: 35000
+        chicken_ham_200g:  { base_price: 30000 }
+        beef_salami_200g: { base_price: 40000 }
+        turkey_breast_200g: { base_price: 35000 }

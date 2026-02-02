@@ -1,87 +1,103 @@
-# Template tier - copy this file and rename to create new customer segments
+# =============================================================================
+# CUSTOMER TIER TEMPLATE
+# =============================================================================
+# Copy this file and rename to create new customer segments
 # Replace "template" with your tier name and customize the values
+# =============================================================================
 
 template:
-  # User demographic
+  # ==================== BASIC DEMOGRAPHICS ====================
+  
+  # Initial user count for this tier
   base_user: 10
 
-  # Defines chance of new users everyday being created in this tier. Each retry is an independent chance.
+  # ==================== USER ACQUISITION ====================
+  
+  # Number of attempts per day to create new users in this tier
   daily_retry: 1
-  daily_new_user_chance: 0.05
-  daily_new_user_chance_weekend: 0.10
+  
+  # Probability of creating a new user on each attempt
+  daily_new_user_chance: 0.05       # 5% on weekdays
+  daily_new_user_chance_weekend: 0.10  # 10% on weekends
 
+  # Random variation in daily new user creation
   daily_new_user_noise:
     distribution: poisson
     multiplier: 1.15
-  
-  # Defines new users multiplier by month name
-  monthly_new_user_multiplier:
-    january: 1.0
-    february: 1.0
-    march: 1.0
-    april: 1.0
-    may: 1.0
-    june: 1.0
-    july: 1.0
-    august: 1.0
-    september: 1.0
-    october: 1.0
-    november: 1.0
-    december: 1.0
 
+  # Monthly multipliers for new user acquisition
+  monthly_new_user_multiplier:
+    january:   1.0
+    february:  1.0
+    march:     1.0
+    april:     1.0
+    may:       1.0
+    june:      1.0
+    july:      1.0
+    august:    1.0
+    september: 1.0
+    october:   1.0
+    november:  1.0
+    december:  1.0
+
+  # Random variation in monthly new user creation
   monthly_new_user_noise:
     distribution: poisson
     multiplier: 1.25
-  
-  # Minimum and maximum items per transaction
-  basket:
-    min_items: 1
-    max_items: 4
 
-  # Relative preference for each category (higher = more likely)
+  # ==================== SHOPPING BEHAVIOR ====================
+  
+  # Basket size limits
+  basket:
+    min_items: 1   # Minimum items per transaction
+    max_items: 4   # Maximum items per transaction
+
+  # Category preference weights (higher = more likely to purchase)
   category_weight:
-    vegetables: 1.0
-    fruits: 1.0
-    grains: 1.0
-    dairy: 1.0
-    bakery: 1.0
-    snacks: 1.0
-    beverages: 1.0
-    meat: 1.0
-    seafood: 1.0
-    poultry: 1.0
-    frozen_foods: 1.0
-    personal_care: 1.0
-    household_supplies: 1.0
+    vegetables:           1.0
+    fruits:              1.0
+    grains:              1.0
+    dairy:               1.0
+    bakery:              1.0
+    snacks:              1.0
+    beverages:           1.0
+    meat:                1.0
+    seafood:             1.0
+    poultry:             1.0
+    frozen_foods:        1.0
+    personal_care:       1.0
+    household_supplies:  1.0
     condiments_seasonings: 1.0
-  
-  # Average units per item (Poisson distribution)
+
+  # Average quantity per item (Poisson distribution)
   quantity_model:
-    base_lambda: 1.5
-  
-  # Multiplier for quantity per category: actual_avg = base_lambda * bias
+    base_lambda: 1.5   # Expected average units per product
+
+  # Quantity bias per category (multiplier for base_lambda)
   quantity_bias:
-    vegetables: 1.0
-    fruits: 1.0
-    grains: 1.0
-    dairy: 1.0
-    bakery: 1.0
-    snacks: 1.0
-    beverages: 1.0
-    meat: 1.0
-    seafood: 1.0
-    poultry: 1.0
-    frozen_foods: 1.0
-    personal_care: 1.0
-    household_supplies: 1.0
+    vegetables:           1.0
+    fruits:              1.0
+    grains:              1.0
+    dairy:               1.0
+    bakery:              1.0
+    snacks:              1.0
+    beverages:           1.0
+    meat:                1.0
+    seafood:             1.0
+    poultry:             1.0
+    frozen_foods:        1.0
+    personal_care:       1.0
+    household_supplies:  1.0
     condiments_seasonings: 1.0
+
+  # ==================== TRANSACTION PATTERNS ====================
   
-  # Likelihood of this tier being selected per weekday
+  # Likelihood of this tier being selected for transactions by weekday
   transaction_weight:
-    monday: 10
-    tuesday: 10
+    monday:    10
+    tuesday:   10
     wednesday: 10
-    thursday: 10
-    friday: 10
-    saturday: 10
-    sunday: 10
+    thursday:  10
+    friday:    10
+    saturday:  10
+    sunday:    10
