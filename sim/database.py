@@ -99,7 +99,15 @@ class LettuceMelonDB:
         conn.execute("CREATE INDEX IF NOT EXISTS idx_trx_item_date ON transaction_item(date)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_funnel_date ON funnel(activity_datetime)")
         
+        # Check existing users
+        existing_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
         print(f"Database initialized at {self.db_path}")
+        print(f"Existing users in database: {existing_users}")
+        
+        if existing_users > 0:
+            sample_users = conn.execute("SELECT user_id, tier FROM users LIMIT 5").fetchdf()
+            print("Sample existing users:")
+            print(sample_users)
     
     def load_catalog_from_csv(self, csv_path="output/catalog.csv"):
         """Load catalog data from CSV file."""
@@ -135,6 +143,20 @@ class LettuceMelonDB:
             return
         
         conn = self.connect()
+        
+        # Debug: print the dataframe structure and first few rows
+        print(f"DEBUG: users_df columns: {list(users_df.columns)}")
+        print(f"DEBUG: users_df shape: {users_df.shape}")
+        print(f"DEBUG: First few rows:")
+        print(users_df.head())
+        
+        # Check for duplicates before inserting
+        if 'user_id' in users_df.columns:
+            duplicates = users_df['user_id'].duplicated().sum()
+            if duplicates > 0:
+                print(f"WARNING: Found {duplicates} duplicate user_ids in new data")
+                print("Duplicate user_ids:", users_df[users_df['user_id'].duplicated()]['user_id'].tolist())
+        
         conn.execute("INSERT INTO users SELECT * FROM users_df")
         print(f"Inserted {len(users_df)} new users")
     
