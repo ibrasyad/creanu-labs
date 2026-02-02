@@ -66,6 +66,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add output/lettuce_melon.duckdb output/*.csv
+        git add output/*.csv
         git diff --staged --quiet || git commit -m "Generate initial data (${{ github.event.inputs.start_date || '2022-01-01' }} to ${{ github.event.inputs.end_date || '2022-12-31' }})"
         git push
