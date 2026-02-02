@@ -35,7 +35,7 @@ def initial_run():
 
 def generate_for_date(target_date):
     """Generate data for a specific date."""
-    print(f"Generating data for date: {target_date}")
+    # print(f"Generating data for date: {target_date}")
     
     _tiers = get_tiers()
     
@@ -131,11 +131,11 @@ def generate_for_date(target_date):
         # Insert transactions
         db.insert_transactions(trx_table[trx_column_list], trx_items[trx_item_column_list])
         
-        print(f"Generated for {target_date}:")
-        print(f"  New users: {len(new_user_rows) if new_user_rows else 0}")
-        print(f"  Funnel activities: {len(funnel_table)}")
-        print(f"  Transactions: {len(trx_table)}")
-        print(f"  Transaction items: {len(trx_items)}")
+        # print(f"Generated for {target_date}:")
+        # print(f"  New users: {len(new_user_rows) if new_user_rows else 0}")
+        # print(f"  Funnel activities: {len(funnel_table)}")
+        # print(f"  Transactions: {len(trx_table)}")
+        # print(f"  Transaction items: {len(trx_items)}")
 
 def main(start_date=None, end_date=None):
     """
