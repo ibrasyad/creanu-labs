@@ -119,25 +119,60 @@ def validate_tiers(tiers_dict):
         if not isinstance(tier_config, dict):
             raise ConfigError(f"Tier '{tier_name}' configuration must be a dict")
         
-        # Validate profile metadata
+        # Validate profile metadata (REQUIRED)
         if 'profile' not in tier_config:
             raise ConfigError(f"Tier '{tier_name}' must specify a profile")
         
-        if tier_config['profile'] not in valid_profiles:
-            raise ConfigError(f"Tier '{tier_name}' has invalid profile '{tier_config['profile']}'. Must be one of: {valid_profiles}")
+        profile = tier_config['profile']
+        if profile not in valid_profiles:
+            raise ConfigError(f"Tier '{tier_name}' has invalid profile '{profile}'. Must be one of: {valid_profiles}")
         
-        if 'priority' in tier_config and tier_config['priority'] not in valid_priorities:
-            raise ConfigError(f"Tier '{tier_name}' has invalid priority '{tier_config['priority']}'. Must be one of: {valid_priorities}")
+        # Validate priority metadata (optional)
+        if 'priority' in tier_config:
+            priority = tier_config['priority']
+            if priority not in valid_priorities:
+                raise ConfigError(f"Tier '{tier_name}' has invalid priority '{priority}'. Must be one of: {valid_priorities}")
+        
+        # Validate description (optional)
+        if 'description' in tier_config:
+            description = tier_config['description']
+            if not isinstance(description, str):
+                raise ConfigError(f"Tier '{tier_name}' description must be a string")
         
         # Validate basket config
         if "basket" in tier_config:
             basket = tier_config["basket"]
+            if not isinstance(basket, dict):
+                raise ConfigError(f"Tier '{tier_name}' basket configuration must be a dictionary")
+            
             if "min_items" in basket and "max_items" in basket:
-                if basket["min_items"] > basket["max_items"]:
+                min_items = basket["min_items"]
+                max_items = basket["max_items"]
+                
+                if not isinstance(min_items, int) or not isinstance(max_items, int):
+                    raise ConfigError(f"Tier '{tier_name}' basket min_items and max_items must be integers")
+                
+                if min_items < 0 or max_items < 0:
+                    raise ConfigError(f"Tier '{tier_name}' basket item counts cannot be negative")
+                
+                if min_items > max_items:
                     raise ConfigError(
-                        f"Tier '{tier_name}': min_items ({basket['min_items']}) "
-                        f"cannot exceed max_items ({basket['max_items']})"
+                        f"Tier '{tier_name}': min_items ({min_items}) "
+                        f"cannot exceed max_items ({max_items})"
                     )
+        
+        # Validate visit chance configuration
+        if "visit_chance" in tier_config:
+            visit_chance = tier_config["visit_chance"]
+            if not isinstance(visit_chance, dict):
+                raise ConfigError(f"Tier '{tier_name}' visit_chance must be a dictionary")
+            
+            valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+            for day in valid_days:
+                if day in visit_chance:
+                    chance = visit_chance[day]
+                    if not isinstance(chance, (int, float)) or not (0 <= chance <= 1):
+                        raise ConfigError(f"Tier '{tier_name}' {day} visit chance '{chance}' must be between 0 and 1")
 
 
 def validate_growth_config(growth_dict):
@@ -158,12 +193,19 @@ def validate_growth_config(growth_dict):
         raise ConfigError("Growth configuration must contain 'base' section")
     
     base = growth_dict['base']
+    if not isinstance(base, dict):
+        raise ConfigError("Growth base configuration must be a dictionary")
+    
     if 'tier_profiles' not in base:
         raise ConfigError("Growth base configuration must contain 'tier_profiles'")
     
     # Validate tier profiles
     tier_profiles = base['tier_profiles']
     valid_profiles = {'conservative', 'aggressive', 'balanced'}
+    valid_metrics = {'new_user', 'visit', 'conversion'}
+    
+    if not isinstance(tier_profiles, dict):
+        raise ConfigError("Growth tier_profiles must be a dictionary")
     
     for profile_name, profile_config in tier_profiles.items():
         if profile_name not in valid_profiles:
@@ -172,14 +214,26 @@ def validate_growth_config(growth_dict):
         if not isinstance(profile_config, dict):
             raise ConfigError(f"Growth profile '{profile_name}' must be a dictionary")
         
-        for metric in ['new_user', 'visit', 'conversion']:
+        for metric in valid_metrics:
             if metric not in profile_config:
                 raise ConfigError(f"Growth profile '{profile_name}' must contain '{metric}' metric")
+            
+            value = profile_config[metric]
+            if not isinstance(value, (int, float)) or value < 0:
+                raise ConfigError(f"Growth profile '{profile_name}' {metric} value '{value}' must be non-negative number.")
     
     # Validate yearly configuration
     if 'yearly' in growth_dict:
         yearly = growth_dict['yearly']
+        if not isinstance(yearly, dict):
+            raise ConfigError("Growth yearly configuration must be a dictionary")
+        
+        valid_year_keys = [f"year_{i}" for i in range(1, 9)] + ["year_8_plus"]
+        
         for year_key, year_config in yearly.items():
+            if year_key not in valid_year_keys:
+                raise ConfigError(f"Invalid year key '{year_key}'. Must be one of: {valid_year_keys}")
+            
             if not isinstance(year_config, dict):
                 raise ConfigError(f"Year '{year_key}' configuration must be a dictionary")
             
@@ -187,6 +241,9 @@ def validate_growth_config(growth_dict):
                 raise ConfigError(f"Year '{year_key}' must contain 'profile_multipliers'")
             
             profile_multipliers = year_config['profile_multipliers']
+            if not isinstance(profile_multipliers, dict):
+                raise ConfigError(f"Year '{year_key}' profile_multipliers must be a dictionary")
+            
             for profile_name, multiplier_config in profile_multipliers.items():
                 if profile_name not in valid_profiles:
                     raise ConfigError(f"Invalid profile multiplier '{profile_name}' in year '{year_key}'. Must be one of: {valid_profiles}")
@@ -194,9 +251,13 @@ def validate_growth_config(growth_dict):
                 if not isinstance(multiplier_config, dict):
                     raise ConfigError(f"Profile multiplier '{profile_name}' in year '{year_key}' must be a dictionary")
                 
-                for metric in ['new_user', 'visit', 'conversion']:
+                for metric in valid_metrics:
                     if metric not in multiplier_config:
                         raise ConfigError(f"Profile multiplier '{profile_name}' in year '{year_key}' must contain '{metric}' metric")
+                    
+                    value = multiplier_config[metric]
+                    if not isinstance(value, (int, float)) or value < 0:
+                        raise ConfigError(f"Profile multiplier '{profile_name}' {metric} value '{value}' in year '{year_key}' must be non-negative number.")
 
 
 def validate_event_config(event_dict):
@@ -213,10 +274,45 @@ def validate_event_config(event_dict):
         raise ConfigError("Event configuration must be a dictionary")
     
     valid_profiles = {'conservative', 'aggressive', 'balanced'}
+    valid_metrics = {'new_user', 'visit', 'conversion'}
     
     for event_name, event_config in event_dict.items():
         if not isinstance(event_config, dict):
             raise ConfigError(f"Event '{event_name}' configuration must be a dictionary")
+        
+        # Validate required fields
+        if 'year' not in event_config:
+            raise ConfigError(f"Event '{event_name}' missing required 'year' field")
+        
+        year = event_config['year']
+        if not isinstance(year, int) or year < 1:
+            raise ConfigError(f"Event '{event_name}' has invalid year '{year}'. Must be positive integer.")
+        
+        # Validate month fields
+        start_month = event_config.get('start_month', 1)
+        end_month = event_config.get('end_month')
+        
+        if not isinstance(start_month, int) or not (1 <= start_month <= 12):
+            raise ConfigError(f"Event '{event_name}' has invalid start_month '{start_month}'. Must be 1-12.")
+        
+        if end_month is not None:
+            if not isinstance(end_month, int) or not (1 <= end_month <= 12):
+                raise ConfigError(f"Event '{event_name}' has invalid end_month '{end_month}'. Must be 1-12.")
+            if start_month > end_month:
+                raise ConfigError(f"Event '{event_name}' start_month ({start_month}) cannot be greater than end_month ({end_month}).")
+        
+        # Validate overall effects
+        overall = event_config.get('overall', {})
+        if not isinstance(overall, dict):
+            raise ConfigError(f"Event '{event_name}' overall effects must be a dictionary")
+        
+        for metric in overall:
+            if metric not in valid_metrics:
+                raise ConfigError(f"Event '{event_name}' has invalid overall metric '{metric}'. Must be one of: {valid_metrics}")
+            
+            value = overall[metric]
+            if not isinstance(value, (int, float)) or value < 0:
+                raise ConfigError(f"Event '{event_name}' overall {metric} value '{value}' must be non-negative number.")
         
         # Validate profile-based targeting
         if 'profiles' in event_config:
@@ -230,6 +326,17 @@ def validate_event_config(event_dict):
                 
                 if not isinstance(profile_config, dict):
                     raise ConfigError(f"Event '{event_name}' profile '{profile_name}' configuration must be a dictionary")
+                
+                # Validate profile effects
+                for key, value in profile_config.items():
+                    if isinstance(value, dict):
+                        # Nested effects validation (like funnel-specific conversions)
+                        # This is valid - skip numeric validation for nested dicts
+                        pass
+                    elif key in valid_metrics:
+                        # Direct metric validation
+                        if not isinstance(value, (int, float)) or value < 0:
+                            raise ConfigError(f"Event '{event_name}' profile '{profile_name}' {key} value '{value}' must be non-negative number.")
 
 
 def validate_date_config(date_dict):
@@ -455,44 +562,78 @@ def apply_growth_multipliers(tiers, growth_config, year):
     Args:
         tiers: Dict of tier configurations
         growth_config: Growth configuration dict
-        year: Year number (1-8+)
+        year: Year number (positive integer)
         
     Returns:
         Dict with tier_name -> {new_user, visit, conversion} multipliers
+        
+    Raises:
+        ValueError: If year is invalid
+        ConfigError: If growth configuration is invalid
     """
-    year_key = f"year_{year}" if year <= 7 else "year_8_plus"
+    # Input validation
+    if not isinstance(year, int) or year < 1:
+        raise ValueError(f"Invalid year: {year}. Must be positive integer.")
+    
+    # Centralized default profile values
+    DEFAULT_PROFILE_MULTIPLIERS = {
+        'new_user': 1.0,
+        'visit': 1.0,
+        'conversion': 1.0
+    }
+    
+    # Determine year key with proper validation
+    if year <= 7:
+        year_key = f"year_{year}"
+    else:
+        year_key = "year_8_plus"
+    
+    # Validate growth config structure
+    if not isinstance(growth_config, dict):
+        raise ConfigError("Growth config must be a dictionary")
     
     # Get base profile multipliers
     base_profiles = growth_config.get('base', {}).get('tier_profiles', {})
+    if not isinstance(base_profiles, dict):
+        raise ConfigError("Base tier_profiles must be a dictionary")
     
     # Get yearly multipliers if available
     yearly_config = growth_config.get('yearly', {}).get(year_key, {})
-    yearly_multipliers = yearly_config.get('profile_multipliers', {})
+    yearly_multipliers = yearly_config.get('profile_multipliers', {}) if isinstance(yearly_config, dict) else {}
     
     tier_multipliers = {}
     
     for tier_name, tier_config in tiers.items():
-        profile = tier_config.get('profile', 'balanced')
+        if not isinstance(tier_config, dict):
+            continue  # Skip invalid tier configs
+            
+        profile = tier_config.get('profile')
+        if not profile:
+            raise ConfigError(f"Tier '{tier_name}' missing required 'profile' field")
         
         # Start with base profile values
-        base_multipliers = base_profiles.get(profile, {
-            'new_user': 1.0,
-            'visit': 1.0,
-            'conversion': 1.0
-        })
+        base_multipliers = base_profiles.get(profile, DEFAULT_PROFILE_MULTIPLIERS)
+        if not isinstance(base_multipliers, dict):
+            base_multipliers = DEFAULT_PROFILE_MULTIPLIERS
         
         # Apply yearly multipliers if available
-        year_multiplier = yearly_multipliers.get(profile, {
-            'new_user': 1.0,
-            'visit': 1.0,
-            'conversion': 1.0
-        })
+        year_multiplier = yearly_multipliers.get(profile, DEFAULT_PROFILE_MULTIPLIERS)
+        if not isinstance(year_multiplier, dict):
+            year_multiplier = DEFAULT_PROFILE_MULTIPLIERS
+        
+        # Validate multiplier values
+        for multiplier_dict in [base_multipliers, year_multiplier]:
+            for metric in ['new_user', 'visit', 'conversion']:
+                if metric in multiplier_dict:
+                    value = multiplier_dict[metric]
+                    if not isinstance(value, (int, float)) or value < 0:
+                        raise ConfigError(f"Invalid multiplier value for {metric}: {value}. Must be non-negative number.")
         
         # Combine base and yearly multipliers
         tier_multipliers[tier_name] = {
-            'new_user': base_multipliers['new_user'] * year_multiplier['new_user'],
-            'visit': base_multipliers['visit'] * year_multiplier['visit'],
-            'conversion': base_multipliers['conversion'] * year_multiplier['conversion']
+            'new_user': base_multipliers.get('new_user', 1.0) * year_multiplier.get('new_user', 1.0),
+            'visit': base_multipliers.get('visit', 1.0) * year_multiplier.get('visit', 1.0),
+            'conversion': base_multipliers.get('conversion', 1.0) * year_multiplier.get('conversion', 1.0)
         }
     
     return tier_multipliers
@@ -510,8 +651,16 @@ def apply_event_effects(tiers, event_config, current_year, current_month):
         
     Returns:
         Dict with tier_name -> {new_user, visit, conversion} event multipliers
+        Dict with tier_name -> {funnel_stage: multiplier} for nested effects
     """
+    # Input validation
+    if not isinstance(current_year, int) or current_year < 1:
+        raise ValueError(f"Invalid year: {current_year}. Must be positive integer.")
+    if not isinstance(current_month, int) or not (1 <= current_month <= 12):
+        raise ValueError(f"Invalid month: {current_month}. Must be 1-12.")
+    
     event_effects = {}
+    nested_effects = {}
     
     # Initialize with no effects
     for tier_name in tiers:
@@ -520,13 +669,24 @@ def apply_event_effects(tiers, event_config, current_year, current_month):
             'visit': 1.0,
             'conversion': 1.0
         }
+        nested_effects[tier_name] = {}
     
     # Find active events
     for event_name, event_data in event_config.items():
+        if not isinstance(event_data, dict):
+            continue  # Skip invalid event data
+            
         event_year = event_data.get('year')
         start_month = event_data.get('start_month', 1)
         end_month = event_data.get('end_month', 12)
         
+        # Validate event date ranges
+        if (event_year is None or 
+            not isinstance(start_month, int) or not (1 <= start_month <= 12) or
+            (end_month is not None and not isinstance(end_month, int)) or
+            (end_month is not None and not (1 <= end_month <= 12))):
+            continue  # Skip events with invalid dates
+            
         # Check if event is active
         if (event_year == current_year and 
             start_month <= current_month <= (end_month or 12)):
@@ -535,7 +695,7 @@ def apply_event_effects(tiers, event_config, current_year, current_month):
             overall = event_data.get('overall', {})
             for tier_name in event_effects:
                 for metric in ['new_user', 'visit', 'conversion']:
-                    if metric in overall:
+                    if metric in overall and isinstance(overall[metric], (int, float)):
                         event_effects[tier_name][metric] *= overall[metric]
             
             # Apply profile-based effects
@@ -544,15 +704,20 @@ def apply_event_effects(tiers, event_config, current_year, current_month):
                 profile = tier_config.get('profile', 'balanced')
                 if profile in profiles:
                     profile_effects = profiles[profile]
+                    
+                    # Handle direct metrics (new_user, visit, conversion)
                     for metric in ['new_user', 'visit', 'conversion']:
-                        if metric in profile_effects:
+                        if metric in profile_effects and isinstance(profile_effects[metric], (int, float)):
                             event_effects[tier_name][metric] *= profile_effects[metric]
                     
                     # Handle nested effects (like funnel-specific conversions)
                     for key, value in profile_effects.items():
                         if isinstance(value, dict):
-                            # This handles things like conversion: { landing_page: 1.25 }
-                            # The actual application would need to be handled by the specific module
-                            pass
+                            # Store nested effects for application by specific modules
+                            for nested_key, nested_value in value.items():
+                                if isinstance(nested_value, (int, float)):
+                                    if nested_key not in nested_effects[tier_name]:
+                                        nested_effects[tier_name][nested_key] = 1.0
+                                    nested_effects[tier_name][nested_key] *= nested_value
     
-    return event_effects
+    return event_effects, nested_effects
