@@ -29,12 +29,28 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e .
         
-    - name: Download existing database
+    - name: Download existing CSV files
       uses: actions/download-artifact@v4
       with:
-        name: lettuce-melon-database
+        name: lettuce-melon-csv
         path: output/
       continue-on-error: true
+        
+    - name: Check if CSV files exist, if not download from repository
+      run: |
+        if [ ! -f "output/transaction.csv" ]; then
+          echo "No CSV artifacts found, downloading from repository..."
+          mkdir -p output
+          curl -o output/catalog.csv https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/catalog.csv
+          curl -o output/users_updated.csv https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/users_updated.csv
+          curl -o output/transaction.csv https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/transaction.csv
+          curl -o output/transaction_item.csv https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/transaction_item.csv
+          curl -o output/funnel.csv https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/funnel.csv
+        fi
+        
+    - name: Initialize database from existing CSV files
+      run: |
+        python generate_duckdb.py initial
         
     - name: Generate daily data
       run: |
@@ -59,14 +75,6 @@ jobs:
         with DatabaseContext() as db:
             print('Database stats:', db.get_stats())
         "
-        
-    - name: Upload updated DuckDB file
-      uses: actions/upload-artifact@v4
-      with:
-        name: lettuce-melon-database
-        path: output/lettuce_melon.duckdb
-        retention-days: 90
-        overwrite: true
         
     - name: Upload updated CSV files
       uses: actions/upload-artifact@v4
