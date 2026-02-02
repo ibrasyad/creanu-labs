@@ -249,6 +249,79 @@ class LettuceMelonDB:
                 print(f"Exported {table} to {filename}")
             except Exception as e:
                 print(f"Error exporting {table}: {e}")
+    
+    def export_daily_data_to_csv(self, target_date, output_dir="output"):
+        """Export only new data for a specific date and append to existing CSV files."""
+        os.makedirs(output_dir, exist_ok=True)
+        conn = self.connect()
+        
+        # Export new users for this date
+        try:
+            new_users_df = conn.execute(f"""
+                SELECT * FROM users 
+                WHERE registered_date = '{target_date}'
+            """).fetchdf()
+            
+            if not new_users_df.empty:
+                users_file = os.path.join(output_dir, 'users_updated.csv')
+                if os.path.exists(users_file):
+                    new_users_df.to_csv(users_file, mode='a', header=False, index=False)
+                else:
+                    new_users_df.to_csv(users_file, index=False)
+                print(f"Appended {len(new_users_df)} new users to users_updated.csv")
+        except Exception as e:
+            print(f"Error exporting new users: {e}")
+        
+        # Export transactions for this date
+        try:
+            trx_df = conn.execute(f"""
+                SELECT * FROM transaction 
+                WHERE date = '{target_date}'
+            """).fetchdf()
+            
+            if not trx_df.empty:
+                trx_file = os.path.join(output_dir, 'transaction.csv')
+                if os.path.exists(trx_file):
+                    trx_df.to_csv(trx_file, mode='a', header=False, index=False)
+                else:
+                    trx_df.to_csv(trx_file, index=False)
+                print(f"Appended {len(trx_df)} transactions to transaction.csv")
+        except Exception as e:
+            print(f"Error exporting transactions: {e}")
+        
+        # Export transaction items for this date
+        try:
+            trx_items_df = conn.execute(f"""
+                SELECT * FROM transaction_item 
+                WHERE date = '{target_date}'
+            """).fetchdf()
+            
+            if not trx_items_df.empty:
+                trx_items_file = os.path.join(output_dir, 'transaction_item.csv')
+                if os.path.exists(trx_items_file):
+                    trx_items_df.to_csv(trx_items_file, mode='a', header=False, index=False)
+                else:
+                    trx_items_df.to_csv(trx_items_file, index=False)
+                print(f"Appended {len(trx_items_df)} transaction items to transaction_item.csv")
+        except Exception as e:
+            print(f"Error exporting transaction items: {e}")
+        
+        # Export funnel activities for this date
+        try:
+            funnel_df = conn.execute(f"""
+                SELECT * FROM funnel 
+                WHERE DATE(activity_datetime) = '{target_date}'
+            """).fetchdf()
+            
+            if not funnel_df.empty:
+                funnel_file = os.path.join(output_dir, 'funnel.csv')
+                if os.path.exists(funnel_file):
+                    funnel_df.to_csv(funnel_file, mode='a', header=False, index=False)
+                else:
+                    funnel_df.to_csv(funnel_file, index=False)
+                print(f"Appended {len(funnel_df)} funnel activities to funnel.csv")
+        except Exception as e:
+            print(f"Error exporting funnel activities: {e}")
 
 # Context manager for database operations
 class DatabaseContext:

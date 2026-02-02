@@ -181,10 +181,10 @@ def daily_run():
     # Generate data for current date only
     generate_for_date(current_date)
     
-    # Export to CSV for sharing
+    # Export only today's data to CSV (append mode)
     with DatabaseContext() as db:
-        db.export_to_csv()
-        print("Data exported to CSV files")
+        db.export_daily_data_to_csv(current_date)
+        print("Daily data appended to CSV files")
 
 if __name__ == "__main__":
     import sys

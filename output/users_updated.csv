@@ -43,3 +43,13 @@ user_id,tier,city,gender,acquisition_channel,registered_date,last_active_date
 20220101-00000042,family_shoppers,west_jakarta,male,paid,2022-01-01,2022-01-01
 20260202-00000043,family_shoppers,north_jakarta,male,paid,2026-02-02,2026-02-02
 20260202-00000044,random,south_jakarta,male,paid,2026-02-02,2026-02-02
+20260202-00000043,students,central_jakarta,female,organic,2026-02-02,2026-02-02
+20260202-00000044,students,central_jakarta,female,organic,2026-02-02,2026-02-02
+20260202-00000045,students,west_jakarta,male,paid,2026-02-02,2026-02-02
+20260202-00000046,students,south_tangerang,male,organic,2026-02-02,2026-02-02
+20260202-00000047,young_professionals,south_jakarta,female,organic,2026-02-02,2026-02-02
+20260202-00000048,young_professionals,central_jakarta,female,organic,2026-02-02,2026-02-02
+20260202-00000049,young_professionals,tangerang_city,female,organic,2026-02-02,2026-02-02
+20260203-00000050,students,tangerang_city,male,organic,2026-02-03,2026-02-03
+20260203-00000051,family_shoppers,north_jakarta,male,paid,2026-02-03,2026-02-03
+20260203-00000052,young_professionals,central_jakarta,female,organic,2026-02-03,2026-02-03

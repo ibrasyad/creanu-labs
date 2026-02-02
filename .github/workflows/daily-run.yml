@@ -60,21 +60,17 @@ jobs:
           python generate_duckdb.py daily
         fi
         
-    - name: Export to CSV
+    - name: Export daily data to CSV (append mode)
       run: |
-        python -c "
-        from sim.database import DatabaseContext
-        with DatabaseContext() as db:
-            db.export_to_csv()
-        "
+        if [ -n "${{ github.event.inputs.date }}" ]; then
+          python -c "from sim.database import DatabaseContext; db = DatabaseContext(); db.connect(); db.export_daily_data_to_csv('${{ github.event.inputs.date }}'); db.close()"
+        else
+          python -c "from datetime import datetime, timedelta; from sim.database import DatabaseContext; utc_now = datetime.utcnow(); utc_plus_7 = utc_now + timedelta(hours=7); current_date = utc_plus_7.strftime('%Y-%m-%d'); db = DatabaseContext(); db.connect(); db.export_daily_data_to_csv(current_date); db.close()"
+        fi
         
     - name: Show database stats
       run: |
-        python -c "
-        from sim.database import DatabaseContext
-        with DatabaseContext() as db:
-            print('Database stats:', db.get_stats())
-        "
+        python -c "from sim.database import DatabaseContext; db = DatabaseContext(); db.connect(); print('Database stats:', db.get_stats()); db.close()"
         
     - name: Upload updated CSV files
       uses: actions/upload-artifact@v4
