@@ -103,11 +103,6 @@ class LettuceMelonDB:
         existing_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
         print(f"Database initialized at {self.db_path}")
         print(f"Existing users in database: {existing_users}")
-        
-        if existing_users > 0:
-            sample_users = conn.execute("SELECT user_id, tier FROM users LIMIT 5").fetchdf()
-            print("Sample existing users:")
-            print(sample_users)
     
     def load_catalog_from_csv(self, csv_path="output/catalog.csv"):
         """Load catalog data from CSV file."""
@@ -120,7 +115,10 @@ class LettuceMelonDB:
         
         # Clear existing catalog and load new data
         conn.execute("DELETE FROM catalog")
-        conn.execute("INSERT INTO catalog SELECT * FROM catalog_df")
+        conn.execute("""
+            INSERT INTO catalog (category, subcategory, product, base_price)
+            SELECT category, subcategory, product, base_price FROM catalog_df
+        """)
         
         print(f"Loaded {len(catalog_df)} catalog items")
     
@@ -144,20 +142,11 @@ class LettuceMelonDB:
         
         conn = self.connect()
         
-        # Debug: print the dataframe structure and first few rows
-        print(f"DEBUG: users_df columns: {list(users_df.columns)}")
-        print(f"DEBUG: users_df shape: {users_df.shape}")
-        print(f"DEBUG: First few rows:")
-        print(users_df.head())
-        
-        # Check for duplicates before inserting
-        if 'user_id' in users_df.columns:
-            duplicates = users_df['user_id'].duplicated().sum()
-            if duplicates > 0:
-                print(f"WARNING: Found {duplicates} duplicate user_ids in new data")
-                print("Duplicate user_ids:", users_df[users_df['user_id'].duplicated()]['user_id'].tolist())
-        
-        conn.execute("INSERT INTO users SELECT * FROM users_df")
+        # Insert with explicit column order to avoid position-based mismatches
+        conn.execute("""
+            INSERT INTO users (user_id, tier, city, gender, acquisition_channel, registered_date, last_active_date)
+            SELECT user_id, tier, city, gender, acquisition_channel, registered_date, last_active_date FROM users_df
+        """)
         print(f"Inserted {len(users_df)} new users")
     
     def update_user_activity(self, user_ids, date):
@@ -183,7 +172,10 @@ class LettuceMelonDB:
             return
         
         conn = self.connect()
-        conn.execute("INSERT INTO funnel SELECT * FROM funnel_df")
+        conn.execute("""
+            INSERT INTO funnel (session_id, tier, user_id, activity, activity_datetime)
+            SELECT session_id, tier, user_id, activity, activity_datetime FROM funnel_df
+        """)
         print(f"Inserted {len(funnel_df)} funnel activities")
     
     def insert_transactions(self, trx_df, trx_items_df):
@@ -194,12 +186,18 @@ class LettuceMelonDB:
         conn = self.connect()
         
         # Insert transactions
-        conn.execute("INSERT INTO transaction SELECT * FROM trx_df")
+        conn.execute("""
+            INSERT INTO transaction (session_id, trx_id, date, tier)
+            SELECT session_id, trx_id, date, tier FROM trx_df
+        """)
         print(f"Inserted {len(trx_df)} transactions")
         
         # Insert transaction items
         if not trx_items_df.empty:
-            conn.execute("INSERT INTO transaction_item SELECT * FROM trx_items_df")
+            conn.execute("""
+                INSERT INTO transaction_item (trx_id, tier, date, product, quantity, unit_price, total_price)
+                SELECT trx_id, tier, date, product, quantity, unit_price, total_price FROM trx_items_df
+            """)
             print(f"Inserted {len(trx_items_df)} transaction items")
     
     def get_visited_users(self, date):

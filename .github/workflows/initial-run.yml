@@ -6,12 +6,12 @@ on:
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
-        default: '2022-01-01'
+        default: '2025-01-01'
         type: string
       end_date:
         description: 'End date (YYYY-MM-DD)'
         required: false
-        default: '2022-12-31'
+        default: '2026-01-01'
         type: string
 
 jobs:
