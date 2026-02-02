@@ -39,8 +39,11 @@ class LettuceMelonDB:
         # Users table
         conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                user_id INTEGER PRIMARY KEY,
+                user_id VARCHAR PRIMARY KEY,
                 tier VARCHAR,
+                city VARCHAR,
+                gender VARCHAR,
+                acquisition_channel VARCHAR,
                 registered_date DATE,
                 last_active_date DATE
             )
@@ -74,7 +77,7 @@ class LettuceMelonDB:
             CREATE TABLE IF NOT EXISTS funnel (
                 session_id VARCHAR,
                 tier VARCHAR,
-                user_id INTEGER,
+                user_id VARCHAR,
                 activity VARCHAR,
                 activity_datetime TIMESTAMP
             )
@@ -119,7 +122,7 @@ class LettuceMelonDB:
         
         # Get all users, but prioritize recently active ones
         users_df = conn.execute("""
-            SELECT user_id, tier, registered_date, last_active_date
+            SELECT user_id, tier, city, gender, acquisition_channel, registered_date, last_active_date
             FROM users
             ORDER BY last_active_date DESC
         """).fetchdf()
@@ -141,7 +144,8 @@ class LettuceMelonDB:
             return
         
         conn = self.connect()
-        user_ids_str = ",".join(map(str, user_ids))
+        # Convert user_ids to strings and quote them for SQL
+        user_ids_str = ",".join([f"'{uid}'" for uid in user_ids])
         
         conn.execute(f"""
             UPDATE users 
