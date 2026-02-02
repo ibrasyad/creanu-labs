@@ -1,0 +1,71 @@
+name: Initial Data Generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: false
+        default: '2022-01-01'
+        type: string
+      end_date:
+        description: 'End date (YYYY-MM-DD)'
+        required: false
+        default: '2022-12-31'
+        type: string
+
+jobs:
+  generate-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        
+    - name: Generate initial data
+      run: |
+        python generate_duckdb.py initial
+        
+    - name: Generate historical data
+      run: |
+        python generate_duckdb.py range ${{ github.event.inputs.start_date || '2022-01-01' }} ${{ github.event.inputs.end_date || '2022-12-31' }}
+        
+    - name: Export to CSV
+      run: |
+        python -c "
+        from sim.database import DatabaseContext
+        with DatabaseContext() as db:
+            db.export_to_csv()
+        "
+        
+    - name: Upload DuckDB file
+      uses: actions/upload-artifact@v3
+      with:
+        name: lettuce-melon-database
+        path: output/lettuce_melon.duckdb
+        retention-days: 90
+        
+    - name: Upload CSV files
+      uses: actions/upload-artifact@v3
+      with:
+        name: lettuce-melon-csv
+        path: output/*.csv
+        retention-days: 30
+        
+    - name: Commit and push data files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add output/lettuce_melon.duckdb output/*.csv
+        git diff --staged --quiet || git commit -m "Generate initial data (${{ github.event.inputs.start_date || '2022-01-01' }} to ${{ github.event.inputs.end_date || '2022-12-31' }})"
+        git push
