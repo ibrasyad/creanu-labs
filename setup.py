@@ -20,6 +20,7 @@ setup(
         "pandas>=1.3.0",
         "numpy>=1.20.0",
         "scipy>=1.7.0",
+        "pyarrow>=10.0.0",
     ],
     extras_require={
         "dev": [
