@@ -50,8 +50,3 @@ jobs:
         git add output/*.parquet
         git diff --staged --quiet || git commit -m "Generate initial data (${{ github.event.inputs.start_date || '2023-01-01' }} to ${{ github.event.inputs.end_date || '2025-12-31' }})"
         git push
-        
-    - name: Upload to Google Drive
-      uses: ./.github/workflows/upload-to-drive.yml
-      with:
-        folder_id: ${{ secrets.DRIVE_FOLDER_ID }}
