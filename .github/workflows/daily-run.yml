@@ -79,13 +79,33 @@ jobs:
         git diff --staged --quiet || git commit -m "Daily data update ($(date +'%Y-%m-%d'))"
         git push
     
+    - name: Create/update tag for release
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag -f daily-data
+        git push -f origin daily-data
+    
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+    
     - name: Update GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         name: "Daily Data"
         tag_name: "daily-data"
         files: output/*.parquet
-        body: "Last updated: $(date +'%Y-%m-%d')"
+        body: |
+          Last updated: ${{ steps.date.outputs.date }}
+          
+          ## Files
+          - catalog.parquet
+          - users_base.parquet  
+          - users_updated.parquet
+          - transaction.parquet
+          - transaction_item.parquet
+          - funnel.parquet
         draft: false
         prerelease: false
       env:
