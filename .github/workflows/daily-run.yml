@@ -29,38 +29,51 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e .
         
-    - name: Download existing Parquet files
-      uses: actions/download-artifact@v4
-      with:
-        name: lettuce-melon-parquet
-        path: output/
-      continue-on-error: true
-        
     - name: Check if Parquet files exist, if not download from repository
       run: |
         if [ ! -f "output/transaction.parquet" ]; then
-          echo "No Parquet artifacts found, downloading from repository..."
+          echo "No Parquet files found, downloading from repository..."
           mkdir -p output
-          curl -o output/catalog.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/catalog.parquet
-          curl -o output/users_updated.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/users_updated.parquet
-          curl -o output/transaction.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/transaction.parquet
-          curl -o output/transaction_item.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/transaction_item.parquet
-          curl -o output/funnel.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/main/output/funnel.parquet
+          # Use current branch instead of main
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          if [ "$BRANCH" = "" ]; then
+            BRANCH="main"
+          fi
+          echo "Downloading from branch: $BRANCH"
+          
+          curl -o output/catalog.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/catalog.parquet
+          curl -o output/users_base.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/users_base.parquet
+          curl -o output/users_updated.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/users_updated.parquet
+          curl -o output/transaction.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/transaction.parquet
+          curl -o output/transaction_item.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/transaction_item.parquet
+          curl -o output/funnel.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/funnel.parquet
         fi
+        
+    - name: Validate Parquet files are not empty
+      run: |
+        for file in output/*.parquet; do
+          if [ -f "$file" ]; then
+            SIZE=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo "0")
+            if [ "$SIZE" -lt 100 ]; then
+              echo "Warning: $file appears to be empty ($SIZE bytes), removing..."
+              rm "$file"
+            fi
+          fi
+        done
         
     - name: Generate daily data
       run: |
         if [ -n "${{ github.event.inputs.date }}" ]; then
           # For specific date
           echo "Running for specific date: ${{ github.event.inputs.date }}"
-          python generate.py --start-date "${{ github.event.inputs.date }}" --end-date "${{ github.event.inputs.date }}"
+          python -c "import sys; sys.path.append('.'); from generate import main; main(start_date='${{ github.event.inputs.date }}', end_date='${{ github.event.inputs.date }}')"
         else
           # Daily run - generate for yesterday (UTC+7)
           # When running at 23:00 UTC, it's 06:00 UTC+7 next day
           # So yesterday UTC+7 is the current UTC date
           YESTERDAY_UTC7=$(date +%Y-%m-%d)
           echo "Running daily generation for UTC+7 yesterday: $YESTERDAY_UTC7"
-          python generate.py --start-date "$YESTERDAY_UTC7" --end-date "$YESTERDAY_UTC7"
+          python -c "import sys; sys.path.append('.'); from generate import main; main(start_date='$YESTERDAY_UTC7', end_date='$YESTERDAY_UTC7')"
         fi
         
     - name: Upload updated Parquet files
