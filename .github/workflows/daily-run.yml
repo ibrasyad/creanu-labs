@@ -29,38 +29,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e .
         
-    - name: Check if Parquet files exist, if not download from repository
-      run: |
-        if [ ! -f "output/transaction.parquet" ]; then
-          echo "No Parquet files found, downloading from repository..."
-          mkdir -p output
-          # Use current branch instead of main
-          BRANCH="${GITHUB_REF#refs/heads/}"
-          if [ "$BRANCH" = "" ]; then
-            BRANCH="main"
-          fi
-          echo "Downloading from branch: $BRANCH"
-          
-          curl -o output/catalog.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/catalog.parquet
-          curl -o output/users_base.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/users_base.parquet
-          curl -o output/users_updated.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/users_updated.parquet
-          curl -o output/transaction.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/transaction.parquet
-          curl -o output/transaction_item.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/transaction_item.parquet
-          curl -o output/funnel.parquet https://raw.githubusercontent.com/ibrasyad/lettuce-melon/$BRANCH/output/funnel.parquet
-        fi
-        
-    - name: Validate Parquet files are not empty
-      run: |
-        for file in output/*.parquet; do
-          if [ -f "$file" ]; then
-            SIZE=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo "0")
-            if [ "$SIZE" -lt 100 ]; then
-              echo "Warning: $file appears to be empty ($SIZE bytes), removing..."
-              rm "$file"
-            fi
-          fi
-        done
-        
     - name: Generate daily data
       run: |
         if [ -n "${{ github.event.inputs.date }}" ]; then
