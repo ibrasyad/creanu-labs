@@ -6,7 +6,7 @@ date:
   # ==================== SIMULATION PERIOD ====================
   # Date range for the entire simulation
   start_date: "2023-01-01"
-  end_date:   "2026-02-09"
+  end_date:   "2026-02-08"
 
   # ==================== TRANSACTION VOLUME ====================
   transaction_volume:

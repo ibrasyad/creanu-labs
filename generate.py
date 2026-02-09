@@ -3,6 +3,7 @@ Main transaction data generation script.
 """
 import pandas as pd
 import random
+import argparse
 from sim.config import get_date_config, get_tiers
 from sim.generate_basket import generate_basket, generate_total_trx
 from sim.utils import date_range, get_day_of_week, weighted_choice, generate_catalog_parquet, append_or_create_parquet
@@ -58,15 +59,19 @@ def initial_run():
     ])
     df_funnel.to_parquet("output/funnel.parquet", index=False)
 
-def main():
+def main(start_date=None, end_date=None):
     date_config = get_date_config()
     _tiers = get_tiers()
+
+    # Use command line arguments if provided, otherwise use config
+    start_date = start_date or date_config["start_date"]
+    end_date = end_date or date_config["end_date"]
 
     base_user_table = pd.read_parquet("output/users_updated.parquet")
     current_user_count = len(base_user_table)
 
     # Generate dates for the simulation period
-    dates = date_range(date_config["start_date"], date_config["end_date"])
+    dates = date_range(start_date, end_date)
     
     for date in dates:
 
@@ -194,34 +199,11 @@ def main():
         output_trx_item = "output/transaction_item.parquet"
         append_or_create_parquet(output_trx_item, trx_items[trx_item_column_list])
 
-    # Final timing
-    end_time = time.time()
-    end_datetime = datetime.now()
-    total_time = end_time - start_time
-    
-    print(f"\n{'='*60}")
-    print(f"SIMULATION COMPLETED!")
-    print(f"{'='*60}")
-    print(f"Period: {date_config['start_date']} to {date_config['end_date']}")
-    print(f"Days processed: {total_days}")
-    print(f"Final user count: {current_user_count}")
-    print(f"Started:  {start_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Finished: {end_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Total time: {total_time:.2f} seconds ({total_time/60:.1f} minutes)")
-    print(f"Average per day: {total_time/total_days:.2f} seconds")
-    print(f"{'='*60}")
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate simulation data')
+    parser.add_argument('--start-date', help='Start date (YYYY-MM-DD)')
+    parser.add_argument('--end-date', help='End date (YYYY-MM-DD)')
+    args = parser.parse_args()
+    
     initial_run()
-    start_time = time.time()
-    start_datetime = datetime.now()
-    main()
-    end_time = time.time()
-    end_datetime = datetime.now()
-    total_time = end_time - start_time
-    print(f"\n{'='*60}")
-    print(f"SIMULATION COMPLETED!")
-    print(f"{'='*60}")
-    print(f"Period: {start_datetime.strftime('%Y-%m-%d %H:%M:%S')} to {end_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Total time: {total_time:.2f} seconds ({total_time/60:.1f} minutes)")
-    print(f"{'='*60}")
+    main(start_date=args.start_date, end_date=args.end_date)

@@ -183,7 +183,10 @@ def append_or_create_parquet(path, df):
     if os.path.exists(path):
         # Read existing, combine, and write back
         existing = pd.read_parquet(path)
-        combined = pd.concat([existing, df], ignore_index=True)
+        # Filter out empty/NA columns to avoid FutureWarning
+        existing_filtered = existing.dropna(axis=1, how='all')
+        df_filtered = df.dropna(axis=1, how='all')
+        combined = pd.concat([existing_filtered, df_filtered], ignore_index=True)
         combined.to_parquet(path, index=False)
     else:
         df.to_parquet(path, index=False)

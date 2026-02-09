@@ -257,7 +257,7 @@ def generate_funnel_table(current_date):
     
     base_date = pd.to_datetime(current_date)
 
-    funnel_df = pd.read_csv(BASE_DIR / "output/users_updated.csv")
+    funnel_df = pd.read_parquet(BASE_DIR / "output/users_updated.parquet")
     funnel_df["last_active_date"] = (
         pd.to_datetime(funnel_df["last_active_date"], format="mixed")
         .dt.normalize()
@@ -383,7 +383,7 @@ def funnel_wide_to_activity_log(df):
                     "tier": row["tier"],
                     "user_id": row["user_id"],
                     "activity": activity,
-                    "activity_datetime": ts,
+                    "activity_datetime": pd.to_datetime(ts).strftime('%Y-%m-%d %H:%M:%S'),
                 })
 
     return pd.DataFrame(rows)
