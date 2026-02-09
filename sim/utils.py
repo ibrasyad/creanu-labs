@@ -112,21 +112,20 @@ def get_month_name(date_str):
     return parse_date(date_str).strftime("%B").lower()
 
 
-def generate_catalog_csv(output_path="output/catalog.csv"):
+def generate_catalog_parquet(output_path="output/catalog.parquet"):
     """
-    Generate a catalog.csv file from catalog.yaml.
+    Generate a catalog.parquet file from catalog.yaml.
     
     Flattens the nested catalog structure (category → subcategory → product → base_price)
-    into a CSV with columns: category, subcategory, product, base_price
+    into a Parquet with columns: category, subcategory, product, base_price
     
     Args:
-        output_path: Path where the CSV file will be saved (default: output/catalog.csv)
+        output_path: Path where the Parquet file will be saved (default: output/catalog.parquet)
         
     Returns:
         List of dicts representing the flattened catalog
     """
     from .config import get_catalog
-    import csv
     
     catalog = get_catalog()
     rows = []
@@ -143,12 +142,10 @@ def generate_catalog_csv(output_path="output/catalog.csv"):
                     "base_price": base_price
                 })
     
-    # Write to CSV
+    # Write to Parquet
     if rows:
-        with open(output_path, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["category", "subcategory", "product", "base_price"])
-            writer.writeheader()
-            writer.writerows(rows)
+        df = pd.DataFrame(rows)
+        df.to_parquet(output_path, index=False)
     
     return rows
 
@@ -178,14 +175,17 @@ def controlled_random(mean, min_val, max_val, p=0.99):
     mu = np.log(mean) - 0.5 * sigma * sigma
     return np.clip(np.random.lognormal(mu, sigma), min_val, max_val)
 
-def append_or_create_csv(path, df):
+def append_or_create_parquet(path, df):
     # Nothing to write → do nothing
     if df is None or df.empty:
-        return False  # explicitly signal "no write happened"
+        return False
 
     if os.path.exists(path):
-        df.to_csv(path, mode="a", header=False, index=False)
+        # Read existing, combine, and write back
+        existing = pd.read_parquet(path)
+        combined = pd.concat([existing, df], ignore_index=True)
+        combined.to_parquet(path, index=False)
     else:
-        df.to_csv(path, index=False)
+        df.to_parquet(path, index=False)
 
     return True

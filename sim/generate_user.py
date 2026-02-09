@@ -187,7 +187,7 @@ def generate_users(dates):
     base_table = generate_base_user_table()
 
     base_user_table = pd.DataFrame(base_table)
-    base_user_table.to_csv("output/users_base.csv", index=False)
+    base_user_table.to_parquet("output/users_base.parquet", index=False)
 
     # Generate new users for the date
     new_user_rows = []
@@ -207,9 +207,9 @@ def generate_users(dates):
         
     if new_user_rows:
         new_user_table = pd.DataFrame(new_user_rows)
-        new_user_table.to_csv("output/users_new.csv", index=False)
+        new_user_table.to_parquet("output/users_new.parquet", index=False)
         final_user_table = pd.concat([base_user_table, new_user_table], ignore_index=True)
-        final_user_table.to_csv("output/users_updated.csv", index=False)
+        final_user_table.to_parquet("output/users_updated.parquet", index=False)
 
 
 if __name__ == "__main__":
