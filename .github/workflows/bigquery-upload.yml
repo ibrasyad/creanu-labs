@@ -30,21 +30,6 @@ jobs:
         pip install -e .
         pip install pandas google-cloud-bigquery google-auth pyarrow
         
-    - name: Download latest parquet files
-      uses: actions/download-artifact@v4
-      with:
-        name: lettuce-melon-parquet
-        path: output/
-        
-    - name: Verify parquet files exist
-      run: |
-        echo "Checking for parquet files in output directory:"
-        ls -la output/
-        if [ ! -f "output/funnel.parquet" ]; then
-          echo "Error: funnel.parquet not found"
-          exit 1
-        fi
-        
     - name: Upload to BigQuery
       env:
         GOOGLE_SERVICE_ACCOUNT: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT }}
