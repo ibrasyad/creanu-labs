@@ -32,7 +32,7 @@ jobs:
         
     - name: Upload to BigQuery
       env:
-        GOOGLE_SERVICE_ACCOUNT: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT }}
+        GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
         BIGQUERY_PROJECT_ID: ${{ secrets.BIGQUERY_PROJECT_ID }}
         BIGQUERY_DATASET_ID: ${{ secrets.BIGQUERY_DATASET_ID }}
         TARGET_TABLE_NAME: ${{ secrets.TARGET_TABLE_NAME }}
