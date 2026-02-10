@@ -144,10 +144,5 @@ dmypy.json
 ehthumbs.db
 Thumbs.db
 
-# Project specific
-output/*.csv
-output/*.parquet
-!output/.gitkeep
-
 # Keep the output directory but ignore its contents
 # Create output/.gitkeep if you want to track the directory
