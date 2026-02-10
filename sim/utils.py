@@ -186,6 +186,28 @@ def append_or_create_parquet(path, df):
         # Filter out empty/NA columns to avoid FutureWarning
         existing_filtered = existing.dropna(axis=1, how='all')
         df_filtered = df.dropna(axis=1, how='all')
+        
+        # Ensure datetime columns have consistent types
+        for col in df_filtered.columns:
+            if 'datetime' in str(df_filtered[col].dtype):
+                if col in existing_filtered.columns:
+                    # Handle both naive and timezone-aware datetimes
+                    existing_dt = pd.to_datetime(existing_filtered[col], errors='coerce')
+                    new_dt = pd.to_datetime(df_filtered[col], errors='coerce')
+                    
+                    if existing_dt.dt.tz is None:
+                        existing_dt = existing_dt.dt.tz_localize('Asia/Bangkok')
+                    else:
+                        existing_dt = existing_dt.dt.tz_convert('Asia/Bangkok')
+                        
+                    if new_dt.dt.tz is None:
+                        new_dt = new_dt.dt.tz_localize('Asia/Bangkok')
+                    else:
+                        new_dt = new_dt.dt.tz_convert('Asia/Bangkok')
+                    
+                    existing_filtered[col] = existing_dt
+                    df_filtered[col] = new_dt
+        
         combined = pd.concat([existing_filtered, df_filtered], ignore_index=True)
         combined.to_parquet(path, index=False)
     else:

@@ -89,13 +89,26 @@ def main(start_date=None, end_date=None):
     
         if new_user_rows:
             new_user_table = pd.DataFrame(new_user_rows)
-            new_user_table["registered_date"] = pd.to_datetime(date)
-            new_user_table["last_active_date"] = pd.to_datetime(date)
+            new_user_table["registered_date"] = pd.to_datetime(date).tz_localize('Asia/Bangkok')
+            new_user_table["last_active_date"] = pd.to_datetime(date).tz_localize('Asia/Bangkok')
             new_user_table.to_parquet("output/users_new.parquet", index=False)
             
             # Ensure consistent datetime types before concat
-            base_user_table["last_active_date"] = pd.to_datetime(base_user_table["last_active_date"], errors='coerce')
-            base_user_table["registered_date"] = pd.to_datetime(base_user_table["registered_date"], errors='coerce')
+            last_active_dt = pd.to_datetime(base_user_table["last_active_date"], errors='coerce')
+            registered_dt = pd.to_datetime(base_user_table["registered_date"], errors='coerce')
+            
+            if last_active_dt.dt.tz is None:
+                last_active_dt = last_active_dt.dt.tz_localize('Asia/Bangkok')
+            else:
+                last_active_dt = last_active_dt.dt.tz_convert('Asia/Bangkok')
+                
+            if registered_dt.dt.tz is None:
+                registered_dt = registered_dt.dt.tz_localize('Asia/Bangkok')
+            else:
+                registered_dt = registered_dt.dt.tz_convert('Asia/Bangkok')
+                
+            base_user_table["last_active_date"] = last_active_dt
+            base_user_table["registered_date"] = registered_dt
             
             base_user_table = pd.concat([base_user_table, new_user_table], ignore_index=True)
             base_user_table.to_parquet("output/users_updated.parquet", index=False)
@@ -119,13 +132,19 @@ def main(start_date=None, end_date=None):
         )
 
         if not visited_users.empty:
-            visited_users["last_active_date"] = date
+            visited_users["last_active_date"] = pd.to_datetime(date).tz_localize('Asia/Bangkok')
         
         # Update users table for their activity:
         if not visited_users.empty:
             # Convert to datetime first to avoid mixed types
-            base_user_table["last_active_date"] = pd.to_datetime(base_user_table["last_active_date"], errors='coerce')
-            visited_users["last_active_date"] = pd.to_datetime(date)
+            last_active_dt = pd.to_datetime(base_user_table["last_active_date"], errors='coerce')
+            if last_active_dt.dt.tz is None:
+                last_active_dt = last_active_dt.dt.tz_localize('Asia/Bangkok')
+            else:
+                last_active_dt = last_active_dt.dt.tz_convert('Asia/Bangkok')
+                
+            base_user_table["last_active_date"] = last_active_dt
+            visited_users["last_active_date"] = pd.to_datetime(date).tz_localize('Asia/Bangkok')
             
             base_user_table = base_user_table.merge(
                 visited_users,
@@ -159,6 +178,9 @@ def main(start_date=None, end_date=None):
 
         # Assignt trx_id
         trx_table["date"] = pd.to_datetime(trx_table["date"])
+        # Ensure timezone is UTC+7
+        if trx_table["date"].dt.tz is None:
+            trx_table["date"] = trx_table["date"].dt.tz_localize('Asia/Bangkok')
         trx_table["trx_seq"] = (
             trx_table
             .groupby(trx_table["date"].dt.date)
