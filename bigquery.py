@@ -1,5 +1,6 @@
 import os
 import json
+import tempfile
 from pathlib import Path
 
 import pyarrow.parquet as pq
@@ -10,7 +11,7 @@ PROJECT_ID = os.environ["BIGQUERY_PROJECT_ID"]
 DATASET_ID = os.environ["BIGQUERY_DATASET_ID"]
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", "output")
 
-COLUMN_TO_DROP = "tier"
+COLUMN_TO_DROP = "tier"  # set None to keep all columns
 
 credentials = service_account.Credentials.from_service_account_info(
     json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT"])
@@ -31,14 +32,21 @@ for file in Path(OUTPUT_DIR).glob("*.parquet"):
 
     table_id = f"{PROJECT_ID}.{DATASET_ID}.{file.stem}"
 
-    job = client.load_table_from_dataframe(
-        table,
-        table_id,
-        job_config=bigquery.LoadJobConfig(
-            write_disposition="WRITE_TRUNCATE",
-            autodetect=True,
-        ),
-    )
+    # Write filtered parquet to temp file
+    with tempfile.NamedTemporaryFile(suffix=".parquet") as tmp:
+        pq.write_table(table, tmp.name)
 
-    job.result()
+        with open(tmp.name, "rb") as f:
+            job = client.load_table_from_file(
+                f,
+                table_id,
+                job_config=bigquery.LoadJobConfig(
+                    source_format=bigquery.SourceFormat.PARQUET,
+                    write_disposition="WRITE_TRUNCATE",
+                    autodetect=True,
+                ),
+            )
+
+        job.result()
+
     print(f"✅ Done: {table_id}")
