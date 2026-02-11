@@ -73,6 +73,12 @@ class BigQueryUploader:
             df = df[columns_to_keep]
             print(f"Filtered to columns: {columns_to_keep}")
         
+        # Convert timestamp columns to avoid casting issues
+        for col in df.columns:
+            if pd.api.types.is_datetime64_any_dtype(df[col]):
+                # Convert datetime64[ns] to datetime64[us] to avoid BigQuery casting issues
+                df[col] = df[col].astype('datetime64[us]')
+        
         try:
             job_config = bigquery.LoadJobConfig(
                 write_disposition=write_disposition,
