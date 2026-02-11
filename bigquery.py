@@ -30,56 +30,43 @@ SCHEMAS = {
     "users_base": [
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("registered_date", "DATETIME"),
+        bigquery.SchemaField("city", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("gender", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("acquisition_channel", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("registered_date", "DATETIME", mode="REQUIRED"),
         bigquery.SchemaField("last_active_date", "DATETIME"),
     ],
     "users_new": [
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("registered_date", "DATETIME"),
-        bigquery.SchemaField("last_active_date", "DATETIME"),
+        bigquery.SchemaField("registered_date", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("last_active_date", "DATETIME", mode="REQUIRED"),
     ],
     "users_updated": [
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("registered_date", "DATETIME"),
-        bigquery.SchemaField("last_active_date", "DATETIME"),
+        bigquery.SchemaField("registered_date", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("last_active_date", "DATETIME", mode="REQUIRED"),
     ],
     "funnel": [
         bigquery.SchemaField("session_id", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
-
-        bigquery.SchemaField("landing_page", "STRING"),
-        bigquery.SchemaField("landing_page_datetime", "DATETIME"),
-
-        bigquery.SchemaField("product_view", "STRING"),
-        bigquery.SchemaField("product_view_datetime", "DATETIME"),
-
-        bigquery.SchemaField("add_to_cart", "STRING"),
-        bigquery.SchemaField("add_to_cart_datetime", "DATETIME"),
-
-        bigquery.SchemaField("checkout", "STRING"),
-        bigquery.SchemaField("checkout_datetime", "DATETIME"),
-
-        bigquery.SchemaField("paid", "STRING"),
-        bigquery.SchemaField("paid_datetime", "DATETIME"),
+        bigquery.SchemaField("activity", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("activity_datetime", "DATETIME", mode="REQUIRED"),
     ],
     "transaction": [
-        bigquery.SchemaField("transaction_id", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("session_id", "STRING"),
-
-        bigquery.SchemaField("transaction_datetime", "DATETIME", mode="REQUIRED"),
-        bigquery.SchemaField("total_amount", "FLOAT"),
-        bigquery.SchemaField("payment_method", "STRING"),
-        bigquery.SchemaField("status", "STRING"),
+        bigquery.SchemaField("session_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("trx_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("date", "DATETIME", mode="REQUIRED"),
     ],
     "transaction_item": [
-        bigquery.SchemaField("transaction_id", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("product_id", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("quantity", "INTEGER"),
-        bigquery.SchemaField("price", "FLOAT"),
+        bigquery.SchemaField("trx_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("date", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("product", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("quantity", "INTEGER", mode="REQUIRED"),
+        bigquery.SchemaField("unit_price", "INTEGER", mode="REQUIRED"),
+        bigquery.SchemaField("total_price", "INTEGER", mode="REQUIRED"),
     ],
 }
 
