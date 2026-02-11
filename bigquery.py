@@ -41,14 +41,20 @@ SCHEMAS = {
     "users_new": [
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("city", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("gender", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("acquisition_channel", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("registered_date", "DATETIME", mode="REQUIRED"),
-        bigquery.SchemaField("last_active_date", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("last_active_date", "DATETIME"),
     ],
     "users_updated": [
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("city", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("gender", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("acquisition_channel", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("registered_date", "DATETIME", mode="REQUIRED"),
-        bigquery.SchemaField("last_active_date", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("last_active_date", "DATETIME"),
     ],
     "funnel": [
         bigquery.SchemaField("session_id", "STRING", mode="REQUIRED"),
