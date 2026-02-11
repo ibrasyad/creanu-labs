@@ -3,7 +3,7 @@ import numpy as np
 import sys
 from pathlib import Path
 import pandas as pd
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -212,18 +212,6 @@ def generate_visit_hour(user_tier, step):
 def generate_landing_datetime(current_date, tier, step):
     # Create datetime in UTC+7 timezone (interpret date as already UTC+7)
     base = pd.to_datetime(current_date)
-    if hasattr(base, 'dt'):
-        # It's a Series
-        if base.dt.tz is None:
-            base = base.dt.tz_localize('Asia/Bangkok')
-        else:
-            base = base.dt.tz_convert('Asia/Bangkok')
-    else:
-        # It's a single Timestamp
-        if base.tz is None:
-            base = base.tz_localize('Asia/Bangkok')
-        else:
-            base = base.tz_convert('Asia/Bangkok')
 
     return (
         base
@@ -269,15 +257,11 @@ def generate_funnel_table(current_date):
     visit_decay = _sim.get("visit_decay", [])
     
     # Create datetime in UTC+7 timezone (interpret date as already UTC+7)
-    base_date = pd.to_datetime(current_date).tz_localize('Asia/Bangkok')
+    base_date = pd.to_datetime(current_date)
 
     funnel_df = pd.read_parquet(BASE_DIR / "output/users_updated.parquet")
     # Handle both naive and timezone-aware datetimes
     last_active_dt = pd.to_datetime(funnel_df["last_active_date"], format="mixed")
-    if last_active_dt.dt.tz is None:
-        last_active_dt = last_active_dt.dt.tz_localize('Asia/Bangkok')
-    else:
-        last_active_dt = last_active_dt.dt.tz_convert('Asia/Bangkok')
     
     funnel_df["last_active_date"] = last_active_dt.dt.normalize()
     funnel_df["recency"] = (base_date - funnel_df["last_active_date"]).dt.days
@@ -369,6 +353,10 @@ def generate_funnel_table(current_date):
         "paid_datetime"]
     
     funnel_df = funnel_df[column_list]
+
+    # Defensive: ensure no timezone-aware datetimes
+    for col in funnel_df.select_dtypes(include=["datetimetz"]).columns:
+        funnel_df[col] = funnel_df[col].dt.tz_localize(None)
 
     return funnel_df
 
