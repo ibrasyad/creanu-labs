@@ -76,13 +76,9 @@ class BigQueryUploader:
         # Convert timestamp columns to avoid casting issues
         for col in df.columns:
             if pd.api.types.is_datetime64_any_dtype(df[col]):
-                # Handle timezone-aware and timezone-naive datetime columns
+                # Remove timezone if present, keep the same datetime values
                 if df[col].dt.tz is not None:
-                    # Convert timezone-aware to UTC+7 then remove timezone
-                    df[col] = df[col].dt.tz_convert('Asia/Bangkok').dt.tz_localize(None)
-                else:
-                    # Convert timezone-naive to UTC+7
-                    df[col] = df[col].dt.tz_localize('Asia/Bangkok').dt.tz_localize(None)
+                    df[col] = df[col].dt.tz_localize(None)
                 # Convert datetime64[ns] to datetime64[us] to avoid BigQuery casting issues
                 df[col] = df[col].astype('datetime64[us]')
         
