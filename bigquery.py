@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import json
 
 import pyarrow.parquet as pq
 from google.cloud import bigquery
