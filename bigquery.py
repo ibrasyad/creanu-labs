@@ -22,7 +22,73 @@ client = bigquery.Client(
     credentials=credentials,
 )
 
+# ----------------------------
+# Explicit schemas per table
+# ----------------------------
+
+SCHEMAS = {
+    "users_base": [
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
+        # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("registered_date", "DATETIME"),
+        bigquery.SchemaField("last_active_date", "DATETIME"),
+    ],
+    "users_new": [
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
+        # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("registered_date", "DATETIME"),
+        bigquery.SchemaField("last_active_date", "DATETIME"),
+    ],
+    "users_updated": [
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
+        # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("registered_date", "DATETIME"),
+        bigquery.SchemaField("last_active_date", "DATETIME"),
+    ],
+    "funnel": [
+        bigquery.SchemaField("session_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
+        # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
+
+        bigquery.SchemaField("landing_page", "STRING"),
+        bigquery.SchemaField("landing_page_datetime", "DATETIME"),
+
+        bigquery.SchemaField("product_view", "STRING"),
+        bigquery.SchemaField("product_view_datetime", "DATETIME"),
+
+        bigquery.SchemaField("add_to_cart", "STRING"),
+        bigquery.SchemaField("add_to_cart_datetime", "DATETIME"),
+
+        bigquery.SchemaField("checkout", "STRING"),
+        bigquery.SchemaField("checkout_datetime", "DATETIME"),
+
+        bigquery.SchemaField("paid", "STRING"),
+        bigquery.SchemaField("paid_datetime", "DATETIME"),
+    ],
+    "transaction": [
+        bigquery.SchemaField("transaction_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("session_id", "STRING"),
+
+        bigquery.SchemaField("transaction_datetime", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("total_amount", "FLOAT"),
+        bigquery.SchemaField("payment_method", "STRING"),
+        bigquery.SchemaField("status", "STRING"),
+    ],
+    "transaction_item": [
+        bigquery.SchemaField("transaction_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("product_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("quantity", "INTEGER"),
+        bigquery.SchemaField("price", "FLOAT"),
+    ],
+}
+
+# ----------------------------
+# Upload loop
+# ----------------------------
+
 for file in Path(OUTPUT_DIR).glob("*.parquet"):
+    table_name = file.stem
     print(f"Uploading {file.name}...")
 
     table = pq.read_table(file)
@@ -30,9 +96,18 @@ for file in Path(OUTPUT_DIR).glob("*.parquet"):
     if COLUMN_TO_DROP and COLUMN_TO_DROP in table.schema.names:
         table = table.drop([COLUMN_TO_DROP])
 
-    table_id = f"{PROJECT_ID}.{DATASET_ID}.{file.stem}"
+    table_id = f"{PROJECT_ID}.{DATASET_ID}.{table_name}"
 
-    # Write filtered parquet to temp file
+    schema = SCHEMAS.get(table_name)
+    if not schema:
+        raise ValueError(f"No schema defined for table: {table_name}")
+
+    job_config = bigquery.LoadJobConfig(
+        source_format=bigquery.SourceFormat.PARQUET,
+        schema=schema,                     # 👈 force schema
+        write_disposition="WRITE_TRUNCATE",
+    )
+
     with tempfile.NamedTemporaryFile(suffix=".parquet") as tmp:
         pq.write_table(table, tmp.name)
 
@@ -40,11 +115,7 @@ for file in Path(OUTPUT_DIR).glob("*.parquet"):
             job = client.load_table_from_file(
                 f,
                 table_id,
-                job_config=bigquery.LoadJobConfig(
-                    source_format=bigquery.SourceFormat.PARQUET,
-                    write_disposition="WRITE_TRUNCATE",
-                    autodetect=True,
-                ),
+                job_config=job_config,
             )
 
         job.result()
