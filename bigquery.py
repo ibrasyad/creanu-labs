@@ -106,7 +106,9 @@ for file in Path(OUTPUT_DIR).glob("*.parquet"):
                     )
 
                 # Ensure final type is timestamp (no timezone)
-                arr = arr.cast(pa.timestamp("us"))
+                # If already timestamp, keep as-is (do NOT downcast precision)
+                if not pa.types.is_timestamp(arr.type):
+                    arr = arr.cast(pa.timestamp("us"))
 
                 table = table.set_column(
                     table.schema.get_field_index(col),
