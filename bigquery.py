@@ -4,6 +4,8 @@ import tempfile
 from pathlib import Path
 
 import pyarrow.parquet as pq
+import pyarrow as pa
+import pyarrow.compute as pc
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -70,15 +72,47 @@ SCHEMAS = {
     ],
 }
 
+DATETIME_COLUMNS = {
+    "users_base": ["registered_date", "last_active_date"],
+    "users_new": ["registered_date", "last_active_date"],
+    "users_updated": ["registered_date", "last_active_date"],
+    "funnel": ["activity_datetime"],
+    "transaction": ["date"],
+    "transaction_item": ["date"],
+}
+
 # ----------------------------
 # Upload loop
 # ----------------------------
+
 
 for file in Path(OUTPUT_DIR).glob("*.parquet"):
     table_name = file.stem
     print(f"Uploading {file.name}...")
 
     table = pq.read_table(file)
+
+    if table_name in DATETIME_COLUMNS:
+        for col in DATETIME_COLUMNS[table_name]:
+            if col in table.schema.names:
+                arr = table[col]
+
+                # If stored as string, cast to timestamp
+                if pa.types.is_string(arr.type):
+                    arr = pc.strptime(
+                        arr,
+                        format="%Y-%m-%d %H:%M:%S",
+                        unit="us"
+                    )
+
+                # Ensure final type is timestamp (no timezone)
+                arr = arr.cast(pa.timestamp("us"))
+
+                table = table.set_column(
+                    table.schema.get_field_index(col),
+                    col,
+                    arr
+                )
 
     if COLUMN_TO_DROP and COLUMN_TO_DROP in table.schema.names:
         table = table.drop([COLUMN_TO_DROP])
