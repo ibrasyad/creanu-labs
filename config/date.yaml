@@ -15,10 +15,10 @@ date:
     # --------------------
     # Multiplier for transaction volume by month (1.0 = baseline)
     monthly_rate:
-      january:   1.0   # New year, normal activity
-      february:  0.9   # Shorter month, slightly lower
+      january:   0.9   # New year, normal activity
+      february:  0.8   # Shorter month, slightly lower
       march:     1.1   # Spring shopping begins
-      april:     1.0   # Stable month
+      april:     0.9   # Stable month
       may:       1.2   # Pre-summer shopping
       june:      1.1   # Summer begins
       july:      1.3   # Peak summer, vacation shopping

@@ -62,18 +62,18 @@ funnel:
   # Peak visit hours during the day (3 peaks)
   visit_hour_peak:
     first:                     # Morning peak
-      weight: 10
+      weight: 7
       hour:
         min: 0
         max: 23
-        avg: 10               # 10 AM average
+        avg: 9               # 9 AM average
         
     second:                    # Afternoon peak
-      weight: 10
+      weight: 12
       hour:
         min: 0
         max: 23
-        avg: 15               # 3 PM average
+        avg: 16               # 4 PM average
         
     third:                     # Evening peak
       weight: 10
