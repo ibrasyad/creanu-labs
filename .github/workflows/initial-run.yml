@@ -49,4 +49,19 @@ jobs:
         git config --local user.name "GitHub Action"
         git add output/*.parquet
         git diff --staged --quiet || git commit -m "Generate initial data (${{ github.event.inputs.start_date || '2023-01-01' }} to ${{ github.event.inputs.end_date || '2025-12-31' }})"
-        git push
+        
+        # Retry push up to 3 times with exponential backoff
+        for i in {1..3}; do
+          if git push; then
+            echo "Push successful on attempt $i"
+            break
+          else
+            echo "Push failed on attempt $i"
+            if [ $i -eq 3 ]; then
+              echo "All push attempts failed"
+              exit 1
+            fi
+            echo "Retrying in $((10 * i)) seconds..."
+            sleep $((10 * i))
+          fi
+        done
