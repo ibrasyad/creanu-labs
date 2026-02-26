@@ -158,56 +158,54 @@ def main(start_date=None, end_date=None):
         filter_column = ["session_id", "activity_datetime", "tier"]
         trx_table = funnel_table[funnel_table["activity"] == "paid"][filter_column].copy().reset_index(drop=True)
         
-        if trx_table.empty:
-            continue
+        if not trx_table.empty:
+            rename_column = {
+                "activity_datetime": "date", 
+            }
+            trx_table.rename(columns=rename_column, inplace=True)
 
-        rename_column = {
-            "activity_datetime": "date", 
-        }
-        trx_table.rename(columns=rename_column, inplace=True)
+            # Assignt trx_id
+            trx_table["date"] = pd.to_datetime(trx_table["date"])
 
-        # Assignt trx_id
-        trx_table["date"] = pd.to_datetime(trx_table["date"])
+            trx_table["trx_seq"] = (
+                trx_table
+                .groupby(trx_table["date"].dt.date)
+                .cumcount()
+                .add(1)
+            )
 
-        trx_table["trx_seq"] = (
-            trx_table
-            .groupby(trx_table["date"].dt.date)
-            .cumcount()
-            .add(1)
-        )
+            trx_table["trx_id"] = (
+                trx_table["date"].dt.strftime("%Y%m%d") + "-" +
+                trx_table["trx_seq"].astype(str).str.zfill(8)
+            )
+            trx_table.drop(columns=["trx_seq"], inplace=True)
+            output_trx = "output/transaction.parquet"
 
-        trx_table["trx_id"] = (
-            trx_table["date"].dt.strftime("%Y%m%d") + "-" +
-            trx_table["trx_seq"].astype(str).str.zfill(8)
-        )
-        trx_table.drop(columns=["trx_seq"], inplace=True)
-        output_trx = "output/transaction.parquet"
+            append_or_create_parquet(output_trx, trx_table[trx_column_list])
 
-        append_or_create_parquet(output_trx, trx_table[trx_column_list])
+            # Generate basket per paid transaction
+            trx_table["basket"] = trx_table["tier"].apply(
+                lambda tier: generate_basket(tier_name=tier)
+            )
 
-        # Generate basket per paid transaction
-        trx_table["basket"] = trx_table["tier"].apply(
-            lambda tier: generate_basket(tier_name=tier)
-        )
+            # Explode basket items
+            trx_items = (
+                trx_table
+                .explode("basket")
+                .reset_index(drop=True)
+            )
 
-        # Explode basket items
-        trx_items = (
-            trx_table
-            .explode("basket")
-            .reset_index(drop=True)
-        )
+            # Normalize dict → columns
+            basket_cols = pd.json_normalize(trx_items["basket"])
 
-        # Normalize dict → columns
-        basket_cols = pd.json_normalize(trx_items["basket"])
+            # Final transaction_item table
+            trx_items = pd.concat(
+                [trx_items.drop(columns=["basket"]), basket_cols],
+                axis=1
+            )
 
-        # Final transaction_item table
-        trx_items = pd.concat(
-            [trx_items.drop(columns=["basket"]), basket_cols],
-            axis=1
-        )
-
-        output_trx_item = "output/transaction_item.parquet"
-        append_or_create_parquet(output_trx_item, trx_items[trx_item_column_list])
+            output_trx_item = "output/transaction_item.parquet"
+            append_or_create_parquet(output_trx_item, trx_items[trx_item_column_list])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate simulation data')

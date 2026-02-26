@@ -34,7 +34,7 @@ jobs:
         
     - name: Generate initial data
       run: |
-        python generate.py
+        python generate.py --start-date "${{ github.event.inputs.start_date || '2023-01-01' }}" --end-date "${{ github.event.inputs.end_date || '2025-12-31' }}"
         
     - name: Upload Parquet files
       uses: actions/upload-artifact@v4

@@ -14,19 +14,19 @@ simulation:
     - days: 7
       multiplier: 0.90   # 1 week old
     - days: 14
-      multiplier: 0.80   # 2 weeks old
+      multiplier: 0.70   # 2 weeks old
     - days: 21
-      multiplier: 0.70   # 3 weeks old
+      multiplier: 0.50   # 3 weeks old
     - days: 28
-      multiplier: 0.50   # 1 month old
+      multiplier: 0.40   # 1 month old
     - days: 60
       multiplier: 0.30   # 2 months old
     - days: 90
-      multiplier: 0.25   # 3 months old
+      multiplier: 0.20   # 3 months old
     - days: 120
-      multiplier: 0.15   # 4 months old
+      multiplier: 0.10   # 4 months old
     - days: 150
-      multiplier: 0.10   # 5+ months old
+      multiplier: 0.05   # 5+ months old
 
   # Daily visit probability by weekday
   visit_chance:
