@@ -74,6 +74,7 @@ def main(start_date=None, end_date=None):
     dates = date_range(start_date, end_date)
     
     for date in dates:
+        print(date)
 
         # rows = []
         new_user_rows = []
