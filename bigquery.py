@@ -29,6 +29,12 @@ client = bigquery.Client(
 # ----------------------------
 
 SCHEMAS = {
+    "catalog": [
+        bigquery.SchemaField("category", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("subcategory", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("product", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("base_price", "INTEGER", mode="REQUIRED"),
+    ],
     "users_base": [
         bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         # bigquery.SchemaField("tier", "STRING", mode="REQUIRED"),
