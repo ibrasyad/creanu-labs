@@ -69,50 +69,50 @@ growth:
     # --------------------
     year_2:
       overall:
-        new_user:  1.25  # +25% continued acquisition
-        visit:     0.80  # -20% still optimizing
-        conversion: 0.65  # -35% conversion challenges
+        new_user:  1.30  # +30% continued acquisition
+        visit:     0.85  # -15% still optimizing
+        conversion: 0.75  # -25% conversion challenges
         
       profile_multipliers:
         conservative:
-          new_user:  1.10  # +10% saturation begins
-          visit:     1.10  # +10% promo-heavy engagement
-          conversion: 1.10  # +10% improving conversion
+          new_user:  1.15  # +15% saturation begins
+          visit:     1.15  # +15% promo-heavy engagement
+          conversion: 1.15  # +15% improving conversion
           
         aggressive:
-          new_user:  1.20  # +20% strong acquisition
-          visit:     1.10  # +10% high engagement
-          conversion: 1.10  # +10% best conversion
+          new_user:  1.25  # +25% strong acquisition
+          visit:     1.15  # +15% high engagement
+          conversion: 1.15  # +15% best conversion
           
         balanced:
-          new_user:  1.05  # +5% moderate acquisition
-          visit:     1.10  # +10% engagement
-          conversion: 1.05  # +5% conversion
+          new_user:  1.10  # +10% moderate acquisition
+          visit:     1.15  # +15% engagement
+          conversion: 1.10  # +10% conversion
 
     # --------------------
     # YEAR 3 — Strategic Shift: Premium Push
     # --------------------
     year_3:
       overall:
-        new_user:  0.90  # -10% deprioritize acquisition
-        visit:     1.25  # +25% focus on existing users
-        conversion: 1.05  # +5% conversion improvements
+        new_user:  0.95  # -5% deprioritize acquisition
+        visit:     1.15  # +15% focus on existing users
+        conversion: 1.10  # +10% conversion improvements
         
       profile_multipliers:
         conservative:
-          new_user:  0.60  # -40% acquisition deprioritized
+          new_user:  0.75  # -25% acquisition deprioritized
           visit:     1.10  # +10% existing users active
-          conversion: 1.20  # +20% conversion focus
+          conversion: 1.15  # +15% conversion focus
           
         aggressive:
-          new_user:  1.40  # +40% still acquiring
-          visit:     1.25  # +25% high engagement
-          conversion: 1.30  # +30% premium conversion
+          new_user:  1.20  # +20% still acquiring
+          visit:     1.15  # +15% high engagement
+          conversion: 1.20  # +20% premium conversion
           
         balanced:
           new_user:  1.10  # +10% moderate acquisition
-          visit:     1.15  # +15% engagement
-          conversion: 1.15  # +15% conversion
+          visit:     1.12  # +12% engagement
+          conversion: 1.12  # +12% conversion
 
     # --------------------
     # YEAR 4 — Correction & Rebalance
