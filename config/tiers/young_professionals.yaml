@@ -26,28 +26,28 @@ young_professionals: # Convenience-focused singles/couples
     december: 0.8
   
   landing_page:
-    conversion_rate: 0.8
+    conversion_rate: 0.55
     duration:
       min_duration: 5
       max_duration: 1800
       avg_duration: 160
 
   product_view:
-    conversion_rate: 0.85
+    conversion_rate: 0.75
     duration:
       min_duration: 5
       max_duration: 3600
       avg_duration: 480
 
   add_to_cart:
-    conversion_rate: 0.9
+    conversion_rate: 0.65
     duration:
       min_duration: 5
       max_duration: 900
       avg_duration: 350
 
   checkout:
-    conversion_rate: 0.95
+    conversion_rate: 0.90
     duration:
       min_duration: 5
       max_duration: 86400
@@ -152,18 +152,18 @@ young_professionals: # Convenience-focused singles/couples
     condiments_seasonings: 0.7
   
   city:
+    central_jakarta: 15
+    south_jakarta: 12
     west_jakarta: 10
-    east_jakarta: 10
-    north_jakarta: 10
-    central_jakarta: 10
-    south_jakarta: 10
-    tangerang_city: 10
-    south_tangerang: 10
+    tangerang_city: 8
+    east_jakarta: 7
+    north_jakarta: 6
+    south_tangerang: 2
   
   gender:
     male: 10
     female: 10
 
   acquisition_channel:
-    organic: 10
-    paid: 10
+    paid: 12
+    organic: 8

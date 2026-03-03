@@ -83,7 +83,7 @@ simulation:
     # Bakery
     bread:             true
     pastries:          true
-    cakes:             true
+    cakes:             false
     cookies:           true
     muffins:           true
     

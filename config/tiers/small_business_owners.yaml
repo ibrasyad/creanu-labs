@@ -152,18 +152,18 @@ small_business_owners: # Restaurant/cafe suppliers
     condiments_seasonings: 3.5
   
   city:
-    west_jakarta: 10
-    east_jakarta: 10
+    central_jakarta: 15
+    west_jakarta: 12
+    east_jakarta: 12
     north_jakarta: 10
-    central_jakarta: 10
-    south_jakarta: 10
-    tangerang_city: 10
-    south_tangerang: 10
+    south_jakarta: 8
+    tangerang_city: 6
+    south_tangerang: 7
   
   gender:
-    male: 10
-    female: 10
+    male: 14
+    female: 6
 
   acquisition_channel:
-    organic: 10
-    paid: 10
+    paid: 14
+    organic: 6

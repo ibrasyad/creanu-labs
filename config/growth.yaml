@@ -70,24 +70,24 @@ growth:
     year_2:
       overall:
         new_user:  1.25  # +25% continued acquisition
-        visit:     0.90  # -10% still optimizing
-        conversion: 0.85  # -15% conversion challenges
+        visit:     0.80  # -20% still optimizing
+        conversion: 0.65  # -35% conversion challenges
         
       profile_multipliers:
         conservative:
           new_user:  1.10  # +10% saturation begins
-          visit:     1.25  # +25% promo-heavy engagement
-          conversion: 1.15  # +15% improving conversion
+          visit:     1.10  # +10% promo-heavy engagement
+          conversion: 1.10  # +10% improving conversion
           
         aggressive:
           new_user:  1.20  # +20% strong acquisition
-          visit:     1.20  # +20% high engagement
-          conversion: 1.20  # +20% best conversion
+          visit:     1.10  # +10% high engagement
+          conversion: 1.10  # +10% best conversion
           
         balanced:
           new_user:  1.05  # +5% moderate acquisition
           visit:     1.10  # +10% engagement
-          conversion: 1.10  # +10% conversion
+          conversion: 1.05  # +5% conversion
 
     # --------------------
     # YEAR 3 — Strategic Shift: Premium Push
@@ -95,7 +95,7 @@ growth:
     year_3:
       overall:
         new_user:  0.90  # -10% deprioritize acquisition
-        visit:     1.45  # +45% focus on existing users
+        visit:     1.25  # +25% focus on existing users
         conversion: 1.05  # +5% conversion improvements
         
       profile_multipliers:
@@ -120,7 +120,7 @@ growth:
     year_4:
       overall:
         new_user:  1.10  # +10% renewed acquisition
-        visit:     1.55  # +55% peak engagement
+        visit:     1.30  # +30% peak engagement
         conversion: 1.15  # +15% strong conversion
         
       profile_multipliers:

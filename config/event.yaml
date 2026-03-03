@@ -23,8 +23,8 @@ event:
     # Default multipliers for all tiers
     overall:
       new_user:  1.4   # +40% new user acquisition
-      visit:     1.3   # +30% visit frequency
-      conversion: 1.1  # +10% conversion rate
+      visit:     1.5   # +50% visit frequency
+      conversion: 1.2  # +20% conversion rate
 
   # ==================== NEW YEAR PROMOTION ====================
   new_year_promotion:
@@ -56,7 +56,7 @@ event:
     profiles:
       aggressive:
         conversion:
-          landing_page: 1.25   # +25% landing page conversion
+          landing_page: 1.05   # +5% landing page conversion
 
 # =============================================================================
 # EVENT TEMPLATE (for reference)

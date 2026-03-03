@@ -42,7 +42,7 @@ random:
   
   # Landing page - Standard browsing behavior
   landing_page:
-    conversion_rate: 0.65   # 65% proceed (average)
+    conversion_rate: 0.45   # 65% proceed (average)
     duration:
       min_duration: 5
       max_duration: 1800    # 30 minutes max
@@ -50,7 +50,7 @@ random:
 
   # Product view - Normal browsing
   product_view:
-    conversion_rate: 0.75   # 75% add to cart
+    conversion_rate: 0.55   # 75% add to cart
     duration:
       min_duration: 5
       max_duration: 3600    # 1 hour max
@@ -58,7 +58,7 @@ random:
 
   # Add to cart - Standard consideration
   add_to_cart:
-    conversion_rate: 0.80   # 80% proceed to checkout
+    conversion_rate: 0.40   # 80% proceed to checkout
     duration:
       min_duration: 5
       max_duration: 900     # 15 minutes max
@@ -192,22 +192,22 @@ random:
   
   # ==================== DEMOGRAPHIC DISTRIBUTION ====================
   
-  # Geographic distribution (Jakarta area)
+  # Geographic distribution (Jakarta area - balanced)
   city:
-    west_jakarta:     10
-    east_jakarta:     10
-    north_jakarta:    10
+    west_jakarta:     12
+    east_jakarta:     11
+    south_jakarta:    11
     central_jakarta:  10
-    south_jakarta:    10
-    tangerang_city:   10
-    south_tangerang:  10
+    north_jakarta:    9
+    tangerang_city:   8
+    south_tangerang:  9
 
-  # Gender distribution
+  # Gender distribution (balanced)
   gender:
     male:   10
     female: 10
 
-  # Acquisition channels
+  # Acquisition channels (balanced)
   acquisition_channel:
     organic: 10   # Natural discovery
     paid:    10   # Advertising

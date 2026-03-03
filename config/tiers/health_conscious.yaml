@@ -26,28 +26,28 @@ health_conscious: # Fresh & organic focused
     december: 0.8
   
   landing_page:
-    conversion_rate: 0.85
+    conversion_rate: 0.75
     duration:
       min_duration: 5
       max_duration: 1800
       avg_duration: 220
 
   product_view:
-    conversion_rate: 0.8
+    conversion_rate: 0.30
     duration:
       min_duration: 5
       max_duration: 3600
       avg_duration: 720
 
   add_to_cart:
-    conversion_rate: 0.85
+    conversion_rate: 0.65
     duration:
       min_duration: 5
       max_duration: 900
       avg_duration: 480
 
   checkout:
-    conversion_rate: 0.9
+    conversion_rate: 0.75
     duration:
       min_duration: 5
       max_duration: 86400
@@ -152,18 +152,18 @@ health_conscious: # Fresh & organic focused
     condiments_seasonings: 1.0
   
   city:
+    south_jakarta: 15
+    central_jakarta: 12
     west_jakarta: 10
-    east_jakarta: 10
-    north_jakarta: 10
-    central_jakarta: 10
-    south_jakarta: 10
-    tangerang_city: 10
-    south_tangerang: 10
+    tangerang_city: 8
+    south_tangerang: 8
+    east_jakarta: 5
+    north_jakarta: 2
   
   gender:
-    male: 10
-    female: 10
+    female: 11
+    male: 9
 
   acquisition_channel:
-    organic: 10
-    paid: 10
+    organic: 15
+    paid: 5

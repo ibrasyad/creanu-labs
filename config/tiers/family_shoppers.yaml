@@ -33,14 +33,14 @@ family_shoppers: # Weekly bulk buyers for households
       avg_duration: 240
 
   product_view:
-    conversion_rate: 0.75
+    conversion_rate: 0.65
     duration:
       min_duration: 5
       max_duration: 3600
       avg_duration: 680
 
   add_to_cart:
-    conversion_rate: 0.85
+    conversion_rate: 0.80
     duration:
       min_duration: 5
       max_duration: 900
@@ -152,18 +152,18 @@ family_shoppers: # Weekly bulk buyers for households
     condiments_seasonings: 1.2
   
   city:
+    south_jakarta: 15
+    tangerang_city: 12
+    south_tangerang: 12
     west_jakarta: 10
-    east_jakarta: 10
-    north_jakarta: 10
-    central_jakarta: 10
-    south_jakarta: 10
-    tangerang_city: 10
-    south_tangerang: 10
+    east_jakarta: 8
+    north_jakarta: 8
+    central_jakarta: 5
   
   gender:
-    male: 10
-    female: 10
+    female: 12
+    male: 8
 
   acquisition_channel:
-    organic: 10
-    paid: 10
+    organic: 12
+    paid: 8

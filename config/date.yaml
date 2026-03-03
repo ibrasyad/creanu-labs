@@ -38,13 +38,13 @@ date:
     # --------------------
     # Expected transactions per day by weekday
     weekday_base:
-      monday:    65   # Start of week
+      monday:    45   # Start of week
       tuesday:   55   # Lower activity
       wednesday: 60   # Mid-week
       thursday:  50   # Lowest activity
-      friday:    80   # Pre-weekend shopping
-      saturday: 110   # Weekend peak
-      sunday:   105   # Weekend shopping
+      friday:    70   # Pre-weekend shopping
+      saturday:  90   # Weekend peak
+      sunday:    85   # Weekend shopping
 
     # Random variation applied to daily transaction counts
     weekday_rate_noise:

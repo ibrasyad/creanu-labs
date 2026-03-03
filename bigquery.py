@@ -71,11 +71,14 @@ SCHEMAS = {
     ],
     "transaction": [
         bigquery.SchemaField("session_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("trx_id", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("date", "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("total_price", "INTEGER", mode="REQUIRED"),
     ],
     "transaction_item": [
         bigquery.SchemaField("trx_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("user_id", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("date", "DATETIME", mode="REQUIRED"),
         bigquery.SchemaField("product", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("quantity", "INTEGER", mode="REQUIRED"),

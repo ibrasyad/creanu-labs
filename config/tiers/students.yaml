@@ -42,7 +42,7 @@ students:
   
   # Landing page - Quick browsing, low commitment
   landing_page:
-    conversion_rate: 0.60   # 60% proceed (selective)
+    conversion_rate: 0.30   # 30% proceed (selective)
     duration:
       min_duration: 5
       max_duration: 1800    # 30 minutes max
@@ -50,7 +50,7 @@ students:
 
   # Product view - Price-sensitive browsing
   product_view:
-    conversion_rate: 0.70   # 70% add to cart
+    conversion_rate: 0.40   # 40% add to cart
     duration:
       min_duration: 5
       max_duration: 3600    # 1 hour max
@@ -58,7 +58,7 @@ students:
 
   # Add to cart - Cautious consideration
   add_to_cart:
-    conversion_rate: 0.75   # 75% proceed to checkout
+    conversion_rate: 0.45   # 45% proceed to checkout
     duration:
       min_duration: 5
       max_duration: 900     # 15 minutes max
@@ -66,7 +66,7 @@ students:
 
   # Checkout - Budget review
   checkout:
-    conversion_rate: 0.80   # 80% complete purchase
+    conversion_rate: 0.60   # 80% complete purchase
     duration:
       min_duration: 5
       max_duration: 86400   # 24 hours max
@@ -192,22 +192,22 @@ students:
   
   # ==================== DEMOGRAPHIC DISTRIBUTION ====================
   
-  # Geographic distribution (Jakarta area)
+  # Geographic distribution (Jakarta area - student areas)
   city:
-    west_jakarta:     10
-    east_jakarta:     10
-    north_jakarta:    10
-    central_jakarta:  10
-    south_jakarta:    10
-    tangerang_city:   10
-    south_tangerang:  10
+    south_jakarta:     15
+    west_jakarta:      12
+    central_jakarta:   10
+    east_jakarta:      8
+    north_jakarta:     5
+    tangerang_city:   5
+    south_tangerang:  5
 
-  # Gender distribution
+  # Gender distribution (balanced)
   gender:
     male:   10
     female: 10
 
-  # Acquisition channels
+  # Acquisition channels (student-friendly)
   acquisition_channel:
-    organic: 10   # Natural discovery
-    paid:    10   # Advertising
+    organic: 15   # Word of mouth, campus discovery
+    paid:    5    # Limited student budgets

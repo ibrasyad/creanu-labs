@@ -12,13 +12,16 @@ from sim.generate_funnel import generate_funnel_table, funnel_wide_to_activity_l
 
 trx_column_list = [
         "session_id",
+        "user_id",
         "trx_id",
         "date",
-        "tier"
+        "tier",
+        "total_price"
     ]
 
 trx_item_column_list = [
         "trx_id",
+        "user_id",
         "tier",
         "date",
         "product",
@@ -156,7 +159,7 @@ def main(start_date=None, end_date=None):
         
         # -------------------
         # Generate the basket
-        filter_column = ["session_id", "activity_datetime", "tier"]
+        filter_column = ["session_id", "user_id", "activity_datetime", "tier"]
         trx_table = funnel_table[funnel_table["activity"] == "paid"][filter_column].copy().reset_index(drop=True)
         
         if not trx_table.empty:
@@ -182,8 +185,6 @@ def main(start_date=None, end_date=None):
             trx_table.drop(columns=["trx_seq"], inplace=True)
             output_trx = "output/transaction.parquet"
 
-            append_or_create_parquet(output_trx, trx_table[trx_column_list])
-
             # Generate basket per paid transaction
             trx_table["basket"] = trx_table["tier"].apply(
                 lambda tier: generate_basket(tier_name=tier)
@@ -204,6 +205,14 @@ def main(start_date=None, end_date=None):
                 [trx_items.drop(columns=["basket"]), basket_cols],
                 axis=1
             )
+
+            # Calculate total price per transaction
+            trx_totals = trx_items.groupby("trx_id")["total_price"].sum().reset_index()
+            
+            # Merge total price back into trx_table
+            trx_table = trx_table.merge(trx_totals, on="trx_id", how="left")
+            
+            append_or_create_parquet(output_trx, trx_table[trx_column_list])
 
             output_trx_item = "output/transaction_item.parquet"
             append_or_create_parquet(output_trx_item, trx_items[trx_item_column_list])

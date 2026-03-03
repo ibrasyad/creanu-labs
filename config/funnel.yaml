@@ -30,7 +30,7 @@ funnel:
 
   # Add to Cart - Product added to basket
   add_to_cart:
-    conversion_rate: 0.80   # 80% proceed to checkout
+    conversion_rate: 0.40   # 40% proceed to checkout
     duration:
       min_duration: 5       # 5 seconds minimum
       max_duration: 900      # 15 minutes maximum
@@ -38,7 +38,7 @@ funnel:
 
   # Checkout - Payment process
   checkout:
-    conversion_rate: 0.85   # 85% complete purchase
+    conversion_rate: 0.50   # 50% complete purchase
     duration:
       min_duration: 5       # 5 seconds minimum
       max_duration: 86400   # 24 hours maximum (saved carts)
