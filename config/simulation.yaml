@@ -35,8 +35,8 @@ simulation:
     wednesday: 0.05   # 5% chance
     thursday:  0.05   # 5% chance
     friday:    0.05   # 5% chance
-    saturday:  0.09   # 9% chance (higher weekend)
-    sunday:    0.09   # 9% chance (higher weekend)
+    saturday:  0.075   # 7.5% chance (higher weekend)
+    sunday:    0.075   # 7.5% chance (higher weekend)
 
   # ==================== SHOPPING BEHAVIOR ====================
   

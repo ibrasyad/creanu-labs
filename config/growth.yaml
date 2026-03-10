@@ -105,14 +105,14 @@ growth:
           conversion: 1.15  # +15% conversion focus
           
         aggressive:
-          new_user:  1.20  # +20% still acquiring
-          visit:     1.15  # +15% high engagement
-          conversion: 1.20  # +20% premium conversion
+          new_user:  1.10  # +20% still acquiring
+          visit:     1.10  # +10% high engagement
+          conversion: 1.05  # +5% premium conversion
           
         balanced:
-          new_user:  1.10  # +10% moderate acquisition
-          visit:     1.12  # +12% engagement
-          conversion: 1.12  # +12% conversion
+          new_user:  1.05  # +5% moderate acquisition
+          visit:     1.07  # +7% engagement
+          conversion: 1.07  # +7% conversion
 
     # --------------------
     # YEAR 4 — Correction & Rebalance
@@ -120,7 +120,7 @@ growth:
     year_4:
       overall:
         new_user:  1.10  # +10% renewed acquisition
-        visit:     1.30  # +30% peak engagement
+        visit:     1.20  # +20% peak engagement
         conversion: 1.15  # +15% strong conversion
         
       profile_multipliers:

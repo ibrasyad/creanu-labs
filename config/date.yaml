@@ -15,18 +15,18 @@ date:
     # --------------------
     # Multiplier for transaction volume by month (1.0 = baseline)
     monthly_rate:
-      january:   0.9   # New year, normal activity
+      january:   0.8   # New year, normal activity
       february:  0.8   # Shorter month, slightly lower
       march:     1.1   # Spring shopping begins
-      april:     0.9   # Stable month
-      may:       1.2   # Pre-summer shopping
-      june:      1.1   # Summer begins
-      july:      1.3   # Peak summer, vacation shopping
-      august:    1.2   # End of summer
-      september: 1.0   # Back to school, stable
-      october:   1.1   # Fall season
-      november:  1.3   # Holiday prep begins
-      december:  1.5   # Holiday shopping peak
+      april:     0.8   # Stable month
+      may:       1.1   # Pre-summer shopping
+      june:      1.0   # Summer begins
+      july:      1.2   # Peak summer, vacation shopping
+      august:    1.1   # End of summer
+      september: 0.9   # Back to school, stable
+      october:   1.0   # Fall season
+      november:  1.2   # Holiday prep begins
+      december:  1.4   # Holiday shopping peak
 
     # Random variation applied to monthly rates
     monthly_rate_noise:
