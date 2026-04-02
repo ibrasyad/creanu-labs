@@ -24,9 +24,9 @@ simulation:
     - days: 90
       multiplier: 0.20   # 3 months old
     - days: 120
-      multiplier: 0.10   # 4 months old
+      multiplier: 0.00   # 4 months old - INACTIVE
     - days: 150
-      multiplier: 0.05   # 5+ months old
+      multiplier: 0.00   # 5+ months old - INACTIVE
 
   # Daily visit probability by weekday
   visit_chance:

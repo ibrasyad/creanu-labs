@@ -72,6 +72,9 @@ def main(start_date=None, end_date=None):
 
     base_user_table = pd.read_parquet("output/users_updated.parquet")
     current_user_count = len(base_user_table)
+    
+    # Global transaction counter
+    global_trx_counter = 1
 
     # Generate dates for the simulation period
     dates = date_range(start_date, end_date)
@@ -168,21 +171,16 @@ def main(start_date=None, end_date=None):
             }
             trx_table.rename(columns=rename_column, inplace=True)
 
-            # Assignt trx_id
             trx_table["date"] = pd.to_datetime(trx_table["date"])
-
-            trx_table["trx_seq"] = (
-                trx_table
-                .groupby(trx_table["date"].dt.date)
-                .cumcount()
-                .add(1)
-            )
-
-            trx_table["trx_id"] = (
-                trx_table["date"].dt.strftime("%Y%m%d") + "-" +
-                trx_table["trx_seq"].astype(str).str.zfill(8)
-            )
-            trx_table.drop(columns=["trx_seq"], inplace=True)
+            
+            # Generate unique transaction IDs using global counter
+            trx_ids = []
+            for i in range(len(trx_table)):
+                trx_id = trx_table["date"].iloc[i].strftime("%Y%m%d") + "-" + str(global_trx_counter).zfill(8)
+                trx_ids.append(trx_id)
+                global_trx_counter += 1
+            
+            trx_table["trx_id"] = trx_ids
             output_trx = "output/transaction.parquet"
 
             # Generate basket per paid transaction

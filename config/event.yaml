@@ -22,9 +22,9 @@ event:
     
     # Default multipliers for all tiers
     overall:
-      new_user:  1.4   # +40% new user acquisition
-      visit:     1.5   # +50% visit frequency
-      conversion: 1.2  # +20% conversion rate
+      new_user:  1.2   # +40% new user acquisition
+      visit:     1.3   # +50% visit frequency
+      # conversion: 1.2  # +20% conversion rate
 
   # ==================== NEW YEAR PROMOTION ====================
   new_year_promotion:
@@ -42,7 +42,7 @@ event:
     profiles:
       conservative:
         visit:      1.4   # +40% visits for budget-conscious users
-        conversion: 1.2   # +20% conversion rate
+        # conversion: 1.2   # +20% conversion rate
 
   # ==================== LANDING PAGE A/B TEST ====================
   landing_page_ab_test:
