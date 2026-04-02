@@ -64,14 +64,19 @@ def get_growth_multiplier(
 
     yearly = growth_cfg["yearly"].get(year_key, {})
     base = growth_cfg.get("base", {})
+    
+    # Get tier profile from tiers config
+    from .config import get_tiers
+    tiers = get_tiers()
+    tier_profile = tiers.get(tier_name, {}).get("profile", "balanced")
 
     return (
-        # 1️⃣ yearly tier
-        get_nested(yearly, "tiers", tier_name, metric)
+        # 1️⃣ yearly profile multiplier
+        get_nested(yearly, "profile_multipliers", tier_profile, metric)
         # 2️⃣ yearly overall
         or get_nested(yearly, "overall", metric)
-        # 3️⃣ base tier
-        or get_nested(base, "tiers", tier_name, metric)
+        # 3️⃣ base profile multiplier
+        or get_nested(base, "tier_profiles", tier_profile, metric)
         # 4️⃣ base overall
         or get_nested(base, "overall", metric)
         # 5️⃣ default
