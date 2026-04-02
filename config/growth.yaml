@@ -69,24 +69,24 @@ growth:
     # --------------------
     year_2:
       overall:
-        new_user:  1.30  # +30% continued acquisition
+        new_user:  0.70  # +30% continued acquisition
         visit:     0.85  # -15% still optimizing
         # conversion: 0.75  # -25% conversion challenges
         
       profile_multipliers:
         conservative:
-          new_user:  1.15  # +15% saturation begins
-          visit:     1.15  # +15% promo-heavy engagement
+          new_user:  0.60  # +15% saturation begins
+          visit:     1.00  # +15% promo-heavy engagement
           # conversion: 1.15  # +15% improving conversion
           
         aggressive:
-          new_user:  1.25  # +25% strong acquisition
+          new_user:  0.85  # +25% strong acquisition
           visit:     1.15  # +15% high engagement
           # conversion: 1.15  # +15% best conversion
           
         balanced:
-          new_user:  1.10  # +10% moderate acquisition
-          visit:     1.15  # +15% engagement
+          new_user:  0.70  # +10% moderate acquisition
+          visit:     1.05  # +15% engagement
           # conversion: 1.10  # +10% conversion
 
     # --------------------
