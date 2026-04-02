@@ -203,6 +203,7 @@ def validate_growth_config(growth_dict):
     tier_profiles = base['tier_profiles']
     valid_profiles = {'conservative', 'aggressive', 'balanced'}
     valid_metrics = {'new_user', 'visit', 'conversion'}
+    required_metrics = {'new_user', 'visit'}  # conversion is optional
     
     if not isinstance(tier_profiles, dict):
         raise ConfigError("Growth tier_profiles must be a dictionary")
@@ -214,13 +215,19 @@ def validate_growth_config(growth_dict):
         if not isinstance(profile_config, dict):
             raise ConfigError(f"Growth profile '{profile_name}' must be a dictionary")
         
-        for metric in valid_metrics:
+        for metric in required_metrics:
             if metric not in profile_config:
                 raise ConfigError(f"Growth profile '{profile_name}' must contain '{metric}' metric")
             
             value = profile_config[metric]
             if not isinstance(value, (int, float)) or value < 0:
                 raise ConfigError(f"Growth profile '{profile_name}' {metric} value '{value}' must be non-negative number.")
+        
+        # Validate optional conversion metric if present
+        if 'conversion' in profile_config:
+            value = profile_config['conversion']
+            if not isinstance(value, (int, float)) or value < 0:
+                raise ConfigError(f"Growth profile '{profile_name}' conversion value '{value}' must be non-negative number.")
     
     # Validate yearly configuration
     if 'yearly' in growth_dict:
@@ -253,10 +260,11 @@ def validate_growth_config(growth_dict):
                 
                 for metric in valid_metrics:
                     if metric not in multiplier_config:
-                        raise ConfigError(f"Profile multiplier '{profile_name}' in year '{year_key}' must contain '{metric}' metric")
+                        if metric != 'conversion':
+                            raise ConfigError(f"Profile multiplier '{profile_name}' in year '{year_key}' must contain '{metric}' metric")
                     
-                    value = multiplier_config[metric]
-                    if not isinstance(value, (int, float)) or value < 0:
+                    value = multiplier_config.get(metric)
+                    if value is not None and (not isinstance(value, (int, float)) or value < 0):
                         raise ConfigError(f"Profile multiplier '{profile_name}' {metric} value '{value}' in year '{year_key}' must be non-negative number.")
 
 
