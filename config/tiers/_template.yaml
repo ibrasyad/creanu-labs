@@ -6,13 +6,114 @@
 # =============================================================================
 
 template:
-  # ==================== BASIC DEMOGRAPHICS ====================
+  # ==================== TIER METADATA ====================
+  profile:     conservative
+  description: "Budget-conscious students seeking affordable convenience"
+
+  # ==================== VISIT PATTERNS ====================
   
+  # Daily visit probability by weekday
+  visit_chance:
+    monday:    0.03   # 3% - low weekday activity
+    tuesday:   0.03   # 3% - study focus
+    wednesday: 0.03   # 3% - mid-week
+    thursday:  0.03   # 3% - near weekend
+    friday:    0.05   # 5% - pre-weekend
+    saturday:  0.08   # 8% - weekend shopping
+    sunday:    0.09   # 9% - highest weekend
+
+  # Monthly visit multipliers (academic calendar impact)
+  monthly_visit_chance_multiplier:
+    january:   0.6   # Winter break - low activity
+    february:  0.7   # Back to school
+    march:     0.8   # Mid-semester
+    april:     0.7   # Exam period
+    may:       0.75  # End of semester
+    june:      0.8   # Summer session
+    july:      0.9   # Summer break
+    august:    1.2   # Back to school prep
+    september: 1.3   # Fall semester start
+    october:   1.1   # Settled in
+    november:  0.9   # Pre-exam
+    december:  0.7   # Final exams
+  
+  # ==================== CONVERSION FUNNEL ====================
+  
+  # Landing page - Quick browsing, low commitment
+  landing_page:
+    conversion_rate: 0.30   # 30% proceed (selective)
+    duration:
+      min_duration: 5
+      max_duration: 1800    # 30 minutes max
+      avg_duration: 150    # ~2.5 minutes
+
+  # Product view - Price-sensitive browsing
+  product_view:
+    conversion_rate: 0.40   # 40% add to cart
+    duration:
+      min_duration: 5
+      max_duration: 3600    # 1 hour max
+      avg_duration: 400    # ~7 minutes
+
+  # Add to cart - Cautious consideration
+  add_to_cart:
+    conversion_rate: 0.45   # 45% proceed to checkout
+    duration:
+      min_duration: 5
+      max_duration: 900     # 15 minutes max
+      avg_duration: 300    # 5 minutes
+
+  # Checkout - Budget review
+  checkout:
+    conversion_rate: 0.60   # 80% complete purchase
+    duration:
+      min_duration: 5
+      max_duration: 86400   # 24 hours max
+      avg_duration: 1500   # 25 minutes
+
+  # Paid - Transaction completed
+  paid:
+    conversion_rate: 1.0    # 100% (final stage)
+    duration:
+      min_duration: 0
+      max_duration: 0
+      avg_duration: 0
+
+  # Random variation in funnel performance
+  funnel_noise:
+    distribution: poisson
+    multiplier: 1.15
+  
+  # ==================== VISIT TIMING ====================
+  
+  # Peak visit hours (student schedule)
+  visit_hour_peak:
+    first:                     # Morning (between classes)
+      weight: 3
+      hour:
+        min: 0
+        max: 23
+        avg: 11               # 11 AM average
+        
+    second:                    # Afternoon (after classes)
+      weight: 8
+      hour:
+        min: 0
+        max: 23
+        avg: 16               # 4 PM average
+        
+    third:                     # Evening (study break)
+      weight: 18
+      hour:
+        min: 0
+        max: 23
+        avg: 21               # 9 PM average
+
+  # ==================== USER ACQUISITION ====================
+ 
   # Initial user count for this tier
   base_user: 10
 
-  # ==================== USER ACQUISITION ====================
-  
   # Number of attempts per day to create new users in this tier
   daily_retry: 1
   

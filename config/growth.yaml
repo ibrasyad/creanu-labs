@@ -5,6 +5,9 @@
 # - new_user: User acquisition growth
 # - visit: Visit frequency/engagement
 # - conversion: Conversion rate improvements
+# 
+# Notes about conversion: I've learnt from my test that increasing conversion
+# too much can cause unrealistic patterns. It's better to keep it disabled.
 # =============================================================================
 
 growth:
