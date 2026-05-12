@@ -8,7 +8,6 @@
 random:
   # ==================== TIER METADATA ====================
   profile:     balanced
-  priority:    medium
   description: "Regular customers with average purchasing patterns"
 
   # ==================== VISIT PATTERNS ====================

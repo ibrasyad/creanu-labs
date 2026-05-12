@@ -8,7 +8,6 @@
 students:
   # ==================== TIER METADATA ====================
   profile:     conservative
-  priority:    low
   description: "Budget-conscious students seeking affordable convenience"
 
   # ==================== VISIT PATTERNS ====================

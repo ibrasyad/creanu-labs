@@ -546,23 +546,6 @@ def get_tiers_by_profile(profile_name):
     return matching_tiers
 
 
-def get_tiers_by_priority(priority_name):
-    """
-    Get all tiers that match a specific priority.
-    
-    Args:
-        priority_name: Priority name (low, medium, high)
-        
-    Returns:
-        Dict of tier_name -> tier_config for matching tiers
-    """
-    matching_tiers = {}
-    for tier_name, tier_config in _tiers.items():
-        if tier_config.get('priority') == priority_name:
-            matching_tiers[tier_name] = tier_config
-    return matching_tiers
-
-
 def apply_growth_multipliers(tiers, growth_config, year):
     """
     Apply growth multipliers to tiers based on their profiles.

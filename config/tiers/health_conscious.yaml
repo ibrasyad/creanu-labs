@@ -1,6 +1,5 @@
 health_conscious: # Fresh & organic focused
   profile: conservative
-  priority: medium
   description: "Health-focused buyers who prefer fresh and organic products"
   visit_chance:
     monday: 0.06

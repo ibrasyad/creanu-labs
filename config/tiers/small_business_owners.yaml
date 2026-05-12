@@ -1,6 +1,5 @@
 small_business_owners: # Restaurant/cafe suppliers
   profile: aggressive
-  priority: high
   description: "Business owners purchasing bulk supplies for restaurants/cafes"
   visit_chance:
     monday: 0.08

@@ -1,6 +1,5 @@
 family_shoppers: # Weekly bulk buyers for households
   profile: balanced
-  priority: medium
   description: "Families doing weekly bulk shopping for households"
   visit_chance:
     monday: 0.03

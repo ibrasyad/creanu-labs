@@ -1,6 +1,5 @@
 young_professionals: # Convenience-focused singles/couples
   profile: aggressive
-  priority: high
   description: "Busy professionals seeking convenience and premium products"
   visit_chance:
     monday: 0.04
