@@ -1,8 +1,8 @@
-# Lettuce-Melon
+# Creanu Labs
 
 ## Objective
 
-I built Lettuce-Melon to solve a common problem in data analytics: realistic transaction data. When you're learning analytics business intelligence tools, you need data that behaves like real customer behavior, not just random numbers. Though I don't claim this would show perfect real world behavior, it's a good starting point for learning.
+I built Creanu Labs to solve a common problem in data analytics: realistic transaction data. When you're learning analytics business intelligence tools, you need data that behaves like real customer behavior, not just random numbers. Though I don't claim this would show perfect real world behavior, it's a good starting point for learning.
 
 ## Method
 

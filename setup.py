@@ -1,17 +1,17 @@
 """
-Setup configuration for lettuce-melon package.
+Setup configuration for creanu-labs package.
 """
 from setuptools import setup, find_packages
 
 setup(
-    name="lettuce-melon",
+    name="creanu-labs",
     version="0.1.0",
     description="A realistic transaction data generator that simulates customer shopping behavior across different customer tiers",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="ibrasyad",
     author_email="ibnura96@gmail.com",
-    url="https://github.com/ibrasyad/lettuce-melon",
+    url="https://github.com/ibrasyad/creanu-labs",
     license="MIT",
     packages=find_packages(),
     python_requires=">=3.8",
@@ -31,7 +31,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "lettuce-melon=generate:main",
+            "creanu-labs=generate:main",
         ],
     },
     classifiers=[

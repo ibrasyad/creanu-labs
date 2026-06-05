@@ -39,7 +39,7 @@ jobs:
     - name: Upload Parquet files
       uses: actions/upload-artifact@v4
       with:
-        name: lettuce-melon-parquet
+        name: creanu-labs-parquet
         path: output/*.parquet
         retention-days: 30
         

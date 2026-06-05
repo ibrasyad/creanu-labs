@@ -1,6 +1,6 @@
 # Customization Guide
 
-This guide explains how to customize Lettuce-Melon for your specific needs. The system is designed to be highly configurable through YAML files, so you can adapt it without touching the code. It's not very tidy but it works and should be easier to understand for beginners.
+This guide explains how to customize Creanu Labs for your specific needs. The system is designed to be highly configurable through YAML files, so you can adapt it without touching the code. It's not very tidy but it works and should be easier to understand for beginners.
 
 ## Quick Overview
 
