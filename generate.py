@@ -215,6 +215,24 @@ def main(start_date=None, end_date=None):
             output_trx_item = "output/transaction_item.parquet"
             append_or_create_parquet(output_trx_item, trx_items[trx_item_column_list])
 
+    # Export parquet files to CSV
+    parquet_to_csv = {
+        "output/users_updated.parquet": "output/csv-file/user.csv",
+        "output/transaction.parquet": "output/csv-file/transaction.csv",
+        "output/transaction_item.parquet": "output/csv-file/transaction_item.csv",
+        "output/funnel.parquet": "output/csv-file/funnel.csv",
+        "output/catalog.parquet": "output/csv-file/catalog.csv"
+    }
+
+    for parquet_file, csv_file in parquet_to_csv.items():
+        df = pd.read_parquet(parquet_file)
+        # Drop "tier" column if it exists
+        if "tier" in df.columns:
+            df = df.drop(columns=["tier"])
+        df.to_csv(csv_file, index=False)
+
+    print("CSV export completed.")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate simulation data')
     parser.add_argument('--start-date', help='Start date (YYYY-MM-DD)')
