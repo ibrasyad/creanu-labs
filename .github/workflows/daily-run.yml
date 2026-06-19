@@ -48,7 +48,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: creanu-labs-parquet
-        path: output/*.parquet
+        path: |
+          output/*.parquet
+          output/csv-file/*.csv
         retention-days: 30
         overwrite: true
         
@@ -91,16 +93,17 @@ jobs:
       with:
         name: "Daily Data"
         tag_name: "daily-data"
-        files: output/*.parquet output/csv-file/*.csv
+        files: |
+          output/*.parquet
+          output/csv-file/*.csv
         body: |
           Last updated: ${{ steps.date.outputs.date }}
           
-          ## Files
-          - catalog.csv
-          - user.csv
-          - transaction.csv
-          - transaction_item.csv
-          - funnel.csv
+          There are two versions:
+          - Parquet files: This is the "raw" output from the script. It still contains tag from user groups.
+          - CSV files: This is the "filtered" output from the script. It filters out tag from user groups.
+
+          Basically, the CSV files are more useful for learning analysis and figure out the segmentation/cluster rather than using the Parquet files.
         draft: false
         prerelease: false
       env:
