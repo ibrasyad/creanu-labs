@@ -170,23 +170,23 @@ students:
 
   # Quantity model (smaller quantities)
   quantity_model:
-    base_lambda: 1.2   # Lower average units
+    base_lambda: 1.0   # Lower average units
 
   # Quantity bias per category
   quantity_bias:
-    vegetables:           0.4   # Very small quantities
-    fruits:              0.5   # Small quantities
-    grains:              0.7   # Moderate (staples)
-    dairy:               0.9   # Near normal
-    bakery:              1.4   # Higher (snacks)
-    snacks:              2.0   # High (favorite)
-    beverages:           1.9   # High (favorite)
-    meat:                0.6   # Low (expensive)
-    seafood:             0.4   # Very low
+    vegetables:           0.5   # Very small quantities
+    fruits:              0.6   # Small quantities
+    grains:              0.8   # Moderate (staples)
+    dairy:               1.0   # Near normal
+    bakery:              1.5   # Higher (snacks)
+    snacks:              1.8   # High (favorite)
+    beverages:           1.7   # High (favorite)
+    meat:                0.7   # Low (expensive)
+    seafood:             0.5   # Very low
     poultry:             1.0   # Normal
-    frozen_foods:        1.8   # High (convenient)
-    personal_care:       0.8   # Moderate
-    household_supplies:  0.6   # Low
+    frozen_foods:        1.6   # High (convenient)
+    personal_care:       0.9   # Moderate
+    household_supplies:  0.7   # Low
     condiments_seasonings: 1.0   # Normal
   
   # ==================== DEMOGRAPHIC DISTRIBUTION ====================

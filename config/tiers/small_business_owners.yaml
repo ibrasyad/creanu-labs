@@ -86,8 +86,8 @@ small_business_owners: # Restaurant/cafe suppliers
   base_user: 3
 
   daily_retry: 2
-  daily_new_user_chance: 0.05
-  daily_new_user_chance_weekend: 0.08
+  daily_new_user_chance: 0.02
+  daily_new_user_chance_weekend: 0.04
 
   daily_new_user_noise:
     distribution: poisson
@@ -132,23 +132,23 @@ small_business_owners: # Restaurant/cafe suppliers
     condiments_seasonings: 2.8
   
   quantity_model:
-    base_lambda: 3.0
+    base_lambda: 1.0
   
   quantity_bias:
-    vegetables: 2.0
-    fruits: 1.5
-    grains: 3.5
-    dairy: 2.2
-    bakery: 1.8
-    snacks: 0.5
-    beverages: 1.0
-    meat: 3.0
-    seafood: 2.8
-    poultry: 3.2
-    frozen_foods: 1.6
-    personal_care: 0.2
-    household_supplies: 1.0
-    condiments_seasonings: 3.5
+    vegetables: 2.5
+    fruits: 1.8
+    grains: 3.0
+    dairy: 2.5
+    bakery: 2.0
+    snacks: 0.8
+    beverages: 1.5
+    meat: 2.5
+    seafood: 2.2
+    poultry: 2.5
+    frozen_foods: 1.8
+    personal_care: 0.3
+    household_supplies: 1.5
+    condiments_seasonings: 2.5
   
   city:
     central_jakarta: 15

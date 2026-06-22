@@ -170,7 +170,7 @@ random:
 
   # Quantity model (standard)
   quantity_model:
-    base_lambda: 1.5   # Standard average units
+    base_lambda: 1.0   # Standard average units
 
   # Quantity bias per category (balanced)
   quantity_bias:

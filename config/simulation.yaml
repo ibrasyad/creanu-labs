@@ -47,7 +47,7 @@ simulation:
 
   # Default quantity distribution (if tier doesn't specify)
   quantity_model:
-    base_lambda: 1.3   # Expected avg units per product (Poisson parameter)
+    base_lambda: 1.0   # Expected avg units per product (Poisson parameter)
 
   # Price randomization around base prices
   price_variation:
