@@ -1,243 +1,138 @@
-"""
-Main transaction data generation script.
-"""
-import pandas as pd
-import random
+"""Generate reproducible, idempotent synthetic commerce data."""
+from __future__ import annotations
+
 import argparse
-from sim.config import get_date_config, get_tiers
-from sim.generate_basket import generate_basket, generate_total_trx
-from sim.utils import date_range, get_day_of_week, weighted_choice, generate_catalog_parquet, append_or_create_parquet
-from sim.generate_user import generate_new_users, roll_new_user_chance, generate_base_user_table
-from sim.generate_funnel import generate_funnel_table, funnel_wide_to_activity_log
+from pathlib import Path
+import random
 
-trx_column_list = [
-        "session_id",
-        "user_id",
-        "trx_id",
-        "date",
-        "tier",
-        "total_price"
-    ]
+import pandas as pd
 
-trx_item_column_list = [
-        "trx_id",
-        "user_id",
-        "tier",
-        "date",
-        "product",
-        "quantity",
-        "unit_price",
-        "total_price"
-    ]
+from sim.config import get_date_config, get_simulation, get_tiers
+from sim.generate_basket import build_purchase_history, generate_basket, update_purchase_history
+from sim.generate_funnel import funnel_wide_to_activity_log, generate_funnel_table
+from sim.generate_user import generate_base_user_table, generate_new_users, roll_new_user_chance
+from sim.utils import append_or_create_parquet, date_range, seed_for_date, set_random_seed
 
-def initial_run():
-    # Generate the catalog for parquet first
-    generate_catalog_parquet()
-    
-    # Generate base user table
-    base_table = generate_base_user_table()
+USER_COLUMNS = ["tier", "user_id", "city", "gender", "acquisition_channel", "registered_date", "last_active_date"]
+FUNNEL_COLUMNS = ["session_id", "tier", "user_id", "activity", "activity_datetime"]
+TRX_COLUMNS = ["session_id", "user_id", "trx_id", "date", "tier", "total_price"]
+ITEM_COLUMNS = ["trx_id", "user_id", "tier", "date", "product", "quantity", "unit_price", "total_price"]
+MANIFEST_COLUMNS = ["simulation_date", "seed"]
 
-    base_user_table = pd.DataFrame(base_table)
-    base_user_table.to_parquet("output/users_base.parquet", index=False)
-    base_user_table.to_parquet("output/users_updated.parquet", index=False)
 
-    # -------------------
-    # Create EMPTY transaction_item.parquet
-    df_transaction_item = pd.DataFrame(columns=trx_item_column_list)
-    df_transaction_item.to_parquet("output/transaction_item.parquet", index=False)
+def _path(output_dir, name):
+    return Path(output_dir) / name
 
-    # -------------------
-    # Create EMPTY transaction.parquet
-    df_transaction = pd.DataFrame(columns=trx_column_list)
-    df_transaction.to_parquet("output/transaction.parquet", index=False)
 
-    # -------------------
-    # Create EMPTY funnel.parquet
-    df_funnel = pd.DataFrame(columns=[
-        "session_id",
-        "tier",
-        "user_id",
-        "activity",
-        "activity_datetime"
-    ])
-    df_funnel.to_parquet("output/funnel.parquet", index=False)
+def initial_run(output_dir="output", seed=None):
+    """Create a new simulation dataset. This intentionally replaces its output directory files."""
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "csv-file").mkdir(exist_ok=True)
+    seed = int(seed if seed is not None else get_simulation().get("random_seed", 20260101))
+    set_random_seed(seed)
+    from sim.utils import generate_catalog_parquet
+    generate_catalog_parquet(str(_path(output, "catalog.parquet")))
+    users = pd.DataFrame(generate_base_user_table(), columns=USER_COLUMNS)
+    users["registered_date"] = pd.to_datetime(users["registered_date"])
+    users["last_active_date"] = pd.to_datetime(users["last_active_date"])
+    users.to_parquet(_path(output, "users_base.parquet"), index=False)
+    users.to_parquet(_path(output, "users_updated.parquet"), index=False)
+    pd.DataFrame(columns=USER_COLUMNS).to_parquet(_path(output, "users_new.parquet"), index=False)
+    pd.DataFrame(columns=FUNNEL_COLUMNS).to_parquet(_path(output, "funnel.parquet"), index=False)
+    pd.DataFrame(columns=TRX_COLUMNS).to_parquet(_path(output, "transaction.parquet"), index=False)
+    pd.DataFrame(columns=ITEM_COLUMNS).to_parquet(_path(output, "transaction_item.parquet"), index=False)
+    pd.DataFrame(columns=MANIFEST_COLUMNS).to_parquet(_path(output, "_simulation_runs.parquet"), index=False)
 
-def main(start_date=None, end_date=None):
-    date_config = get_date_config()
-    _tiers = get_tiers()
 
-    # Use command line arguments if provided, otherwise use config
-    start_date = start_date or date_config["start_date"]
-    end_date = end_date or date_config["end_date"]
+def _completed_dates(output_dir):
+    path = _path(output_dir, "_simulation_runs.parquet")
+    if not path.exists():
+        return set()
+    return set(pd.read_parquet(path)["simulation_date"].astype(str))
 
-    base_user_table = pd.read_parquet("output/users_updated.parquet")
-    current_user_count = len(base_user_table)
-    
-    # Global transaction counter
-    global_trx_counter = 1
 
-    # Generate dates for the simulation period
-    dates = date_range(start_date, end_date)
-    
-    for date in dates:
-        print(date)
+def _export_csv(output_dir):
+    exports = {"users_updated.parquet": "user.csv", "transaction.parquet": "transaction.csv",
+               "transaction_item.parquet": "transaction_item.csv", "funnel.parquet": "funnel.csv",
+               "catalog.parquet": "catalog.csv"}
+    for parquet_name, csv_name in exports.items():
+        df = pd.read_parquet(_path(output_dir, parquet_name)).drop(columns=["tier"], errors="ignore")
+        df.to_csv(_path(output_dir, "csv-file") / csv_name, index=False)
 
-        # rows = []
-        new_user_rows = []
-        
-        tier_names = list(_tiers.keys())
+
+def main(start_date=None, end_date=None, output_dir="output", seed=None):
+    output = Path(output_dir)
+    if not _path(output, "users_updated.parquet").exists():
+        raise FileNotFoundError("Simulation is not initialized. Run initial_run() before main().")
+    config = get_date_config()
+    start_date, end_date = start_date or config["start_date"], end_date or config["end_date"]
+    base_seed = int(seed if seed is not None else get_simulation().get("random_seed", 20260101))
+    completed = _completed_dates(output)
+    users = pd.read_parquet(_path(output, "users_updated.parquet"))
+    existing_items = pd.read_parquet(_path(output, "transaction_item.parquet"))
+    purchase_history = build_purchase_history(existing_items)
+    tiers = get_tiers()
+
+    for current_date in date_range(start_date, end_date):
+        if current_date in completed:
+            print(f"Skipping already generated date: {current_date}")
+            continue
+        day_seed = seed_for_date(base_seed, current_date)
+        set_random_seed(day_seed)
+        tier_names = list(tiers)
         random.shuffle(tier_names)
+        new_rows = []
+        current_user_count = len(users)
         for tier_name in tier_names:
-            roll = roll_new_user_chance(tier_name, date)
-            new_users = generate_new_users(roll, tier_name, date, current_user_count)
-            if new_users:
-                new_user_rows.extend(new_users)
-                current_user_count += len(new_users)
-    
-        if new_user_rows:
-            new_user_table = pd.DataFrame(new_user_rows)
-            new_user_table["registered_date"] = pd.to_datetime(date)
-            new_user_table["last_active_date"] = pd.to_datetime(date)
-            new_user_table.to_parquet("output/users_new.parquet", index=False)
-            
-            # Ensure consistent datetime types before concat
-            last_active_dt = pd.to_datetime(base_user_table["last_active_date"], errors='coerce')
-            registered_dt = pd.to_datetime(base_user_table["registered_date"], errors='coerce')
-                
-            base_user_table["last_active_date"] = last_active_dt
-            base_user_table["registered_date"] = registered_dt
-            
-            base_user_table = pd.concat([base_user_table, new_user_table], ignore_index=True)
-            base_user_table.to_parquet("output/users_updated.parquet", index=False)
-        
-        # Generate funnel here
-        output_funnel = "output/funnel.parquet"
-        funnel_table = generate_funnel_table(date)
+            arrivals = roll_new_user_chance(tier_name, current_date)
+            new_users = generate_new_users(arrivals, tier_name, current_date, current_user_count)
+            new_rows.extend(new_users)
+            current_user_count += len(new_users)
+        new_users_df = pd.DataFrame(new_rows, columns=USER_COLUMNS[:-2])
+        if not new_users_df.empty:
+            new_users_df["registered_date"] = pd.Timestamp(current_date)
+            new_users_df["last_active_date"] = pd.Timestamp(current_date)
+            users = pd.concat([users, new_users_df], ignore_index=True)
+        # users_new is an explicit daily delta snapshot, including an empty day.
+        new_users_df.reindex(columns=USER_COLUMNS).to_parquet(_path(output, "users_new.parquet"), index=False)
 
-        funnel_table = funnel_wide_to_activity_log(funnel_table)
-        # Defensive: ensure no timezone sneaks in
-        for col in funnel_table.select_dtypes(include=["datetimetz"]).columns:
-            funnel_table[col] = funnel_table[col].dt.tz_localize(None)
+        funnel_wide = generate_funnel_table(current_date, users=users)
+        funnel_log = funnel_wide_to_activity_log(funnel_wide)
+        append_or_create_parquet(str(_path(output, "funnel.parquet")), funnel_log)
+        visitors = funnel_log.loc[funnel_log.activity.eq("landing_page"), "user_id"].unique()
+        if len(visitors):
+            users.loc[users.user_id.isin(visitors), "last_active_date"] = pd.Timestamp(current_date)
+        users.to_parquet(_path(output, "users_updated.parquet"), index=False)
 
+        paid = funnel_log.loc[funnel_log.activity.eq("paid"), ["session_id", "user_id", "tier", "activity_datetime"]].copy()
+        transaction_rows, item_rows = [], []
+        for paid_row in paid.itertuples(index=False):
+            trx_id = f"trx-{paid_row.session_id}"  # stable and collision-free, even after midnight
+            basket = generate_basket(paid_row.tier, paid_row.user_id, paid_row.activity_datetime, purchase_history)
+            if not basket:
+                continue
+            transaction_rows.append({"session_id": paid_row.session_id, "user_id": paid_row.user_id,
+                                     "trx_id": trx_id, "date": paid_row.activity_datetime, "tier": paid_row.tier,
+                                     "total_price": sum(item["total_price"] for item in basket)})
+            for item in basket:
+                item_rows.append({"trx_id": trx_id, "user_id": paid_row.user_id, "tier": paid_row.tier,
+                                  "date": paid_row.activity_datetime, **item})
+            update_purchase_history(purchase_history, paid_row.user_id, paid_row.activity_datetime, basket)
+        append_or_create_parquet(str(_path(output, "transaction.parquet")), pd.DataFrame(transaction_rows, columns=TRX_COLUMNS))
+        append_or_create_parquet(str(_path(output, "transaction_item.parquet")), pd.DataFrame(item_rows, columns=ITEM_COLUMNS))
+        append_or_create_parquet(str(_path(output, "_simulation_runs.parquet")),
+                                 pd.DataFrame([{"simulation_date": current_date, "seed": day_seed}]))
+        completed.add(current_date)
+        print(f"Generated {current_date}: {len(funnel_log)} events, {len(transaction_rows)} transactions")
+    _export_csv(output)
 
-        append_or_create_parquet(
-            output_funnel,
-            funnel_table
-            )
-
-        # Users who visited today (landing_page)
-        visited_users = (
-            funnel_table[funnel_table["activity"] == "landing_page"]
-            [["user_id"]]
-            .drop_duplicates()
-        )
-
-        if not visited_users.empty:
-            visited_users["last_active_date"] = pd.to_datetime(date)
-        
-        # Update users table for their activity:
-        if not visited_users.empty:
-            # Convert to datetime first to avoid mixed types
-            last_active_dt = pd.to_datetime(base_user_table["last_active_date"], errors='coerce')
-                
-            base_user_table["last_active_date"] = last_active_dt
-            visited_users["last_active_date"] = pd.to_datetime(date)
-            
-            base_user_table = base_user_table.merge(
-                visited_users,
-                on="user_id",
-                how="left",
-                suffixes=("", "_new")
-            )
-
-            base_user_table["last_active_date"] = (
-                base_user_table["last_active_date_new"]
-                .combine_first(base_user_table["last_active_date"])
-            )
-
-            base_user_table.drop(columns=["last_active_date_new"], inplace=True)
-
-            # Persist update
-            base_user_table.to_parquet("output/users_updated.parquet", index=False)
-        
-        # -------------------
-        # Generate the basket
-        filter_column = ["session_id", "user_id", "activity_datetime", "tier"]
-        trx_table = funnel_table[funnel_table["activity"] == "paid"][filter_column].copy().reset_index(drop=True)
-        
-        if not trx_table.empty:
-            rename_column = {
-                "activity_datetime": "date", 
-            }
-            trx_table.rename(columns=rename_column, inplace=True)
-
-            trx_table["date"] = pd.to_datetime(trx_table["date"])
-            
-            # Generate unique transaction IDs using global counter
-            trx_ids = []
-            for i in range(len(trx_table)):
-                trx_id = trx_table["date"].iloc[i].strftime("%Y%m%d") + "-" + str(global_trx_counter).zfill(8)
-                trx_ids.append(trx_id)
-                global_trx_counter += 1
-            
-            trx_table["trx_id"] = trx_ids
-            output_trx = "output/transaction.parquet"
-
-            # Generate basket per paid transaction
-            trx_table["basket"] = trx_table["tier"].apply(
-                lambda tier: generate_basket(tier_name=tier)
-            )
-
-            # Explode basket items
-            trx_items = (
-                trx_table
-                .explode("basket")
-                .reset_index(drop=True)
-            )
-
-            # Normalize dict → columns
-            basket_cols = pd.json_normalize(trx_items["basket"])
-
-            # Final transaction_item table
-            trx_items = pd.concat(
-                [trx_items.drop(columns=["basket"]), basket_cols],
-                axis=1
-            )
-
-            # Calculate total price per transaction
-            trx_totals = trx_items.groupby("trx_id")["total_price"].sum().reset_index()
-            
-            # Merge total price back into trx_table
-            trx_table = trx_table.merge(trx_totals, on="trx_id", how="left")
-            
-            append_or_create_parquet(output_trx, trx_table[trx_column_list])
-
-            output_trx_item = "output/transaction_item.parquet"
-            append_or_create_parquet(output_trx_item, trx_items[trx_item_column_list])
-
-    # Export parquet files to CSV
-    parquet_to_csv = {
-        "output/users_updated.parquet": "output/csv-file/user.csv",
-        "output/transaction.parquet": "output/csv-file/transaction.csv",
-        "output/transaction_item.parquet": "output/csv-file/transaction_item.csv",
-        "output/funnel.parquet": "output/csv-file/funnel.csv",
-        "output/catalog.parquet": "output/csv-file/catalog.csv"
-    }
-
-    for parquet_file, csv_file in parquet_to_csv.items():
-        df = pd.read_parquet(parquet_file)
-        # Drop "tier" column if it exists
-        if "tier" in df.columns:
-            df = df.drop(columns=["tier"])
-        df.to_csv(csv_file, index=False)
-
-    print("CSV export completed.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate simulation data')
-    parser.add_argument('--start-date', help='Start date (YYYY-MM-DD)')
-    parser.add_argument('--end-date', help='End date (YYYY-MM-DD)')
+    parser = argparse.ArgumentParser(description="Generate simulation data")
+    parser.add_argument("--start-date", help="Start date (YYYY-MM-DD)")
+    parser.add_argument("--end-date", help="End date (YYYY-MM-DD)")
+    parser.add_argument("--seed", type=int, help="Base random seed")
     args = parser.parse_args()
-    
-    initial_run()
-    main(start_date=args.start_date, end_date=args.end_date)
+    initial_run(seed=args.seed)
+    main(start_date=args.start_date, end_date=args.end_date, seed=args.seed)

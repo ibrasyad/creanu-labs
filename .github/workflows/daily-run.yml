@@ -11,6 +11,10 @@ on:
         required: false
         type: string
 
+concurrency:
+  group: daily-data-generation
+  cancel-in-progress: false
+
 jobs:
   generate-daily-data:
     runs-on: ubuntu-latest

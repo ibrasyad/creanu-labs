@@ -1,93 +1,38 @@
-import random
-import numpy as np
-import sys
-from pathlib import Path
-from datetime import datetime
+"""Campaign and event multipliers."""
+from .config import get_event_config, get_tiers
 
-# Handle both module import and direct script execution
-try:
-    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config, get_event_config
-    from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
-except ImportError:
-    # Allow running as a script
-    sys.path.insert(0, str(Path(__file__).parent))
-    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config, get_event_config
-    from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
-
-# Cache configs
-_catalog = get_catalog()
-_tiers = get_tiers()
-_sim = get_simulation()
-_date_config = get_date_config()
-_growth = get_growth_config()
 _event = get_event_config()
 
 
-def is_event_active(event, current_year, current_month):
-    """Check if event is active at a given time"""
-    start = (event["year"], event["start_month"])
-    end_month = event.get("end_month")
-
-    current = (current_year, current_month)
-
-    if current < start:
+def is_event_active(event, simulation_year, current_month):
+    """Events are configured in simulation years, not calendar years."""
+    if simulation_year != event["year"] or current_month < event.get("start_month", 1):
         return False
-
-    if end_month is None:
-        return True
-
-    end = (event["year"], end_month)
-    return current <= end
+    end_month = event.get("end_month")
+    return end_month is None or current_month <= end_month
 
 
 def get_metric_multiplier(metric_cfg, funnel_step=None):
-    """
-    Metric config can be:
-    - float -> global
-    - dict -> per funnel step
-    """
     if metric_cfg is None:
         return 1.0
-
     if isinstance(metric_cfg, (int, float)):
-        return metric_cfg
-
+        return float(metric_cfg)
     if isinstance(metric_cfg, dict) and funnel_step:
-        return metric_cfg.get(funnel_step, 1.0)
-
+        return float(metric_cfg.get(funnel_step, 1.0))
     return 1.0
 
 
-def get_event_multiplier(
-    current_year,
-    current_month,
-    metric,
-    tier=None,
-    funnel_step=None
-):
-    """
-    Returns the cumulative multiplier from all active events
-    """
-
+def get_event_multiplier(simulation_year, current_month, metric, tier=None, funnel_step=None):
+    """Return cumulative active-event effects with tier > profile > overall precedence."""
+    profile = get_tiers().get(tier, {}).get("profile") if tier else None
     multiplier = 1.0
-
     for event in _event.values():
-        if not is_event_active(event, current_year, current_month):
+        if not is_event_active(event, simulation_year, current_month):
             continue
-
-        # 1️⃣ tier-level overrides
-        tier_cfg = event.get("tiers", {}).get(tier, {})
-        metric_cfg = tier_cfg.get(metric)
-
-        if metric_cfg is not None:
-            multiplier *= get_metric_multiplier(metric_cfg, funnel_step)
-            continue  # tier overrides overall
-
-        # 2️⃣ overall fallback
-        overall_cfg = event.get("overall", {})
-        metric_cfg = overall_cfg.get(metric)
-
-        if metric_cfg is not None:
-            multiplier *= get_metric_multiplier(metric_cfg, funnel_step)
-
+        metric_cfg = event.get("tiers", {}).get(tier, {}).get(metric)
+        if metric_cfg is None and profile:
+            metric_cfg = event.get("profiles", {}).get(profile, {}).get(metric)
+        if metric_cfg is None:
+            metric_cfg = event.get("overall", {}).get(metric)
+        multiplier *= get_metric_multiplier(metric_cfg, funnel_step)
     return multiplier

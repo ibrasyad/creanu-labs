@@ -368,6 +368,41 @@ def validate_date_config(date_dict):
             datetime.strptime(date_str, "%Y-%m-%d")
         except ValueError:
             raise ConfigError(f"Invalid date format in '{date_field}': {date_str}. Expected YYYY-MM-DD")
+    if date_dict["start_date"] > date_dict["end_date"]:
+        raise ConfigError("start_date cannot be after end_date")
+
+
+def validate_simulation_config(simulation, catalog):
+    if not isinstance(simulation, dict):
+        raise ConfigError("Simulation configuration must be a dictionary")
+    decay = simulation.get("visit_decay", [])
+    if not isinstance(decay, list) or not decay:
+        raise ConfigError("Simulation must define a non-empty visit_decay list")
+    previous_days = -1
+    for rule in decay:
+        if not isinstance(rule, dict) or not isinstance(rule.get("days"), int) or rule["days"] < 0:
+            raise ConfigError("Each visit_decay rule needs non-negative integer days")
+        if rule["days"] <= previous_days or not isinstance(rule.get("multiplier"), (int, float)) or rule["multiplier"] < 0:
+            raise ConfigError("visit_decay days must increase and multipliers must be non-negative")
+        previous_days = rule["days"]
+    basket = simulation.get("basket", {})
+    if basket.get("min_items", 1) < 1 or basket.get("min_items", 1) > basket.get("max_items", 0):
+        raise ConfigError("Simulation basket requires 1 <= min_items <= max_items")
+
+
+def validate_funnel_config(funnel):
+    order = funnel.get("funnel_order")
+    if not isinstance(order, list) or len(order) < 2 or len(order) != len(set(order)):
+        raise ConfigError("funnel_order must contain at least two unique stages")
+    for stage in order:
+        stage_config = funnel.get(stage, {})
+        rate = stage_config.get("conversion_rate")
+        if not isinstance(rate, (int, float)) or not 0 <= rate <= 1:
+            raise ConfigError(f"Funnel stage '{stage}' needs conversion_rate between 0 and 1")
+        duration = stage_config.get("duration", {})
+        low, mean, high = duration.get("min_duration"), duration.get("avg_duration"), duration.get("max_duration")
+        if not all(isinstance(value, (int, float)) for value in (low, mean, high)) or not low <= mean <= high:
+            raise ConfigError(f"Funnel stage '{stage}' duration must satisfy min <= avg <= max")
 
 
 def _load_tiers_from_directory():
@@ -461,6 +496,8 @@ def _load_and_validate_configs():
         validate_catalog(catalog)
         validate_tiers(tiers)
         validate_date_config(date_config)
+        validate_simulation_config(simulation, catalog)
+        validate_funnel_config(funnel)
         validate_growth_config(growth)
         validate_event_config(event)
         

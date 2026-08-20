@@ -5,6 +5,10 @@
 # =============================================================================
 
 simulation:
+  # Base seed used when the CLI does not supply --seed. Each date derives its
+  # own deterministic stream, so daily and historical runs agree.
+  random_seed: 20260101
+
   # ==================== USER BEHAVIOR ====================
   
   # Visit decay rate over time (user engagement drops without activity)
@@ -26,7 +30,10 @@ simulation:
     - days: 120
       multiplier: 0.05   # 4 months old
     - days: 150
-      multiplier: 0.00   # 5+ months old - INACTIVE
+      multiplier: 0.00   # 5+ months old - eligible for reactivation only
+
+  # Small probability that a fully lapsed customer returns.
+  reactivation_probability: 0.002
 
   # Daily visit probability by weekday
   visit_chance:

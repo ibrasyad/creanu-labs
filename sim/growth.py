@@ -1,84 +1,34 @@
-import random
-import numpy as np
-import sys
-from pathlib import Path
-from datetime import datetime
-
-# Handle both module import and direct script execution
-try:
-    from .config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
-    from .utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
-except ImportError:
-    # Allow running as a script
-    sys.path.insert(0, str(Path(__file__).parent))
-    from config import get_catalog, get_tiers, get_simulation, get_date_config, get_growth_config
-    from utils import weighted_choice, apply_noise, get_day_of_week, get_month_name, date_range
-
-# Cache configs
-_catalog = get_catalog()
-_tiers = get_tiers()
-_sim = get_simulation()
-_date_config = get_date_config()
-_growth = get_growth_config()
+"""Growth multipliers applied to behavioral rates."""
+from .config import get_tiers
 
 
 def get_simulation_year(date, simulation_start):
-    """
-    Year 1 = simulation_start.year
-    Year 2 = simulation_start.year + 1
-    etc.
-    """
-    return date.year - simulation_start.year + 1
+    year = date.year - simulation_start.year + 1
+    if (date.month, date.day) < (simulation_start.month, simulation_start.day):
+        year -= 1
+    return max(1, year)
 
 
-def resolve_year_key(year, yearly_cfg):
-    key = f"year_{year}"
-    if key in yearly_cfg:
-        return key
-    if "year_8_plus" in yearly_cfg and year >= 8:
-        return "year_8_plus"
-    return None
-
-def get_nested(cfg, *keys):
-    val = cfg
-    for k in keys:
-        if val is None:
-            return None
-        val = val.get(k)
-    return val
+def _value(mapping, *keys):
+    current = mapping
+    for key in keys:
+        if not isinstance(current, dict) or key not in current:
+            return 1.0
+        current = current[key]
+    return float(current) if current is not None else 1.0
 
 
-def get_growth_multiplier(
-    *,
-    date,
-    simulation_start,
-    growth_cfg,
-    tier_name,
-    metric,
-):
-    sim_year = date.year - simulation_start.year + 1
-
-    year_key = f"year_{sim_year}"
-    if year_key not in growth_cfg["yearly"]:
-        year_key = "year_8_plus"
-
-    yearly = growth_cfg["yearly"].get(year_key, {})
+def get_growth_multiplier(*, date, simulation_start, growth_cfg, tier_name, metric):
+    """Compose global, profile, yearly-global and yearly-profile multipliers."""
+    simulation_year = get_simulation_year(date, simulation_start)
+    yearly_cfg = growth_cfg.get("yearly", {})
+    year_key = f"year_{simulation_year}"
+    yearly = yearly_cfg.get(year_key, yearly_cfg.get("year_8_plus", {}))
+    profile = get_tiers().get(tier_name, {}).get("profile", "balanced")
     base = growth_cfg.get("base", {})
-    
-    # Get tier profile from tiers config
-    from .config import get_tiers
-    tiers = get_tiers()
-    tier_profile = tiers.get(tier_name, {}).get("profile", "balanced")
-
     return (
-        # 1️⃣ yearly profile multiplier
-        get_nested(yearly, "profile_multipliers", tier_profile, metric)
-        # 2️⃣ yearly overall
-        or get_nested(yearly, "overall", metric)
-        # 3️⃣ base profile multiplier
-        or get_nested(base, "tier_profiles", tier_profile, metric)
-        # 4️⃣ base overall
-        or get_nested(base, "overall", metric)
-        # 5️⃣ default
-        or 1.0
+        _value(base, "overall", metric)
+        * _value(base, "tier_profiles", profile, metric)
+        * _value(yearly, "overall", metric)
+        * _value(yearly, "profile_multipliers", profile, metric)
     )
