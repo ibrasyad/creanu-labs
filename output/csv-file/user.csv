@@ -6,7 +6,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230101-00000005,west_jakarta,male,organic,2023-01-01,2023-08-15
 20230101-00000006,west_jakarta,female,organic,2023-01-01,2026-08-29
 20230101-00000007,central_jakarta,male,organic,2023-01-01,2026-09-11
-20230101-00000008,central_jakarta,male,organic,2023-01-01,2026-08-14
+20230101-00000008,central_jakarta,male,organic,2023-01-01,2026-10-05
 20230101-00000009,west_jakarta,female,paid,2023-01-01,2024-06-01
 20230101-00000010,north_jakarta,female,organic,2023-01-01,2023-04-01
 20230101-00000011,south_tangerang,female,organic,2023-01-01,2023-02-17
@@ -72,7 +72,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230108-00000071,south_jakarta,male,organic,2023-01-08,2026-03-19
 20230108-00000072,tangerang_city,female,paid,2023-01-08,2025-12-20
 20230108-00000073,south_tangerang,male,organic,2023-01-08,2026-08-15
-20230108-00000074,south_tangerang,female,organic,2023-01-08,2026-09-11
+20230108-00000074,south_tangerang,female,organic,2023-01-08,2026-10-05
 20230108-00000075,south_tangerang,male,paid,2023-01-08,2026-10-04
 20230108-00000076,central_jakarta,female,paid,2023-01-08,2025-11-11
 20230109-00000077,south_jakarta,male,paid,2023-01-09,2026-03-31
@@ -99,7 +99,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230113-00000098,west_jakarta,female,organic,2023-01-13,2026-08-23
 20230113-00000099,central_jakarta,male,paid,2023-01-13,2026-08-08
 20230113-00000100,central_jakarta,female,paid,2023-01-13,2026-09-26
-20230113-00000101,central_jakarta,female,paid,2023-01-13,2026-10-03
+20230113-00000101,central_jakarta,female,paid,2023-01-13,2026-10-05
 20230113-00000102,west_jakarta,male,organic,2023-01-13,2026-10-04
 20230114-00000103,west_jakarta,female,paid,2023-01-14,2026-08-31
 20230114-00000104,south_jakarta,female,organic,2023-01-14,2026-09-12
@@ -169,7 +169,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230128-00000168,west_jakarta,male,paid,2023-01-28,2026-05-15
 20230128-00000169,east_jakarta,female,organic,2023-01-28,2026-08-02
 20230128-00000170,central_jakarta,male,organic,2023-01-28,2026-07-03
-20230128-00000171,west_jakarta,male,paid,2023-01-28,2026-08-13
+20230128-00000171,west_jakarta,male,paid,2023-01-28,2026-10-05
 20230128-00000172,south_jakarta,female,paid,2023-01-28,2023-03-26
 20230129-00000173,west_jakarta,female,organic,2023-01-29,2026-02-08
 20230129-00000174,east_jakarta,female,paid,2023-01-29,2025-10-19
@@ -286,7 +286,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230217-00000285,south_jakarta,female,organic,2023-02-17,2026-09-26
 20230217-00000286,south_jakarta,female,organic,2023-02-17,2026-09-30
 20230217-00000287,west_jakarta,female,organic,2023-02-17,2026-09-20
-20230218-00000288,central_jakarta,male,organic,2023-02-18,2026-09-27
+20230218-00000288,central_jakarta,male,organic,2023-02-18,2026-10-05
 20230218-00000289,south_tangerang,female,organic,2023-02-18,2026-09-26
 20230218-00000290,south_jakarta,male,organic,2023-02-18,2026-08-23
 20230218-00000291,south_jakarta,female,paid,2023-02-18,2024-04-13
@@ -488,7 +488,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230319-00000487,south_jakarta,female,organic,2023-03-19,2026-09-27
 20230319-00000488,south_jakarta,male,organic,2023-03-19,2026-05-04
 20230319-00000489,south_tangerang,male,organic,2023-03-19,2026-09-23
-20230319-00000490,north_jakarta,female,paid,2023-03-19,2023-05-06
+20230319-00000490,north_jakarta,female,paid,2023-03-19,2026-10-05
 20230319-00000491,south_tangerang,female,organic,2023-03-19,2026-04-11
 20230319-00000492,south_jakarta,female,organic,2023-03-19,2025-04-05
 20230319-00000493,south_jakarta,male,paid,2023-03-19,2026-09-22
@@ -550,7 +550,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230326-00000549,central_jakarta,female,paid,2023-03-26,2026-10-04
 20230326-00000550,west_jakarta,female,organic,2023-03-26,2025-04-20
 20230326-00000551,central_jakarta,female,organic,2023-03-26,2026-09-11
-20230326-00000552,south_jakarta,female,organic,2023-03-26,2026-10-02
+20230326-00000552,south_jakarta,female,organic,2023-03-26,2026-10-05
 20230326-00000553,west_jakarta,female,paid,2023-03-26,2024-08-10
 20230327-00000554,south_tangerang,male,paid,2023-03-27,2026-05-17
 20230327-00000555,central_jakarta,male,organic,2023-03-27,2026-09-05
@@ -598,7 +598,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230404-00000597,tangerang_city,female,organic,2023-04-04,2025-05-21
 20230404-00000598,south_jakarta,female,organic,2023-04-04,2023-05-06
 20230404-00000599,tangerang_city,female,paid,2023-04-04,2026-10-03
-20230404-00000600,west_jakarta,female,organic,2023-04-04,2026-09-05
+20230404-00000600,west_jakarta,female,organic,2023-04-04,2026-10-05
 20230404-00000601,west_jakarta,male,organic,2023-04-04,2025-08-15
 20230404-00000602,west_jakarta,male,paid,2023-04-04,2026-09-05
 20230405-00000603,south_jakarta,female,organic,2023-04-05,2026-09-19
@@ -678,14 +678,14 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230424-00000677,south_jakarta,female,paid,2023-04-24,2026-01-03
 20230425-00000678,west_jakarta,female,paid,2023-04-25,2026-01-31
 20230425-00000679,south_tangerang,male,paid,2023-04-25,2026-07-03
-20230425-00000680,west_jakarta,female,organic,2023-04-25,2026-09-20
+20230425-00000680,west_jakarta,female,organic,2023-04-25,2026-10-05
 20230425-00000681,west_jakarta,female,organic,2023-04-25,2026-10-04
 20230425-00000682,west_jakarta,male,organic,2023-04-25,2025-01-12
 20230425-00000683,south_jakarta,female,organic,2023-04-25,2026-10-02
 20230426-00000684,south_jakarta,male,organic,2023-04-26,2026-09-27
 20230426-00000685,south_tangerang,male,paid,2023-04-26,2026-09-19
 20230426-00000686,north_jakarta,female,paid,2023-04-26,2023-09-09
-20230427-00000687,tangerang_city,male,organic,2023-04-27,2026-10-04
+20230427-00000687,tangerang_city,male,organic,2023-04-27,2026-10-05
 20230427-00000688,west_jakarta,female,organic,2023-04-27,2026-09-12
 20230428-00000689,tangerang_city,female,organic,2023-04-28,2026-09-13
 20230428-00000690,tangerang_city,male,paid,2023-04-28,2025-12-03
@@ -774,7 +774,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230509-00000773,west_jakarta,male,paid,2023-05-09,2024-02-28
 20230509-00000774,north_jakarta,female,organic,2023-05-09,2026-09-27
 20230509-00000775,central_jakarta,male,paid,2023-05-09,2025-09-19
-20230510-00000776,north_jakarta,female,paid,2023-05-10,2026-09-26
+20230510-00000776,north_jakarta,female,paid,2023-05-10,2026-10-05
 20230510-00000777,tangerang_city,female,organic,2023-05-10,2026-09-25
 20230510-00000778,central_jakarta,male,organic,2023-05-10,2025-12-27
 20230510-00000779,west_jakarta,female,organic,2023-05-10,2026-03-21
@@ -1045,7 +1045,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230703-00001044,tangerang_city,male,paid,2023-07-03,2026-09-18
 20230703-00001045,central_jakarta,male,organic,2023-07-03,2025-01-12
 20230704-00001046,central_jakarta,male,organic,2023-07-04,2023-12-29
-20230704-00001047,south_jakarta,male,organic,2023-07-04,2026-10-03
+20230704-00001047,south_jakarta,male,organic,2023-07-04,2026-10-05
 20230704-00001048,tangerang_city,male,organic,2023-07-04,2026-10-03
 20230704-00001049,south_tangerang,male,paid,2023-07-04,2024-07-21
 20230704-00001050,south_jakarta,female,organic,2023-07-04,2026-09-30
@@ -1057,7 +1057,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230706-00001056,east_jakarta,male,organic,2023-07-06,2025-09-05
 20230706-00001057,south_jakarta,male,organic,2023-07-06,2026-08-15
 20230706-00001058,south_tangerang,female,organic,2023-07-06,2024-05-14
-20230706-00001059,central_jakarta,female,paid,2023-07-06,2026-10-03
+20230706-00001059,central_jakarta,female,paid,2023-07-06,2026-10-05
 20230706-00001060,tangerang_city,female,organic,2023-07-06,2023-08-17
 20230706-00001061,south_tangerang,female,organic,2023-07-06,2026-10-04
 20230706-00001062,central_jakarta,female,organic,2023-07-06,2026-03-26
@@ -1096,7 +1096,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230711-00001095,south_jakarta,male,organic,2023-07-11,2025-09-28
 20230712-00001096,tangerang_city,female,organic,2023-07-12,2026-09-04
 20230712-00001097,central_jakarta,female,organic,2023-07-12,2025-10-06
-20230712-00001098,east_jakarta,male,paid,2023-07-12,2026-09-07
+20230712-00001098,east_jakarta,male,paid,2023-07-12,2026-10-05
 20230712-00001099,south_jakarta,female,paid,2023-07-12,2026-08-02
 20230712-00001100,south_tangerang,male,organic,2023-07-12,2026-09-01
 20230713-00001101,tangerang_city,female,organic,2023-07-13,2026-08-16
@@ -1106,7 +1106,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230713-00001105,central_jakarta,male,organic,2023-07-13,2024-08-04
 20230713-00001106,tangerang_city,male,paid,2023-07-13,2026-08-29
 20230713-00001107,east_jakarta,male,organic,2023-07-13,2026-09-19
-20230714-00001108,south_tangerang,female,organic,2023-07-14,2026-09-24
+20230714-00001108,south_tangerang,female,organic,2023-07-14,2026-10-05
 20230714-00001109,west_jakarta,female,organic,2023-07-14,2023-07-14
 20230714-00001110,west_jakarta,female,organic,2023-07-14,2024-03-31
 20230715-00001111,north_jakarta,male,organic,2023-07-15,2026-09-22
@@ -1134,12 +1134,12 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230720-00001133,south_jakarta,male,paid,2023-07-20,2026-08-25
 20230720-00001134,central_jakarta,female,organic,2023-07-20,2026-08-17
 20230721-00001135,tangerang_city,female,organic,2023-07-21,2024-05-11
-20230721-00001136,tangerang_city,female,paid,2023-07-21,2026-09-15
+20230721-00001136,tangerang_city,female,paid,2023-07-21,2026-10-05
 20230721-00001137,tangerang_city,female,organic,2023-07-21,2025-05-04
 20230721-00001138,west_jakarta,female,organic,2023-07-21,2023-12-16
 20230721-00001139,west_jakarta,female,organic,2023-07-21,2025-12-13
 20230721-00001140,tangerang_city,male,organic,2023-07-21,2024-08-19
-20230722-00001141,central_jakarta,male,paid,2023-07-22,2026-10-03
+20230722-00001141,central_jakarta,male,paid,2023-07-22,2026-10-05
 20230722-00001142,south_jakarta,male,paid,2023-07-22,2026-10-03
 20230722-00001143,south_tangerang,female,organic,2023-07-22,2025-10-10
 20230723-00001144,tangerang_city,male,paid,2023-07-23,2026-08-30
@@ -1262,7 +1262,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230813-00001261,south_tangerang,female,paid,2023-08-13,2023-12-03
 20230813-00001262,north_jakarta,male,paid,2023-08-13,2026-09-18
 20230813-00001263,central_jakarta,female,organic,2023-08-13,2026-09-09
-20230813-00001264,east_jakarta,male,organic,2023-08-13,2026-10-03
+20230813-00001264,east_jakarta,male,organic,2023-08-13,2026-10-05
 20230813-00001265,west_jakarta,female,organic,2023-08-13,2025-12-27
 20230813-00001266,central_jakarta,female,organic,2023-08-13,2025-04-29
 20230814-00001267,north_jakarta,female,paid,2023-08-14,2026-09-26
@@ -1389,12 +1389,12 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230830-00001388,tangerang_city,male,organic,2023-08-30,2024-11-16
 20230830-00001389,south_jakarta,female,paid,2023-08-30,2026-09-28
 20230831-00001390,north_jakarta,male,paid,2023-08-31,2026-08-21
-20230831-00001391,west_jakarta,female,organic,2023-08-31,2026-08-25
+20230831-00001391,west_jakarta,female,organic,2023-08-31,2026-10-05
 20230831-00001392,tangerang_city,female,paid,2023-08-31,2025-03-23
 20230831-00001393,tangerang_city,male,paid,2023-08-31,2025-02-14
 20230831-00001394,tangerang_city,female,organic,2023-08-31,2026-09-26
 20230901-00001395,south_jakarta,female,organic,2023-09-01,2023-10-12
-20230901-00001396,tangerang_city,male,organic,2023-09-01,2026-09-27
+20230901-00001396,tangerang_city,male,organic,2023-09-01,2026-10-05
 20230901-00001397,south_tangerang,female,organic,2023-09-01,2024-04-06
 20230902-00001398,south_jakarta,male,organic,2023-09-02,2025-05-30
 20230902-00001399,south_jakarta,male,organic,2023-09-02,2023-12-08
@@ -1499,7 +1499,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230921-00001498,tangerang_city,female,organic,2023-09-21,2026-09-06
 20230922-00001499,west_jakarta,female,organic,2023-09-22,2026-10-02
 20230922-00001500,tangerang_city,male,organic,2023-09-22,2026-03-08
-20230922-00001501,south_jakarta,male,organic,2023-09-22,2026-03-22
+20230922-00001501,south_jakarta,male,organic,2023-09-22,2026-10-05
 20230923-00001502,south_jakarta,female,organic,2023-09-23,2025-09-13
 20230923-00001503,south_jakarta,female,paid,2023-09-23,2024-05-03
 20230923-00001504,west_jakarta,female,organic,2023-09-23,2023-12-21
@@ -1548,7 +1548,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20230930-00001547,west_jakarta,female,paid,2023-09-30,2025-02-15
 20230930-00001548,south_jakarta,female,organic,2023-09-30,2024-07-23
 20230930-00001549,tangerang_city,female,organic,2023-09-30,2026-09-26
-20230930-00001550,central_jakarta,female,organic,2023-09-30,2026-09-25
+20230930-00001550,central_jakarta,female,organic,2023-09-30,2026-10-05
 20230930-00001551,west_jakarta,female,organic,2023-09-30,2023-12-23
 20231001-00001552,central_jakarta,female,paid,2023-10-01,2026-08-30
 20231001-00001553,tangerang_city,female,paid,2023-10-01,2026-09-22
@@ -1575,7 +1575,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20231005-00001574,south_tangerang,male,organic,2023-10-05,2025-08-10
 20231005-00001575,south_jakarta,female,organic,2023-10-05,2024-11-30
 20231005-00001576,east_jakarta,female,organic,2023-10-05,2024-10-13
-20231006-00001577,south_jakarta,female,paid,2023-10-06,2026-09-17
+20231006-00001577,south_jakarta,female,paid,2023-10-06,2026-10-05
 20231006-00001578,tangerang_city,male,paid,2023-10-06,2026-04-11
 20231006-00001579,south_jakarta,female,paid,2023-10-06,2026-09-27
 20231006-00001580,south_jakarta,male,organic,2023-10-06,2026-09-19
@@ -1609,7 +1609,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20231011-00001608,south_jakarta,female,paid,2023-10-11,2025-12-31
 20231011-00001609,south_jakarta,male,paid,2023-10-11,2026-08-25
 20231011-00001610,west_jakarta,male,paid,2023-10-11,2024-08-25
-20231011-00001611,south_jakarta,male,organic,2023-10-11,2026-10-02
+20231011-00001611,south_jakarta,male,organic,2023-10-11,2026-10-05
 20231011-00001612,south_jakarta,female,paid,2023-10-11,2026-09-22
 20231011-00001613,tangerang_city,male,organic,2023-10-11,2026-09-01
 20231012-00001614,south_jakarta,female,paid,2023-10-12,2026-08-04
@@ -1754,7 +1754,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20231110-00001753,east_jakarta,female,organic,2023-11-10,2025-08-22
 20231110-00001754,east_jakarta,male,paid,2023-11-10,2026-10-03
 20231110-00001755,tangerang_city,male,organic,2023-11-10,2026-07-27
-20231110-00001756,east_jakarta,female,organic,2023-11-10,2026-09-12
+20231110-00001756,east_jakarta,female,organic,2023-11-10,2026-10-05
 20231110-00001757,north_jakarta,female,organic,2023-11-10,2025-03-15
 20231110-00001758,tangerang_city,female,organic,2023-11-10,2026-04-17
 20231110-00001759,west_jakarta,female,organic,2023-11-10,2026-09-29
@@ -1823,7 +1823,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20231123-00001822,central_jakarta,female,organic,2023-11-23,2026-09-29
 20231123-00001823,south_jakarta,female,organic,2023-11-23,2026-09-12
 20231123-00001824,west_jakarta,female,organic,2023-11-23,2026-10-04
-20231123-00001825,west_jakarta,female,paid,2023-11-23,2026-10-04
+20231123-00001825,west_jakarta,female,paid,2023-11-23,2026-10-05
 20231124-00001826,north_jakarta,male,organic,2023-11-24,2025-02-27
 20231124-00001827,central_jakarta,male,organic,2023-11-24,2025-09-06
 20231124-00001828,west_jakarta,male,organic,2023-11-24,2026-09-27
@@ -1842,7 +1842,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20231127-00001841,south_tangerang,male,organic,2023-11-27,2026-09-17
 20231127-00001842,south_jakarta,male,paid,2023-11-27,2026-09-04
 20231127-00001843,central_jakarta,female,organic,2023-11-27,2026-03-22
-20231127-00001844,east_jakarta,female,organic,2023-11-27,2026-08-08
+20231127-00001844,east_jakarta,female,organic,2023-11-27,2026-10-05
 20231127-00001845,south_jakarta,female,paid,2023-11-27,2026-09-27
 20231127-00001846,east_jakarta,female,organic,2023-11-27,2024-02-17
 20231127-00001847,west_jakarta,female,organic,2023-11-27,2025-08-07
@@ -2006,7 +2006,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20240108-00002005,central_jakarta,male,organic,2024-01-08,2026-09-19
 20240109-00002006,south_jakarta,female,organic,2024-01-09,2026-10-04
 20240109-00002007,tangerang_city,female,paid,2024-01-09,2026-08-01
-20240111-00002008,central_jakarta,female,paid,2024-01-11,2026-09-20
+20240111-00002008,central_jakarta,female,paid,2024-01-11,2026-10-05
 20240112-00002009,tangerang_city,female,organic,2024-01-12,2025-11-10
 20240112-00002010,west_jakarta,female,organic,2024-01-12,2025-12-23
 20240113-00002011,south_jakarta,male,organic,2024-01-13,2025-12-02
@@ -2092,17 +2092,17 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20240303-00002091,south_jakarta,male,organic,2024-03-03,2025-12-08
 20240303-00002092,tangerang_city,female,organic,2024-03-03,2026-08-30
 20240303-00002093,west_jakarta,male,paid,2024-03-03,2026-10-04
-20240304-00002094,west_jakarta,female,organic,2024-03-04,2026-10-03
+20240304-00002094,west_jakarta,female,organic,2024-03-04,2026-10-05
 20240305-00002095,east_jakarta,female,organic,2024-03-05,2026-10-03
 20240306-00002096,north_jakarta,female,paid,2024-03-06,2026-03-07
 20240307-00002097,central_jakarta,female,paid,2024-03-07,2026-07-04
 20240307-00002098,central_jakarta,male,paid,2024-03-07,2024-08-31
 20240307-00002099,tangerang_city,male,paid,2024-03-07,2026-07-13
 20240308-00002100,tangerang_city,female,organic,2024-03-08,2026-08-04
-20240309-00002101,tangerang_city,female,organic,2024-03-09,2026-03-28
+20240309-00002101,tangerang_city,female,organic,2024-03-09,2026-10-05
 20240309-00002102,west_jakarta,male,organic,2024-03-09,2025-08-08
 20240310-00002103,west_jakarta,male,organic,2024-03-10,2026-09-22
-20240310-00002104,east_jakarta,female,paid,2024-03-10,2026-09-30
+20240310-00002104,east_jakarta,female,paid,2024-03-10,2026-10-05
 20240310-00002105,west_jakarta,female,organic,2024-03-10,2026-08-29
 20240310-00002106,central_jakarta,female,paid,2024-03-10,2024-05-08
 20240312-00002107,south_jakarta,female,paid,2024-03-12,2026-10-04
@@ -2127,7 +2127,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20240322-00002126,south_jakarta,male,organic,2024-03-22,2026-06-09
 20240322-00002127,central_jakarta,female,paid,2024-03-22,2026-09-05
 20240322-00002128,central_jakarta,male,organic,2024-03-22,2026-04-07
-20240323-00002129,central_jakarta,male,paid,2024-03-23,2026-10-03
+20240323-00002129,central_jakarta,male,paid,2024-03-23,2026-10-05
 20240323-00002130,south_jakarta,male,organic,2024-03-23,2026-09-05
 20240323-00002131,central_jakarta,female,paid,2024-03-23,2026-09-10
 20240323-00002132,west_jakarta,male,organic,2024-03-23,2026-08-15
@@ -2216,7 +2216,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20240516-00002215,west_jakarta,female,paid,2024-05-16,2026-07-17
 20240518-00002216,west_jakarta,male,organic,2024-05-18,2025-07-05
 20240519-00002217,east_jakarta,male,paid,2024-05-19,2025-02-01
-20240520-00002218,central_jakarta,female,organic,2024-05-20,2026-09-13
+20240520-00002218,central_jakarta,female,organic,2024-05-20,2026-10-05
 20240522-00002219,tangerang_city,male,organic,2024-05-22,2026-08-12
 20240523-00002220,south_jakarta,female,organic,2024-05-23,2026-08-29
 20240524-00002221,south_jakarta,female,paid,2024-05-24,2025-10-31
@@ -2299,7 +2299,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20240714-00002298,south_jakarta,female,organic,2024-07-14,2025-06-11
 20240714-00002299,south_tangerang,female,paid,2024-07-14,2024-08-26
 20240714-00002300,central_jakarta,male,organic,2024-07-14,2025-03-02
-20240715-00002301,central_jakarta,male,organic,2024-07-15,2026-10-04
+20240715-00002301,central_jakarta,male,organic,2024-07-15,2026-10-05
 20240715-00002302,south_tangerang,male,organic,2024-07-15,2026-10-04
 20240716-00002303,central_jakarta,male,paid,2024-07-16,2026-10-04
 20240717-00002304,south_jakarta,male,paid,2024-07-17,2025-09-21
@@ -2404,7 +2404,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20240927-00002403,central_jakarta,male,organic,2024-09-27,2025-03-09
 20240929-00002404,south_jakarta,male,organic,2024-09-29,2024-10-13
 20240929-00002405,east_jakarta,female,organic,2024-09-29,2026-04-11
-20240929-00002406,west_jakarta,female,organic,2024-09-29,2026-09-22
+20240929-00002406,west_jakarta,female,organic,2024-09-29,2026-10-05
 20240929-00002407,west_jakarta,male,organic,2024-09-29,2024-11-10
 20240930-00002408,south_jakarta,female,organic,2024-09-30,2026-09-10
 20240930-00002409,central_jakarta,female,organic,2024-09-30,2026-07-07
@@ -2417,7 +2417,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20241007-00002416,south_tangerang,male,organic,2024-10-07,2026-09-12
 20241007-00002417,tangerang_city,female,organic,2024-10-07,2026-09-19
 20241008-00002418,east_jakarta,male,organic,2024-10-08,2026-03-26
-20241008-00002419,south_jakarta,female,organic,2024-10-08,2026-10-02
+20241008-00002419,south_jakarta,female,organic,2024-10-08,2026-10-05
 20241008-00002420,north_jakarta,female,paid,2024-10-08,2026-05-05
 20241008-00002421,west_jakarta,female,organic,2024-10-08,2026-09-22
 20241009-00002422,west_jakarta,female,organic,2024-10-09,2026-10-03
@@ -2477,7 +2477,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20241124-00002476,south_tangerang,male,paid,2024-11-24,2025-08-16
 20241124-00002477,east_jakarta,male,organic,2024-11-24,2024-12-21
 20241125-00002478,south_tangerang,male,organic,2024-11-25,2024-12-22
-20241126-00002479,east_jakarta,male,paid,2024-11-26,2026-10-01
+20241126-00002479,east_jakarta,male,paid,2024-11-26,2026-10-05
 20241126-00002480,west_jakarta,male,paid,2024-11-26,2026-07-22
 20241127-00002481,tangerang_city,female,organic,2024-11-27,2025-11-02
 20241127-00002482,central_jakarta,female,organic,2024-11-27,2026-10-04
@@ -2614,7 +2614,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250207-00002613,tangerang_city,female,organic,2025-02-07,2026-09-26
 20250207-00002614,tangerang_city,female,organic,2025-02-07,2026-09-27
 20250208-00002615,south_tangerang,male,organic,2025-02-08,2025-03-10
-20250208-00002616,central_jakarta,male,organic,2025-02-08,2026-10-04
+20250208-00002616,central_jakarta,male,organic,2025-02-08,2026-10-05
 20250209-00002617,south_tangerang,female,organic,2025-02-09,2025-09-25
 20250209-00002618,south_tangerang,female,organic,2025-02-09,2025-08-30
 20250211-00002619,south_jakarta,male,organic,2025-02-11,2026-10-01
@@ -2650,7 +2650,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250227-00002649,central_jakarta,female,paid,2025-02-27,2026-08-18
 20250227-00002650,tangerang_city,male,organic,2025-02-27,2025-04-13
 20250227-00002651,north_jakarta,female,paid,2025-02-27,2025-03-29
-20250227-00002652,south_jakarta,male,paid,2025-02-27,2026-09-30
+20250227-00002652,south_jakarta,male,paid,2025-02-27,2026-10-05
 20250227-00002653,central_jakarta,male,organic,2025-02-27,2026-03-01
 20250301-00002654,south_jakarta,male,organic,2025-03-01,2025-03-02
 20250301-00002655,east_jakarta,male,paid,2025-03-01,2025-07-13
@@ -2686,7 +2686,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250316-00002685,south_jakarta,male,paid,2025-03-16,2026-09-18
 20250316-00002686,central_jakarta,male,organic,2025-03-16,2026-08-31
 20250316-00002687,central_jakarta,male,organic,2025-03-16,2026-09-14
-20250318-00002688,west_jakarta,female,organic,2025-03-18,2026-09-17
+20250318-00002688,west_jakarta,female,organic,2025-03-18,2026-10-05
 20250318-00002689,west_jakarta,female,organic,2025-03-18,2025-03-18
 20250318-00002690,tangerang_city,female,organic,2025-03-18,2026-09-05
 20250318-00002691,west_jakarta,male,paid,2025-03-18,2026-10-03
@@ -2748,7 +2748,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250412-00002747,central_jakarta,male,organic,2025-04-12,2025-07-08
 20250412-00002748,south_jakarta,female,paid,2025-04-12,2026-09-26
 20250412-00002749,south_jakarta,male,paid,2025-04-12,2026-10-03
-20250412-00002750,east_jakarta,female,paid,2025-04-12,2026-09-26
+20250412-00002750,east_jakarta,female,paid,2025-04-12,2026-10-05
 20250412-00002751,south_jakarta,female,paid,2025-04-12,2026-09-27
 20250413-00002752,south_tangerang,female,organic,2025-04-13,2025-12-29
 20250413-00002753,west_jakarta,male,paid,2025-04-13,2025-04-13
@@ -2908,13 +2908,13 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250609-00002907,east_jakarta,male,organic,2025-06-09,2026-09-05
 20250610-00002908,central_jakarta,male,paid,2025-06-10,2026-09-13
 20250610-00002909,west_jakarta,female,paid,2025-06-10,2025-08-28
-20250610-00002910,north_jakarta,male,paid,2025-06-10,2026-09-19
+20250610-00002910,north_jakarta,male,paid,2025-06-10,2026-10-05
 20250610-00002911,west_jakarta,female,organic,2025-06-10,2026-10-04
 20250611-00002912,south_jakarta,female,organic,2025-06-11,2026-10-02
 20250612-00002913,south_jakarta,female,organic,2025-06-12,2025-09-01
 20250612-00002914,tangerang_city,male,organic,2025-06-12,2026-08-29
 20250612-00002915,east_jakarta,female,paid,2025-06-12,2026-09-27
-20250612-00002916,west_jakarta,male,paid,2025-06-12,2026-09-05
+20250612-00002916,west_jakarta,male,paid,2025-06-12,2026-10-05
 20250614-00002917,south_jakarta,male,paid,2025-06-14,2026-10-02
 20250614-00002918,south_jakarta,female,organic,2025-06-14,2025-08-09
 20250614-00002919,north_jakarta,male,organic,2025-06-14,2026-01-02
@@ -2953,7 +2953,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250622-00002952,tangerang_city,female,organic,2025-06-22,2026-04-11
 20250622-00002953,east_jakarta,male,paid,2025-06-22,2026-09-26
 20250624-00002954,south_jakarta,male,organic,2025-06-24,2025-10-05
-20250625-00002955,west_jakarta,male,paid,2025-06-25,2026-09-29
+20250625-00002955,west_jakarta,male,paid,2025-06-25,2026-10-05
 20250625-00002956,west_jakarta,female,paid,2025-06-25,2025-09-09
 20250626-00002957,west_jakarta,male,organic,2025-06-26,2026-10-04
 20250626-00002958,central_jakarta,male,organic,2025-06-26,2025-08-01
@@ -3061,7 +3061,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20250803-00003060,west_jakarta,male,organic,2025-08-03,2025-09-25
 20250803-00003061,central_jakarta,female,paid,2025-08-03,2025-12-27
 20250803-00003062,tangerang_city,female,organic,2025-08-03,2026-09-26
-20250804-00003063,south_jakarta,female,organic,2025-08-04,2026-09-05
+20250804-00003063,south_jakarta,female,organic,2025-08-04,2026-10-05
 20250804-00003064,south_jakarta,female,paid,2025-08-04,2026-08-30
 20250805-00003065,central_jakarta,female,paid,2025-08-05,2025-08-29
 20250805-00003066,east_jakarta,female,organic,2025-08-05,2026-07-18
@@ -3259,10 +3259,10 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20251025-00003258,east_jakarta,male,organic,2025-10-25,2026-08-31
 20251025-00003259,south_tangerang,female,paid,2025-10-25,2026-09-27
 20251026-00003260,south_jakarta,male,organic,2025-10-26,2025-10-26
-20251026-00003261,south_tangerang,male,organic,2025-10-26,2026-08-07
+20251026-00003261,south_tangerang,male,organic,2025-10-26,2026-10-05
 20251027-00003262,tangerang_city,female,paid,2025-10-27,2026-03-19
 20251027-00003263,west_jakarta,male,organic,2025-10-27,2026-09-20
-20251028-00003264,south_tangerang,female,organic,2025-10-28,2026-10-02
+20251028-00003264,south_tangerang,female,organic,2025-10-28,2026-10-05
 20251028-00003265,south_jakarta,male,organic,2025-10-28,2026-08-08
 20251028-00003266,east_jakarta,female,organic,2025-10-28,2026-10-04
 20251028-00003267,central_jakarta,female,paid,2025-10-28,2026-10-03
@@ -3271,7 +3271,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20251030-00003270,south_jakarta,male,organic,2025-10-30,2026-09-25
 20251030-00003271,west_jakarta,female,paid,2025-10-30,2026-09-26
 20251031-00003272,east_jakarta,male,organic,2025-10-31,2025-11-30
-20251031-00003273,central_jakarta,male,organic,2025-10-31,2026-10-02
+20251031-00003273,central_jakarta,male,organic,2025-10-31,2026-10-05
 20251031-00003274,tangerang_city,male,paid,2025-10-31,2026-09-22
 20251031-00003275,east_jakarta,male,organic,2025-10-31,2026-08-11
 20251031-00003276,central_jakarta,female,paid,2025-10-31,2026-09-11
@@ -3297,7 +3297,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20251107-00003296,south_jakarta,female,organic,2025-11-07,2025-11-21
 20251108-00003297,south_tangerang,female,organic,2025-11-08,2026-08-18
 20251108-00003298,tangerang_city,female,paid,2025-11-08,2025-12-25
-20251108-00003299,north_jakarta,female,organic,2025-11-08,2026-10-03
+20251108-00003299,north_jakarta,female,organic,2025-11-08,2026-10-05
 20251109-00003300,west_jakarta,female,organic,2025-11-09,2026-09-12
 20251109-00003301,tangerang_city,male,paid,2025-11-09,2026-09-12
 20251109-00003302,south_jakarta,female,organic,2025-11-09,2026-10-03
@@ -3364,7 +3364,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20251127-00003363,central_jakarta,male,organic,2025-11-27,2026-10-02
 20251127-00003364,north_jakarta,female,organic,2025-11-27,2026-09-25
 20251129-00003365,west_jakarta,female,paid,2025-11-29,2025-11-29
-20251129-00003366,south_tangerang,male,paid,2025-11-29,2026-10-04
+20251129-00003366,south_tangerang,male,paid,2025-11-29,2026-10-05
 20251130-00003367,east_jakarta,female,organic,2025-11-30,2026-09-27
 20251130-00003368,west_jakarta,female,paid,2025-11-30,2026-10-03
 20251130-00003369,central_jakarta,female,organic,2025-11-30,2026-09-26
@@ -3643,7 +3643,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260228-00003642,east_jakarta,male,organic,2026-02-28,2026-10-04
 20260228-00003643,central_jakarta,male,organic,2026-02-28,2026-07-28
 20260301-00003644,west_jakarta,female,paid,2026-03-01,2026-10-03
-20260301-00003645,south_tangerang,female,paid,2026-03-01,2026-09-17
+20260301-00003645,south_tangerang,female,paid,2026-03-01,2026-10-05
 20260302-00003646,central_jakarta,female,paid,2026-03-02,2026-10-02
 20260302-00003647,south_jakarta,female,paid,2026-03-02,2026-08-24
 20260302-00003648,south_jakarta,male,paid,2026-03-02,2026-09-26
@@ -3694,7 +3694,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260317-00003693,west_jakarta,female,organic,2026-03-17,2026-05-29
 20260317-00003694,south_jakarta,female,organic,2026-03-17,2026-09-26
 20260318-00003695,east_jakarta,male,organic,2026-03-18,2026-09-27
-20260318-00003696,west_jakarta,male,paid,2026-03-18,2026-09-25
+20260318-00003696,west_jakarta,male,paid,2026-03-18,2026-10-05
 20260318-00003697,central_jakarta,male,organic,2026-03-18,2026-09-11
 20260318-00003698,west_jakarta,male,organic,2026-03-18,2026-09-18
 20260319-00003699,south_tangerang,female,organic,2026-03-19,2026-07-12
@@ -3768,7 +3768,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260410-00003767,west_jakarta,female,organic,2026-04-10,2026-06-28
 20260411-00003768,tangerang_city,female,paid,2026-04-11,2026-09-27
 20260411-00003769,north_jakarta,female,paid,2026-04-11,2026-09-11
-20260411-00003770,tangerang_city,male,organic,2026-04-11,2026-10-02
+20260411-00003770,tangerang_city,male,organic,2026-04-11,2026-10-05
 20260411-00003771,east_jakarta,female,paid,2026-04-11,2026-10-03
 20260411-00003772,south_jakarta,male,paid,2026-04-11,2026-10-03
 20260411-00003773,south_jakarta,male,organic,2026-04-11,2026-10-03
@@ -3827,7 +3827,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260427-00003826,west_jakarta,female,organic,2026-04-27,2026-06-07
 20260427-00003827,south_jakarta,male,organic,2026-04-27,2026-10-04
 20260427-00003828,west_jakarta,female,paid,2026-04-27,2026-09-19
-20260428-00003829,tangerang_city,male,organic,2026-04-28,2026-10-01
+20260428-00003829,tangerang_city,male,organic,2026-04-28,2026-10-05
 20260428-00003830,south_jakarta,female,paid,2026-04-28,2026-09-12
 20260429-00003831,central_jakarta,female,paid,2026-04-29,2026-06-13
 20260429-00003832,west_jakarta,female,organic,2026-04-29,2026-09-19
@@ -3836,7 +3836,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260430-00003835,east_jakarta,female,organic,2026-04-30,2026-10-03
 20260501-00003836,south_jakarta,male,organic,2026-05-01,2026-10-03
 20260501-00003837,east_jakarta,male,organic,2026-05-01,2026-10-02
-20260501-00003838,central_jakarta,female,organic,2026-05-01,2026-09-27
+20260501-00003838,central_jakarta,female,organic,2026-05-01,2026-10-05
 20260501-00003839,south_jakarta,male,paid,2026-05-01,2026-10-03
 20260501-00003840,east_jakarta,male,organic,2026-05-01,2026-07-31
 20260501-00003841,west_jakarta,female,organic,2026-05-01,2026-09-23
@@ -3844,7 +3844,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260502-00003843,north_jakarta,male,organic,2026-05-02,2026-09-11
 20260502-00003844,west_jakarta,male,paid,2026-05-02,2026-09-19
 20260502-00003845,central_jakarta,female,organic,2026-05-02,2026-06-07
-20260502-00003846,south_jakarta,female,paid,2026-05-02,2026-09-29
+20260502-00003846,south_jakarta,female,paid,2026-05-02,2026-10-05
 20260502-00003847,south_jakarta,male,paid,2026-05-02,2026-08-01
 20260503-00003848,south_tangerang,female,organic,2026-05-03,2026-09-24
 20260503-00003849,east_jakarta,female,organic,2026-05-03,2026-08-21
@@ -3876,10 +3876,10 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260511-00003875,south_jakarta,female,organic,2026-05-11,2026-09-21
 20260511-00003876,west_jakarta,female,organic,2026-05-11,2026-05-11
 20260512-00003877,east_jakarta,male,paid,2026-05-12,2026-05-12
-20260512-00003878,east_jakarta,female,paid,2026-05-12,2026-10-03
+20260512-00003878,east_jakarta,female,paid,2026-05-12,2026-10-05
 20260512-00003879,south_jakarta,female,organic,2026-05-12,2026-07-10
 20260512-00003880,west_jakarta,female,paid,2026-05-12,2026-08-30
-20260514-00003881,east_jakarta,male,paid,2026-05-14,2026-09-11
+20260514-00003881,east_jakarta,male,paid,2026-05-14,2026-10-05
 20260515-00003882,south_jakarta,female,organic,2026-05-15,2026-08-02
 20260515-00003883,central_jakarta,female,organic,2026-05-15,2026-09-30
 20260516-00003884,west_jakarta,female,organic,2026-05-16,2026-09-16
@@ -3907,9 +3907,9 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260523-00003906,central_jakarta,female,organic,2026-05-23,2026-06-01
 20260523-00003907,west_jakarta,male,organic,2026-05-23,2026-10-03
 20260523-00003908,north_jakarta,male,paid,2026-05-23,2026-10-03
-20260523-00003909,tangerang_city,female,paid,2026-05-23,2026-08-07
+20260523-00003909,tangerang_city,female,paid,2026-05-23,2026-10-05
 20260523-00003910,central_jakarta,female,organic,2026-05-23,2026-10-04
-20260523-00003911,east_jakarta,male,organic,2026-05-23,2026-10-03
+20260523-00003911,east_jakarta,male,organic,2026-05-23,2026-10-05
 20260523-00003912,south_jakarta,male,paid,2026-05-23,2026-10-02
 20260524-00003913,north_jakarta,male,organic,2026-05-24,2026-09-29
 20260524-00003914,tangerang_city,female,organic,2026-05-24,2026-09-12
@@ -3928,7 +3928,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260529-00003927,west_jakarta,male,paid,2026-05-29,2026-10-02
 20260529-00003928,south_jakarta,male,organic,2026-05-29,2026-09-20
 20260529-00003929,tangerang_city,female,paid,2026-05-29,2026-09-19
-20260529-00003930,south_jakarta,male,organic,2026-05-29,2026-10-04
+20260529-00003930,south_jakarta,male,organic,2026-05-29,2026-10-05
 20260530-00003931,east_jakarta,female,organic,2026-05-30,2026-09-27
 20260530-00003932,south_tangerang,female,paid,2026-05-30,2026-10-04
 20260530-00003933,west_jakarta,male,organic,2026-05-30,2026-06-13
@@ -3943,7 +3943,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260602-00003942,south_tangerang,female,paid,2026-06-02,2026-09-24
 20260602-00003943,south_jakarta,male,paid,2026-06-02,2026-09-25
 20260603-00003944,east_jakarta,female,organic,2026-06-03,2026-09-19
-20260603-00003945,west_jakarta,female,paid,2026-06-03,2026-09-01
+20260603-00003945,west_jakarta,female,paid,2026-06-03,2026-10-05
 20260604-00003946,west_jakarta,male,paid,2026-06-04,2026-08-23
 20260604-00003947,south_jakarta,male,organic,2026-06-04,2026-09-19
 20260604-00003948,south_jakarta,male,paid,2026-06-04,2026-08-23
@@ -3973,7 +3973,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260615-00003972,south_jakarta,female,paid,2026-06-15,2026-10-03
 20260616-00003973,west_jakarta,male,paid,2026-06-16,2026-08-11
 20260617-00003974,tangerang_city,male,paid,2026-06-17,2026-09-05
-20260617-00003975,west_jakarta,male,paid,2026-06-17,2026-10-04
+20260617-00003975,west_jakarta,male,paid,2026-06-17,2026-10-05
 20260617-00003976,south_jakarta,female,paid,2026-06-17,2026-07-12
 20260619-00003977,south_jakarta,female,organic,2026-06-19,2026-09-26
 20260619-00003978,west_jakarta,female,paid,2026-06-19,2026-09-12
@@ -3990,7 +3990,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260623-00003989,west_jakarta,male,organic,2026-06-23,2026-09-05
 20260623-00003990,south_tangerang,male,paid,2026-06-23,2026-09-05
 20260623-00003991,south_jakarta,male,paid,2026-06-23,2026-08-03
-20260624-00003992,south_jakarta,male,organic,2026-06-24,2026-10-02
+20260624-00003992,south_jakarta,male,organic,2026-06-24,2026-10-05
 20260624-00003993,central_jakarta,male,organic,2026-06-24,2026-06-24
 20260625-00003994,south_jakarta,male,paid,2026-06-25,2026-09-30
 20260625-00003995,tangerang_city,male,paid,2026-06-25,2026-09-06
@@ -4045,7 +4045,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260709-00004044,west_jakarta,female,paid,2026-07-09,2026-07-29
 20260711-00004045,central_jakarta,male,paid,2026-07-11,2026-09-07
 20260711-00004046,tangerang_city,male,paid,2026-07-11,2026-09-04
-20260711-00004047,north_jakarta,female,organic,2026-07-11,2026-09-22
+20260711-00004047,north_jakarta,female,organic,2026-07-11,2026-10-05
 20260711-00004048,south_jakarta,male,paid,2026-07-11,2026-10-04
 20260711-00004049,central_jakarta,male,organic,2026-07-11,2026-09-02
 20260711-00004050,central_jakarta,male,organic,2026-07-11,2026-09-19
@@ -4067,7 +4067,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260716-00004066,south_jakarta,female,organic,2026-07-16,2026-08-22
 20260716-00004067,west_jakarta,female,paid,2026-07-16,2026-09-29
 20260716-00004068,central_jakarta,female,paid,2026-07-16,2026-08-09
-20260716-00004069,south_tangerang,male,paid,2026-07-16,2026-10-03
+20260716-00004069,south_tangerang,male,paid,2026-07-16,2026-10-05
 20260717-00004070,west_jakarta,female,paid,2026-07-17,2026-10-02
 20260718-00004071,south_jakarta,female,organic,2026-07-18,2026-09-04
 20260718-00004072,central_jakarta,female,organic,2026-07-18,2026-08-28
@@ -4082,7 +4082,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260720-00004081,central_jakarta,female,organic,2026-07-20,2026-09-17
 20260720-00004082,south_jakarta,male,paid,2026-07-20,2026-09-07
 20260720-00004083,south_jakarta,female,organic,2026-07-20,2026-10-02
-20260720-00004084,south_jakarta,male,paid,2026-07-20,2026-09-27
+20260720-00004084,south_jakarta,male,paid,2026-07-20,2026-10-05
 20260720-00004085,east_jakarta,male,organic,2026-07-20,2026-10-03
 20260720-00004086,south_tangerang,female,organic,2026-07-20,2026-09-13
 20260720-00004087,north_jakarta,male,organic,2026-07-20,2026-10-01
@@ -4093,7 +4093,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260722-00004092,south_tangerang,female,organic,2026-07-22,2026-10-03
 20260722-00004093,west_jakarta,male,organic,2026-07-22,2026-09-20
 20260722-00004094,west_jakarta,male,organic,2026-07-22,2026-09-01
-20260723-00004095,east_jakarta,male,paid,2026-07-23,2026-10-04
+20260723-00004095,east_jakarta,male,paid,2026-07-23,2026-10-05
 20260723-00004096,south_jakarta,male,organic,2026-07-23,2026-10-03
 20260723-00004097,east_jakarta,female,organic,2026-07-23,2026-09-30
 20260723-00004098,east_jakarta,female,organic,2026-07-23,2026-09-06
@@ -4103,7 +4103,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260725-00004102,east_jakarta,male,organic,2026-07-25,2026-09-01
 20260725-00004103,west_jakarta,male,organic,2026-07-25,2026-08-15
 20260726-00004104,east_jakarta,male,organic,2026-07-26,2026-09-19
-20260726-00004105,south_tangerang,female,organic,2026-07-26,2026-10-02
+20260726-00004105,south_tangerang,female,organic,2026-07-26,2026-10-05
 20260726-00004106,tangerang_city,female,paid,2026-07-26,2026-10-03
 20260726-00004107,south_tangerang,female,paid,2026-07-26,2026-08-13
 20260726-00004108,east_jakarta,female,paid,2026-07-26,2026-09-29
@@ -4162,7 +4162,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260812-00004161,south_tangerang,female,organic,2026-08-12,2026-09-25
 20260812-00004162,south_jakarta,female,organic,2026-08-12,2026-09-27
 20260813-00004163,south_tangerang,female,organic,2026-08-13,2026-10-04
-20260813-00004164,west_jakarta,male,paid,2026-08-13,2026-09-20
+20260813-00004164,west_jakarta,male,paid,2026-08-13,2026-10-05
 20260813-00004165,east_jakarta,female,organic,2026-08-13,2026-10-03
 20260813-00004166,south_tangerang,male,paid,2026-08-13,2026-09-20
 20260814-00004167,west_jakarta,female,paid,2026-08-14,2026-09-30
@@ -4237,7 +4237,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260903-00004236,west_jakarta,male,paid,2026-09-03,2026-09-12
 20260903-00004237,south_tangerang,female,organic,2026-09-03,2026-09-13
 20260903-00004238,tangerang_city,male,organic,2026-09-03,2026-09-13
-20260903-00004239,east_jakarta,female,paid,2026-09-03,2026-09-27
+20260903-00004239,east_jakarta,female,paid,2026-09-03,2026-10-05
 20260903-00004240,west_jakarta,male,paid,2026-09-03,2026-09-17
 20260904-00004241,south_jakarta,female,organic,2026-09-04,2026-09-21
 20260904-00004242,south_tangerang,male,paid,2026-09-04,2026-09-04
@@ -4282,7 +4282,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260913-00004281,east_jakarta,male,paid,2026-09-13,2026-10-03
 20260913-00004282,south_jakarta,male,paid,2026-09-13,2026-09-13
 20260913-00004283,central_jakarta,male,organic,2026-09-13,2026-09-13
-20260914-00004284,north_jakarta,male,paid,2026-09-14,2026-10-03
+20260914-00004284,north_jakarta,male,paid,2026-09-14,2026-10-05
 20260914-00004285,west_jakarta,female,organic,2026-09-14,2026-09-23
 20260914-00004286,east_jakarta,male,organic,2026-09-14,2026-09-14
 20260914-00004287,north_jakarta,female,paid,2026-09-14,2026-09-28
@@ -4328,7 +4328,7 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20260925-00004327,south_jakarta,female,organic,2026-09-25,2026-09-25
 20260925-00004328,west_jakarta,male,organic,2026-09-25,2026-09-25
 20260926-00004329,west_jakarta,female,organic,2026-09-26,2026-10-02
-20260926-00004330,south_jakarta,male,paid,2026-09-26,2026-09-26
+20260926-00004330,south_jakarta,male,paid,2026-09-26,2026-10-05
 20260926-00004331,south_jakarta,female,organic,2026-09-26,2026-10-04
 20260926-00004332,tangerang_city,male,paid,2026-09-26,2026-09-26
 20260927-00004333,tangerang_city,female,paid,2026-09-27,2026-09-30
@@ -4359,3 +4359,4 @@ user_id,city,gender,acquisition_channel,registered_date,last_active_date
 20261003-00004358,south_jakarta,female,paid,2026-10-03,2026-10-03
 20261003-00004359,central_jakarta,female,organic,2026-10-03,2026-10-04
 20261004-00004360,east_jakarta,female,paid,2026-10-04,2026-10-04
+20261005-00004361,tangerang_city,male,paid,2026-10-05,2026-10-05
