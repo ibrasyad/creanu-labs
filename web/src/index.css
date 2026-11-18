@@ -4,22 +4,22 @@
 
 @layer base {
   body {
-    @apply antialiased bg-slate-950 text-slate-100;
+    @apply antialiased;
   }
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars (neutral so they read correctly in both themes) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: rgba(148, 163, 184, 0.45);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: rgba(148, 163, 184, 0.75);
 }

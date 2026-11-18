@@ -12,6 +12,10 @@ import {
   Sparkles,
   Megaphone,
   TrendingUp,
+  Plus,
+  Trash2,
+  Clock,
+  Zap,
 } from 'lucide-react';
 import { ThemeConfig } from '../types/theme';
 
@@ -21,6 +25,23 @@ interface ConfigEditorProps {
   theme: ThemeConfig;
 }
 
+const MONTHS = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december',
+];
+
+const FUNNEL_STEPS = ['landing_page', 'product_view', 'add_to_cart', 'checkout', 'paid'];
+
 export const ConfigEditor: React.FC<ConfigEditorProps> = ({
   yamlContent,
   onChangeYaml,
@@ -28,6 +49,7 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeAdvancedTab, setActiveAdvancedTab] = useState<'tiers' | 'catalog' | 'funnel' | 'events' | 'growth'>('tiers');
+  const [selectedTimingTier, setSelectedTimingTier] = useState('');
 
   // Parse YAML for structured controls
   let parsedConfig: any = null;
@@ -69,6 +91,95 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({
     updateField(['simulation', 'random_seed'], newSeed);
   };
 
+  // Generic object mutation helpers (add / remove / rename keys)
+  const mutateConfig = (mutator: (cfg: any) => void) => {
+    try {
+      const cloned = JSON.parse(JSON.stringify(parsedConfig || {}));
+      mutator(cloned);
+      onChangeYaml(yaml.dump(cloned));
+    } catch (err) {
+      console.error('Failed to mutate config:', err);
+    }
+  };
+
+  const addMarketingEvent = () => {
+    mutateConfig((cfg) => {
+      cfg.event = cfg.event || {};
+      let idx = Object.keys(cfg.event).length + 1;
+      let key = `campaign_${idx}`;
+      while (cfg.event[key]) key = `campaign_${++idx}`;
+      cfg.event[key] = {
+        name: 'New Campaign',
+        description: 'Describe the campaign goal',
+        year: 1,
+        start_month: 1,
+        end_month: 3,
+        overall: { new_user: 1.1, visit: 1.1 },
+      };
+    });
+  };
+
+  const removeMarketingEvent = (key: string) => {
+    mutateConfig((cfg) => {
+      if (cfg.event) delete cfg.event[key];
+    });
+  };
+
+  const renameMarketingEvent = (oldKey: string, newKey: string) => {
+    const clean = newKey.trim().replace(/\s+/g, '_').toLowerCase();
+    if (!clean || clean === oldKey) return;
+    mutateConfig((cfg) => {
+      if (!cfg.event?.[oldKey] || cfg.event[clean]) return;
+      const rebuilt: Record<string, any> = {};
+      for (const [k, v] of Object.entries<any>(cfg.event)) {
+        if (k === oldKey) rebuilt[clean] = v;
+        else rebuilt[k] = v;
+      }
+      cfg.event = rebuilt;
+    });
+  };
+
+  const addGrowthYear = () => {
+    mutateConfig((cfg) => {
+      cfg.growth = cfg.growth || {};
+      cfg.growth.yearly = cfg.growth.yearly || {};
+      const years = Object.keys(cfg.growth.yearly)
+        .map((k) => Number(k.replace('year_', '')))
+        .filter((n) => !Number.isNaN(n));
+      const next = (years.length ? Math.max(...years) : 0) + 1;
+      cfg.growth.yearly[`year_${next}`] = {
+        overall: { new_user: 1.0, visit: 1.0 },
+        profile_multipliers: {
+          conservative: { new_user: 1.0, visit: 1.0 },
+          aggressive: { new_user: 1.0, visit: 1.0 },
+          balanced: { new_user: 1.0, visit: 1.0 },
+        },
+      };
+    });
+  };
+
+  const removeGrowthYear = (key: string) => {
+    mutateConfig((cfg) => {
+      if (cfg.growth?.yearly) delete cfg.growth.yearly[key];
+    });
+  };
+
+  const addPeakHour = () => {
+    mutateConfig((cfg) => {
+      cfg.funnel = cfg.funnel || {};
+      cfg.funnel.visit_hour_peak = cfg.funnel.visit_hour_peak || {};
+      const ordinals = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth'];
+      const next = ordinals.find((o) => !cfg.funnel.visit_hour_peak[o]) || `peak_${Date.now()}`;
+      cfg.funnel.visit_hour_peak[next] = { weight: 5, hour: { min: 0, max: 23, avg: 12 } };
+    });
+  };
+
+  const removePeakHour = (key: string) => {
+    mutateConfig((cfg) => {
+      if (cfg.funnel?.visit_hour_peak) delete cfg.funnel.visit_hour_peak[key];
+    });
+  };
+
   if (!parsedConfig) {
     return (
       <div className={`p-6 border ${theme.borderClass} ${theme.cardClass} text-center space-y-2`}>
@@ -82,6 +193,10 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({
 
   const startDateStr = parsedConfig.date?.start_date || '2026-01-01';
   const endDateStr = parsedConfig.date?.end_date || '2026-03-31';
+  const timingTierKey = parsedConfig.tiers?.[selectedTimingTier]
+    ? selectedTimingTier
+    : Object.keys(parsedConfig.tiers || {})[0] || '';
+  const timingTier = parsedConfig.tiers?.[timingTierKey] || {};
 
   const daysDiff = Math.max(
     1,
@@ -534,55 +649,385 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({
             </div>
           )}
 
-          {/* Sub-Tab 3: Funnel Durations */}
+          {/* Sub-Tab 3: Funnel Durations & Peak Hours */}
           {activeAdvancedTab === 'funnel' && (
-            <div className="space-y-3">
-              <p className={`text-xs ${theme.mutedClass}`}>
-                Configure average session dwell time (in seconds) spent by shoppers at each step before advancing or dropping off.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-                {['landing_page', 'product_view', 'add_to_cart', 'checkout'].map((step) => {
-                  const dur = parsedConfig.funnel?.[step]?.duration || { min_duration: 5, avg_duration: 180, max_duration: 600 };
-                  return (
-                    <div key={step} className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
-                      <span className="font-bold uppercase tracking-wider block text-emerald-600 dark:text-emerald-400">
-                        {step.replace('_', ' ')}
-                      </span>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between items-center">
-                          <span className={theme.mutedClass}>Min Secs:</span>
-                          <input
-                            type="number"
-                            min="1"
-                            value={dur.min_duration}
-                            onChange={(e) => updateField(['funnel', step, 'duration', 'min_duration'], Number(e.target.value))}
-                            className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
-                          />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className={theme.mutedClass}>Avg Secs:</span>
-                          <input
-                            type="number"
-                            min="5"
-                            value={dur.avg_duration}
-                            onChange={(e) => updateField(['funnel', step, 'duration', 'avg_duration'], Number(e.target.value))}
-                            className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
-                          />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className={theme.mutedClass}>Max Secs:</span>
-                          <input
-                            type="number"
-                            min="10"
-                            value={dur.max_duration}
-                            onChange={(e) => updateField(['funnel', step, 'duration', 'max_duration'], Number(e.target.value))}
-                            className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
-                          />
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <p className={`text-xs ${theme.mutedClass}`}>
+                    Global stage timing defaults. Tier-specific values can override these settings below.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+                  {FUNNEL_STEPS.map((step) => {
+                    const dur = parsedConfig.funnel?.[step]?.duration || {
+                      min_duration: 5,
+                      avg_duration: 180,
+                      max_duration: 600,
+                    };
+                    return (
+                      <div key={step} className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                        <span className="font-bold uppercase tracking-wider block text-emerald-600 dark:text-emerald-400">
+                          {step.replace(/_/g, ' ')}
+                        </span>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between items-center">
+                            <span className={theme.mutedClass}>Min Secs:</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={dur.min_duration}
+                              onChange={(e) => updateField(['funnel', step, 'duration', 'min_duration'], Number(e.target.value))}
+                              className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className={theme.mutedClass}>Avg Secs:</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={dur.avg_duration}
+                              onChange={(e) => updateField(['funnel', step, 'duration', 'avg_duration'], Number(e.target.value))}
+                              className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className={theme.mutedClass}>Max Secs:</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={dur.max_duration}
+                              onChange={(e) => updateField(['funnel', step, 'duration', 'max_duration'], Number(e.target.value))}
+                              className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Tier-specific timing overrides */}
+              {Object.keys(parsedConfig.tiers || {}).length > 0 && (
+                <div className="space-y-3 pt-4 border-t border-inherit">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h4 className="text-xs font-bold uppercase tracking-wider">Tier Timing Overrides</h4>
+                    <select
+                      value={timingTierKey}
+                      onChange={(e) => setSelectedTimingTier(e.target.value)}
+                      className={`rounded px-2 py-1 text-xs border ${theme.inputClass}`}
+                    >
+                      {Object.keys(parsedConfig.tiers).map((tierKey) => (
+                        <option key={tierKey} value={tierKey}>
+                          {tierKey}
+                        </option>
+                      ))}
+                    </select>
+                    <span className={`text-[11px] ${theme.mutedClass}`}>
+                      Edit the selected tier's stage duration and peak-hour settings.
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+                    {FUNNEL_STEPS.map((step) => {
+                      const duration = {
+                        ...(parsedConfig.funnel?.[step]?.duration || {}),
+                        ...(timingTier[step]?.duration || {}),
+                      };
+                      return (
+                        <div key={step} className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                          <span className="font-bold uppercase tracking-wider block text-emerald-600 dark:text-emerald-400">
+                            {step.replace(/_/g, ' ')}
+                          </span>
+                          {(['min_duration', 'avg_duration', 'max_duration'] as const).map((field) => (
+                            <div key={field} className="flex justify-between items-center gap-1">
+                              <span className={theme.mutedClass}>
+                                {field === 'min_duration' ? 'Min' : field === 'avg_duration' ? 'Avg' : 'Max'} Secs:
+                              </span>
+                              <input
+                                type="number"
+                                min="0"
+                                value={duration[field] ?? 0}
+                                onChange={(e) =>
+                                  updateField(
+                                    ['tiers', timingTierKey, step, 'duration', field],
+                                    Number(e.target.value)
+                                  )
+                                }
+                                className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="space-y-2">
+                    <span className={`block text-[11px] font-semibold uppercase ${theme.mutedClass}`}>
+                      {timingTierKey} Peak Visit Hours
+                    </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                      {Object.entries<any>({
+                        ...(parsedConfig.funnel?.visit_hour_peak || {}),
+                        ...(timingTier.visit_hour_peak || {}),
+                      }).map(([peakKey, peak]) => (
+                        <div key={peakKey} className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5">
+                          <span className="font-bold uppercase text-emerald-600 dark:text-emerald-400">
+                            {peakKey}
+                          </span>
+                          <div className="grid grid-cols-2 gap-2 mt-2">
+                            {(['weight', 'avg', 'min', 'max'] as const).map((field) => {
+                              const value = field === 'weight' ? peak.weight : peak.hour?.[field];
+                              return (
+                                <label key={field} className={`flex items-center justify-between gap-2 ${theme.mutedClass}`}>
+                                  <span>{field === 'avg' ? 'Avg hour' : field === 'min' ? 'Min hour' : field === 'max' ? 'Max hour' : 'Weight'}</span>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    max={field === 'weight' ? undefined : 23}
+                                    value={value ?? (field === 'weight' ? 1 : field === 'avg' ? 12 : field === 'min' ? 0 : 23)}
+                                    onChange={(e) =>
+                                      updateField(
+                                        field === 'weight'
+                                          ? ['tiers', timingTierKey, 'visit_hour_peak', peakKey, 'weight']
+                                          : ['tiers', timingTierKey, 'visit_hour_peak', peakKey, 'hour', field],
+                                        Number(e.target.value)
+                                      )
+                                    }
+                                    className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                                  />
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                      {Object.keys({
+                        ...(parsedConfig.funnel?.visit_hour_peak || {}),
+                        ...(timingTier.visit_hour_peak || {}),
+                      }).length === 0 && (
+                        <p className={`text-[11px] ${theme.mutedClass}`}>No peak hours configured for this tier or globally.</p>
+                      )}
                     </div>
-                  );
-                })}
+                  </div>
+                </div>
+              )}
+
+              {/* Peak visit hours */}
+              <div className="space-y-3 pt-4 border-t border-inherit">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider">Peak Visit Hours</h4>
+                      <p className={`text-[11px] ${theme.mutedClass}`}>
+                        Weighted daily traffic peaks. Higher weight = more sessions land in that window.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={addPeakHour}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold border ${theme.buttonClass}`}
+                  >
+                    <Plus className="w-3 h-3" /> Add Peak
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                  {Object.entries<any>(parsedConfig.funnel?.visit_hour_peak || {}).map(([peakKey, peak]) => {
+                    const hour = peak?.hour || { min: 0, max: 23, avg: 12 };
+                    return (
+                      <div key={peakKey} className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                            {peakKey}
+                          </span>
+                          <button
+                            onClick={() => removePeakHour(peakKey)}
+                            className="opacity-60 hover:opacity-100 hover:text-rose-500"
+                            title="Remove peak"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Weight</label>
+                            <input
+                              type="number"
+                              min="0"
+                              step="1"
+                              value={peak.weight ?? 1}
+                              onChange={(e) => updateField(['funnel', 'visit_hour_peak', peakKey, 'weight'], Number(e.target.value))}
+                              className={`w-full rounded px-2 py-1 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Avg Hour</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="23"
+                              value={hour.avg ?? 12}
+                              onChange={(e) => updateField(['funnel', 'visit_hour_peak', peakKey, 'hour', 'avg'], Number(e.target.value))}
+                              className={`w-full rounded px-2 py-1 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Min Hour</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="23"
+                              value={hour.min ?? 0}
+                              onChange={(e) => updateField(['funnel', 'visit_hour_peak', peakKey, 'hour', 'min'], Number(e.target.value))}
+                              className={`w-full rounded px-2 py-1 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Max Hour</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="23"
+                              value={hour.max ?? 23}
+                              onChange={(e) => updateField(['funnel', 'visit_hour_peak', peakKey, 'hour', 'max'], Number(e.target.value))}
+                              className={`w-full rounded px-2 py-1 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {Object.keys(parsedConfig.funnel?.visit_hour_peak || {}).length === 0 && (
+                    <p className={`text-[11px] ${theme.mutedClass}`}>
+                      No peaks configured — visits fall back to a 19:00 average.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Funnel noise */}
+              <div className="pt-4 border-t border-inherit grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                  <span className="font-bold uppercase tracking-wider block text-emerald-600 dark:text-emerald-400">
+                    Funnel Noise
+                  </span>
+                  <div className="flex justify-between items-center">
+                    <span className={theme.mutedClass}>Multiplier:</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="1"
+                      value={parsedConfig.funnel?.funnel_noise?.multiplier ?? 1.15}
+                      onChange={(e) => updateField(['funnel', 'funnel_noise', 'multiplier'], parseFloat(e.target.value))}
+                      className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={theme.mutedClass}>Distribution:</span>
+                    <select
+                      value={parsedConfig.funnel?.funnel_noise?.distribution ?? 'lognormal'}
+                      onChange={(e) => updateField(['funnel', 'funnel_noise', 'distribution'], e.target.value)}
+                      className={`rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                    >
+                      {['lognormal', 'normal', 'poisson', 'uniform'].map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                  <span className="font-bold uppercase tracking-wider block text-emerald-600 dark:text-emerald-400">
+                    Reactivation
+                  </span>
+                  <div className="flex justify-between items-center">
+                    <span className={theme.mutedClass}>Lapsed Return Chance:</span>
+                    <input
+                      type="number"
+                      step="0.001"
+                      min="0"
+                      max="1"
+                      value={parsedConfig.simulation?.reactivation_probability ?? 0.002}
+                      onChange={(e) =>
+                        updateField(['simulation', 'reactivation_probability'], parseFloat(e.target.value))
+                      }
+                      className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                    />
+                  </div>
+                  <p className={`text-[10px] ${theme.mutedClass}`}>
+                    Daily chance a fully decayed customer returns.
+                  </p>
+                </div>
+              </div>
+
+              {/* Visit decay curve */}
+              <div className="pt-4 border-t border-inherit space-y-2">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider">Visit Decay Curve</h4>
+                    <p className={`text-[11px] ${theme.mutedClass}`}>
+                      Engagement multiplier by days since the customer's last visit.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() =>
+                      mutateConfig((cfg) => {
+                        cfg.simulation = cfg.simulation || {};
+                        const decay = Array.isArray(cfg.simulation.visit_decay) ? cfg.simulation.visit_decay : [];
+                        const lastDays = decay.length ? Number(decay[decay.length - 1].days) : 0;
+                        decay.push({ days: lastDays + 30, multiplier: 0.0 });
+                        cfg.simulation.visit_decay = decay;
+                      })
+                    }
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold border ${theme.buttonClass}`}
+                  >
+                    <Plus className="w-3 h-3" /> Add Rule
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
+                  {(parsedConfig.simulation?.visit_decay || []).map((rule: any, idx: number) => (
+                    <div key={idx} className="p-2 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className={`text-[10px] ${theme.mutedClass}`}>Day {rule.days}</span>
+                        <button
+                          onClick={() =>
+                            mutateConfig((cfg) => {
+                              cfg.simulation.visit_decay.splice(idx, 1);
+                            })
+                          }
+                          className="opacity-60 hover:opacity-100 hover:text-rose-500"
+                          title="Remove rule"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                      <input
+                        type="number"
+                        min="0"
+                        value={rule.days}
+                        onChange={(e) => updateField(['simulation', 'visit_decay', String(idx), 'days'], Number(e.target.value))}
+                        className={`w-full rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                      />
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="1"
+                        value={rule.multiplier}
+                        onChange={(e) =>
+                          updateField(['simulation', 'visit_decay', String(idx), 'multiplier'], parseFloat(e.target.value))
+                        }
+                        className={`w-full rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -590,67 +1035,478 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({
           {/* Sub-Tab 4: Marketing Events & Campaigns */}
           {activeAdvancedTab === 'events' && (
             <div className="space-y-3 text-xs">
-              <div className="flex items-center gap-2">
-                <Megaphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <p className={theme.mutedClass}>
-                  Marketing campaigns and promotional calendar multipliers configured in <code>config/event.yaml</code>.
-                </p>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <Megaphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <p className={theme.mutedClass}>
+                    Marketing campaigns and promotional calendar multipliers configured in <code>config/event.yaml</code>.
+                  </p>
+                </div>
+                <button
+                  onClick={addMarketingEvent}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold border ${theme.buttonClass}`}
+                >
+                  <Plus className="w-3 h-3" /> Add Campaign
+                </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {Object.entries<any>(parsedConfig.event || {}).map(([evtKey, evt]) => (
-                  <div key={evtKey} className="p-3.5 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs uppercase text-emerald-600 dark:text-emerald-400">
-                        {evt.name || evtKey}
-                      </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-inherit opacity-70">
-                        Year {evt.year} &bull; M{evt.start_month || 1}-{evt.end_month || 12}
-                      </span>
+                  <div key={evtKey} className="p-3.5 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <input
+                        value={evt.name ?? evtKey}
+                        onChange={(e) => updateField(['event', evtKey, 'name'], e.target.value)}
+                        className={`flex-1 min-w-0 rounded px-2 py-1 text-xs font-bold border ${theme.inputClass}`}
+                      />
+                      <button
+                        onClick={() => removeMarketingEvent(evtKey)}
+                        className="opacity-60 hover:opacity-100 hover:text-rose-500 shrink-0"
+                        title="Remove campaign"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                    <p className={`text-[10px] ${theme.mutedClass}`}>{evt.description || 'Promotional traffic spike'}</p>
-                    {evt.overall && (
-                      <div className="pt-2 border-t border-inherit/40 grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        {evt.overall.visit && <div>Visit Boost: <strong>{evt.overall.visit}x</strong></div>}
-                        {evt.overall.new_user && <div>Acquisition: <strong>{evt.overall.new_user}x</strong></div>}
+
+                    <div>
+                      <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Campaign Key</label>
+                      <input
+                        defaultValue={evtKey}
+                        onBlur={(e) => renameMarketingEvent(evtKey, e.target.value)}
+                        className={`w-full rounded px-2 py-1 text-[11px] font-mono border ${theme.inputClass}`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Description</label>
+                      <input
+                        value={evt.description ?? ''}
+                        onChange={(e) => updateField(['event', evtKey, 'description'], e.target.value)}
+                        className={`w-full rounded px-2 py-1 text-[11px] border ${theme.inputClass}`}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Year</label>
+                        <input
+                          type="number"
+                          min="1"
+                          value={evt.year ?? 1}
+                          onChange={(e) => updateField(['event', evtKey, 'year'], Number(e.target.value))}
+                          className={`w-full rounded px-2 py-1 font-mono border ${theme.inputClass}`}
+                        />
                       </div>
-                    )}
+                      <div>
+                        <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>Start Month</label>
+                        <select
+                          value={evt.start_month ?? 1}
+                          onChange={(e) => updateField(['event', evtKey, 'start_month'], Number(e.target.value))}
+                          className={`w-full rounded px-1 py-1 font-mono border ${theme.inputClass}`}
+                        >
+                          {MONTHS.map((m, i) => (
+                            <option key={m} value={i + 1}>
+                              {m.slice(0, 3)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className={`text-[10px] block mb-0.5 ${theme.mutedClass}`}>End Month</label>
+                        <select
+                          value={evt.end_month ?? 12}
+                          onChange={(e) => updateField(['event', evtKey, 'end_month'], Number(e.target.value))}
+                          className={`w-full rounded px-1 py-1 font-mono border ${theme.inputClass}`}
+                        >
+                          {MONTHS.map((m, i) => (
+                            <option key={m} value={i + 1}>
+                              {m.slice(0, 3)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-inherit/40 space-y-1.5">
+                      <span className={`block text-[10px] font-semibold uppercase ${theme.mutedClass}`}>
+                        Overall Multipliers
+                      </span>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-[10px]">Visit</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={evt.overall?.visit ?? 1}
+                            onChange={(e) => updateField(['event', evtKey, 'overall', 'visit'], parseFloat(e.target.value))}
+                            className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-[10px]">New User</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={evt.overall?.new_user ?? 1}
+                            onChange={(e) => updateField(['event', evtKey, 'overall', 'new_user'], parseFloat(e.target.value))}
+                            className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-[10px]">Conversion</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={evt.overall?.conversion ?? 1}
+                            onChange={(e) =>
+                              updateField(['event', evtKey, 'overall', 'conversion'], parseFloat(e.target.value))
+                            }
+                            className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Profile targeting */}
+                    <div className="pt-2 border-t border-inherit/40 space-y-1.5">
+                      <span className={`block text-[10px] font-semibold uppercase ${theme.mutedClass}`}>
+                        Profile Targeting
+                      </span>
+                      {['conservative', 'balanced', 'aggressive'].map((prof) => {
+                        const profCfg = evt.profiles?.[prof];
+                        return (
+                          <div key={prof} className="rounded border border-inherit/50 p-2 space-y-1">
+                            <span className="text-[10px] capitalize font-semibold">{prof}</span>
+                            <div className="grid grid-cols-2 gap-2">
+                              {(['visit', 'new_user'] as const).map((metric) => (
+                                <label key={metric} className="flex items-center justify-between gap-1 text-[10px]">
+                                  <span>{metric === 'new_user' ? 'New user' : 'Visit'}</span>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="—"
+                                    value={profCfg?.[metric] ?? ''}
+                                    onChange={(e) => {
+                                      const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
+                                      mutateConfig((cfg) => {
+                                        const target = cfg.event?.[evtKey];
+                                        if (!target) return;
+                                        if (val === undefined) {
+                                          if (target.profiles?.[prof]) {
+                                            delete target.profiles[prof][metric];
+                                            if (Object.keys(target.profiles[prof]).length === 0) delete target.profiles[prof];
+                                            if (Object.keys(target.profiles).length === 0) delete target.profiles;
+                                          }
+                                        } else {
+                                          target.profiles = target.profiles || {};
+                                          target.profiles[prof] = target.profiles[prof] || {};
+                                          target.profiles[prof][metric] = val;
+                                        }
+                                      });
+                                    }}
+                                    className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                                  />
+                                </label>
+                              ))}
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              {FUNNEL_STEPS.slice(0, -1).map((step) => (
+                                <label key={step} className="flex items-center justify-between gap-1 text-[10px]">
+                                  <span className="truncate">{step.replace(/_/g, ' ')}</span>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="—"
+                                    value={profCfg?.conversion?.[step] ?? ''}
+                                    onChange={(e) => {
+                                      const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
+                                      mutateConfig((cfg) => {
+                                        const target = cfg.event?.[evtKey];
+                                        if (!target) return;
+                                        if (val === undefined) {
+                                          if (target.profiles?.[prof]?.conversion) {
+                                            delete target.profiles[prof].conversion[step];
+                                            if (Object.keys(target.profiles[prof].conversion).length === 0) {
+                                              delete target.profiles[prof].conversion;
+                                            }
+                                            if (Object.keys(target.profiles[prof]).length === 0) delete target.profiles[prof];
+                                            if (Object.keys(target.profiles).length === 0) delete target.profiles;
+                                          }
+                                        } else {
+                                          target.profiles = target.profiles || {};
+                                          target.profiles[prof] = target.profiles[prof] || {};
+                                          target.profiles[prof].conversion = target.profiles[prof].conversion || {};
+                                          target.profiles[prof].conversion[step] = val;
+                                        }
+                                      });
+                                    }}
+                                    className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                                  />
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 ))}
+                {Object.keys(parsedConfig.event || {}).length === 0 && (
+                  <p className={`text-[11px] ${theme.mutedClass}`}>
+                    No campaigns yet. Add one to model seasonal traffic spikes.
+                  </p>
+                )}
               </div>
             </div>
           )}
 
           {/* Sub-Tab 5: Growth Models */}
           {activeAdvancedTab === 'growth' && (
-            <div className="space-y-3 text-xs">
+            <div className="space-y-5 text-xs">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <p className={theme.mutedClass}>
                   Macro growth profiles and yearly lifecycle multipliers configured in <code>config/growth.yaml</code>.
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {['conservative', 'balanced', 'aggressive'].map((prof) => {
-                  const pData = parsedConfig.growth?.base?.tier_profiles?.[prof] || {};
-                  return (
-                    <div key={prof} className="p-3.5 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
-                      <div className="flex items-center justify-between">
+
+              {/* Base overall multipliers */}
+              <div className="p-3.5 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                <h4 className="text-[11px] font-bold uppercase tracking-wider">Base Overall Multipliers</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {(['new_user', 'visit', 'conversion'] as const).map((metric) => (
+                    <label key={metric} className="flex items-center justify-between gap-2">
+                      <span className={`text-[11px] capitalize ${theme.mutedClass}`}>
+                        {metric.replace('_', ' ')}
+                      </span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={parsedConfig.growth?.base?.overall?.[metric] ?? 1}
+                        onChange={(e) =>
+                          updateField(['growth', 'base', 'overall', metric], parseFloat(e.target.value))
+                        }
+                        className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Base tier profiles */}
+              <div className="space-y-2">
+                <h4 className="text-[11px] font-bold uppercase tracking-wider">Base Tier Profiles</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {['conservative', 'balanced', 'aggressive'].map((prof) => {
+                    const pData = parsedConfig.growth?.base?.tier_profiles?.[prof] || {};
+                    return (
+                      <div key={prof} className="p-3.5 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
                         <span className="font-bold text-xs capitalize text-emerald-600 dark:text-emerald-400">{prof}</span>
-                        <span className="text-[10px] opacity-70 font-mono">Profile</span>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className={`text-[11px] ${theme.mutedClass}`}>New User Growth</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={pData.new_user ?? 1.0}
+                              onChange={(e) =>
+                                updateField(['growth', 'base', 'tier_profiles', prof, 'new_user'], parseFloat(e.target.value))
+                              }
+                              className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between gap-1">
+                            <span className={`text-[11px] ${theme.mutedClass}`}>Visit Engagement</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={pData.visit ?? 1.0}
+                              onChange={(e) =>
+                                updateField(['growth', 'base', 'tier_profiles', prof, 'visit'], parseFloat(e.target.value))
+                              }
+                              className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between gap-1">
+                            <span className={`text-[11px] ${theme.mutedClass}`}>Conversion</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={pData.conversion ?? 1.0}
+                              onChange={(e) =>
+                                updateField(
+                                  ['growth', 'base', 'tier_profiles', prof, 'conversion'],
+                                  parseFloat(e.target.value)
+                                )
+                              }
+                              className={`w-16 text-right rounded px-1.5 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-1 text-[11px] font-mono">
-                        <div className="flex justify-between">
-                          <span className={theme.mutedClass}>New User Growth:</span>
-                          <span>{pData.new_user ?? 1.0}x</span>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Yearly lifecycle stages */}
+              <div className="space-y-2 pt-3 border-t border-inherit">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider">Yearly Lifecycle Stages</h4>
+                    <p className={`text-[11px] ${theme.mutedClass}`}>
+                      Multipliers applied per simulation year. <code>year_8_plus</code> is the long-term fallback.
+                    </p>
+                  </div>
+                  <button
+                    onClick={addGrowthYear}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold border ${theme.buttonClass}`}
+                  >
+                    <Plus className="w-3 h-3" /> Add Year
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {Object.entries<any>(parsedConfig.growth?.yearly || {}).map(([yearKey, yearCfg]) => (
+                    <div key={yearKey} className="p-3 rounded border border-inherit bg-black/5 dark:bg-white/5 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                          {yearKey.replace(/_/g, ' ')}
+                        </span>
+                        <button
+                          onClick={() => removeGrowthYear(yearKey)}
+                          className="opacity-60 hover:opacity-100 hover:text-rose-500"
+                          title="Remove year stage"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        {/* Overall */}
+                        <div className="space-y-1.5">
+                          <span className={`block text-[10px] font-semibold uppercase ${theme.mutedClass}`}>Overall</span>
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-[10px]">New User</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={yearCfg.overall?.new_user ?? 1}
+                              onChange={(e) =>
+                                updateField(['growth', 'yearly', yearKey, 'overall', 'new_user'], parseFloat(e.target.value))
+                              }
+                              className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-[10px]">Visit</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={yearCfg.overall?.visit ?? 1}
+                              onChange={(e) =>
+                                updateField(['growth', 'yearly', yearKey, 'overall', 'visit'], parseFloat(e.target.value))
+                              }
+                              className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-[10px]">Conversion</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={yearCfg.overall?.conversion ?? 1}
+                              onChange={(e) =>
+                                updateField(
+                                  ['growth', 'yearly', yearKey, 'overall', 'conversion'],
+                                  parseFloat(e.target.value)
+                                )
+                              }
+                              className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                            />
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className={theme.mutedClass}>Visit Engagement:</span>
-                          <span>{pData.visit ?? 1.0}x</span>
-                        </div>
+
+                        {/* Per-profile multipliers */}
+                        {['conservative', 'balanced', 'aggressive'].map((prof) => {
+                          const profCfg = yearCfg.profile_multipliers?.[prof] || {};
+                          return (
+                            <div key={prof} className="space-y-1.5">
+                              <span className={`block text-[10px] font-semibold uppercase ${theme.mutedClass}`}>
+                                {prof}
+                              </span>
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="text-[10px]">New User</span>
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={profCfg.new_user ?? 1}
+                                  onChange={(e) =>
+                                    updateField(
+                                      ['growth', 'yearly', yearKey, 'profile_multipliers', prof, 'new_user'],
+                                      parseFloat(e.target.value)
+                                    )
+                                  }
+                                  className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="text-[10px]">Visit</span>
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={profCfg.visit ?? 1}
+                                  onChange={(e) =>
+                                    updateField(
+                                      ['growth', 'yearly', yearKey, 'profile_multipliers', prof, 'visit'],
+                                      parseFloat(e.target.value)
+                                    )
+                                  }
+                                  className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="text-[10px]">Conversion</span>
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={profCfg.conversion ?? 1}
+                                  onChange={(e) =>
+                                    updateField(
+                                      ['growth', 'yearly', yearKey, 'profile_multipliers', prof, 'conversion'],
+                                      parseFloat(e.target.value)
+                                    )
+                                  }
+                                  className={`w-14 text-right rounded px-1 py-0.5 font-mono border ${theme.inputClass}`}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  );
-                })}
+                  ))}
+                  {Object.keys(parsedConfig.growth?.yearly || {}).length === 0 && (
+                    <p className={`text-[11px] ${theme.mutedClass}`}>
+                      No yearly stages — growth multipliers stay at 1.0x.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           )}
