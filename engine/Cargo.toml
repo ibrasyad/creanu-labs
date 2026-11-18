@@ -1,0 +1,40 @@
+[package]
+name = "lettuce-melon-engine"
+version = "0.1.0"
+edition = "2021"
+description = "High-performance synthetic retail simulation engine for Creanu Labs"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Serialization / Deserialization of configs and simulation results
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+serde-wasm-bindgen = "0.6"
+
+# High performance random number generation
+rand = "0.8"
+rand_distr = "0.4"
+rand_chacha = "0.3"
+
+# Date and time calculations
+chrono = { version = "0.4", features = ["serde"] }
+
+# WebAssembly bindings
+wasm-bindgen = "0.2"
+js-sys = "0.2"
+web-sys = { version = "0.3", features = ["console"] }
+
+# SHA256 for deterministic seed_for_date
+sha2 = "0.10"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
