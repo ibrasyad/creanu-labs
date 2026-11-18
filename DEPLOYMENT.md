@@ -60,10 +60,9 @@ The Cloudflare configuration is located at [web/wrangler.jsonc](file:///d:/Winds
   "name": "creanu-labs-simulator",
   "compatibility_date": "2024-11-01",
   "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS"
+    "directory": "./dist"
   }
 }
 ```
 
-This uses Cloudflare's **Static Assets on Workers** feature, combining lightning-fast asset delivery with the ability to add Cloudflare D1 database bindings in the future without changing infrastructure.
+This deploys the site as an assets-only Worker. Do not add an `assets.binding` unless you also configure a Worker script (`main`) that uses the binding.
