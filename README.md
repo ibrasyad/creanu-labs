@@ -1,4 +1,4 @@
-# Creanu Labs
+# Creanu Labs Simulator
 
 ## Objective
 
