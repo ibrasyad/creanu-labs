@@ -3,6 +3,7 @@ import JSZip from 'jszip';
 import { X, Download, FileText, Archive, CheckCircle2 } from 'lucide-react';
 import { SimulationOutput } from '../types/simulation';
 import { ThemeConfig } from '../types/theme';
+import { escapeCsvCell } from '../utils/csv';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
   const generateCSV = (headers: string[], rows: (string | number)[][]): string => {
     const headerLine = headers.join(',');
-    const bodyLines = rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','));
+    const bodyLines = rows.map((r) => r.map(escapeCsvCell).join(','));
     return [headerLine, ...bodyLines].join('\n');
   };
 
